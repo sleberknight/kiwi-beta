@@ -17,7 +17,8 @@
 
     <properties>
         <!-- Versions for required dependencies -->
-        <dropwizard.version>2.0.25</dropwizard.version>
+        <guava.version>31.0.1-jre</guava.version>
+        <dropwizard.version>2.0.26</dropwizard.version>
         <hibernate-validator.version>6.1.7.Final</hibernate-validator.version>
         <jakarta-el.version>3.0.4</jakarta-el.version>
         <kiwi.version>1.1.0</kiwi.version>
@@ -46,10 +47,29 @@
             </exclusions>
         </dependency>
 
+        <!-- TODO: Remove this and related exclusions below once kiwi and kiwi-test have updated to DW 2.0.26 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.errorprone</groupId>
+                    <artifactId>error_prone_annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>org.kiwiproject</groupId>
             <artifactId>kiwi</artifactId>
             <version>${kiwi.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -88,6 +108,12 @@
             <artifactId>kiwi-test</artifactId>
             <version>${kiwi-test.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
