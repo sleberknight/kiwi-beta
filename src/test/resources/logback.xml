@@ -10,6 +10,29 @@
 
     <logger name="org.kiwiproject.beta.base.process.ProcessOutputHandler" level="TRACE"/>
 
+    <appender name="MEMORY" class="org.kiwiproject.beta.test.logback.InMemoryAppender"/>
+
+    <!-- The following loggers MUST exist for KiwiSlf4jTest to work properly -->
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jTest.TRACE" level="TRACE">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jTest.DEBUG" level="DEBUG">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jTest.INFO" level="INFO">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jTest.WARN" level="WARN">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jTest.ERROR" level="ERROR">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
