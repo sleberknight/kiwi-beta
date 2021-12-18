@@ -8,6 +8,8 @@
         </encoder>
     </appender>
 
+    <logger name="org.kiwiproject.beta" level="TRACE"/>
+
     <logger name="org.kiwiproject.beta.base.process.ProcessOutputHandler" level="TRACE"/>
 
     <appender name="MEMORY" class="org.kiwiproject.beta.test.logback.InMemoryAppender"/>
