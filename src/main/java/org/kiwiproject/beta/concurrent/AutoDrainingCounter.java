@@ -29,10 +29,6 @@ import java.util.function.Consumer;
 @Slf4j
 public class AutoDrainingCounter implements Closeable {
 
-    // TODO:
-    //  implement DW Managed?
-    //  better way than to use synchronized on start() or is that the "best" way?
-
     private final AtomicInteger count;
     private final Duration drainPeriod;
     private final Consumer<Integer> drainCallback;
@@ -62,6 +58,7 @@ public class AutoDrainingCounter implements Closeable {
         return counter;
     }
 
+    // TODO:  better way than to use synchronized on start() or is that the "best" way?
     public synchronized void start() {
         if (counting.get()) {
             throw new IllegalStateException("counter already started");
