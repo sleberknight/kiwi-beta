@@ -5,6 +5,7 @@ import static java.util.Objects.nonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
+import java.io.Closeable;
 import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -26,12 +27,10 @@ import java.util.function.Consumer;
  * asynchronously if desired.
  */
 @Slf4j
-@SuppressWarnings("ALL")
-public class AutoDrainingCounter {
+public class AutoDrainingCounter implements Closeable {
 
     // TODO:
     //  implement DW Managed?
-    //  implement Closeable?
     //  better way than to use synchronized on start() or is that the "best" way?
 
     private final AtomicInteger count;
@@ -90,6 +89,15 @@ public class AutoDrainingCounter {
     public void stop() {
         counting.set(false);
         scheduledExecutor.shutdownNow();
+    }
+
+    /**
+     * Simply calls {@link #stop()}. Implementing {@link Closeable} lets this class participate
+     * in automatic resource management via th try-with-resources mechanism.
+     */
+    @Override
+    public void close() {
+        stop();
     }
 
     public int get() {

@@ -115,6 +115,13 @@ class AutoDrainingCounterTest {
     }
 
     @Test
+    void shouldClose() {
+        counter = AutoDrainingCounter.createAndStart(DRAIN_PERIOD);
+        counter.close();
+        assertThat(counter.isAlive()).isFalse();
+    }
+
+    @Test
     void shouldGet() {
         counter = AutoDrainingCounter.createAndStart(DRAIN_PERIOD);
         assertThat(counter.get()).isZero();
