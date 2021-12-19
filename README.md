@@ -1,5 +1,5 @@
 ### kiwi-beta
-![Build](https://github.com/sleberknight/kiwi-beta/actions/workflows/maven.yml/badge.svg)
+[![Build](https://github.com/sleberknight/kiwi-beta/actions/workflows/maven.yml/badge.svg)](https://github.com/sleberknight/kiwi-beta/actions?query=workflow%3Abuild)
 
 A playground for experimental code that might or might not ever make it into [kiwi](https://github.com/kiwiproject/kiwi)
 or [kiwi-test](https://github.com/kiwiproject/kiwi-test).
