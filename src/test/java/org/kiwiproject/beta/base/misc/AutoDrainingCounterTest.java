@@ -3,6 +3,8 @@ package org.kiwiproject.beta.base.misc;
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.awaitility.Awaitility.await;
+import static org.awaitility.Durations.TWO_HUNDRED_MILLISECONDS;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.kiwiproject.base.DefaultEnvironment;
 
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -17,6 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * Trying out an idea for a self-contained thread-safe counter that drains itself on a recurring basis. The
@@ -30,6 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 class AutoDrainingCounterTest {
 
     private static final Duration DRAIN_PERIOD = Duration.ofSeconds(5);
+    private static final Duration TWENTY_FIVE_MILLISECONDS = Duration.ofMillis(25);
 
     private AutoDrainingCounter counter;
 
@@ -52,6 +57,26 @@ class AutoDrainingCounterTest {
         var drainPeriod = Duration.ofSeconds(10);
         var counter = AutoDrainingCounter.createAndStart(drainPeriod);
 
+        runCounter(counter);
+    }
+
+    /**
+     * Same as above "test".
+     */
+    @SuppressWarnings({"java:S2699", "java:S1607"})
+    @Test
+    @Disabled
+    void runExampleWithCallback() {
+        var drainPeriod = Duration.ofSeconds(10);
+        var totalCount = new AtomicInteger();
+        var counter = AutoDrainingCounter.createAndStart(drainPeriod, totalCount::addAndGet);
+
+        runCounter(counter);
+
+        LOG.info("Total count: {}", totalCount.get());
+    }
+
+    private void runCounter(AutoDrainingCounter counter) {
         var scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
         int delay = 750;  // millis
         scheduledExecutor.scheduleAtFixedRate(() -> {
@@ -139,12 +164,33 @@ class AutoDrainingCounterTest {
         assertThat(counter.incrementAndGet()).isEqualTo(4);
     }
 
+    @Test
+    void shouldExecuteCallbackWhenProvided() {
+        var drainPeriod = Duration.ofMillis(50);
+        var totalCount = new AtomicInteger();
+        counter = AutoDrainingCounter.createAndStart(drainPeriod, totalCount::addAndGet);
+
+        counter.incrementAndGet();
+        counter.incrementAndGet();
+        counter.incrementAndGet();
+        waitUntilTotalCountEquals(totalCount, 3);
+
+        counter.incrementAndGet();
+        counter.incrementAndGet();
+        waitUntilTotalCountEquals(totalCount, 5);
+    }
+
+    private void waitUntilTotalCountEquals(AtomicInteger totalCount, int expectedValue) {
+        await().pollInterval(TWENTY_FIVE_MILLISECONDS)
+                .atMost(TWO_HUNDRED_MILLISECONDS)
+                .until(() -> totalCount.get() == expectedValue);
+    }
+
     // TODO: draining tests...
 
     // TODO:
     //  implement DW Managed?
     //  implement Closeable?
-    //  add a callback mechanism when drains occur?
     //  better way than to use synchronized on start() or is that the "best" way?
 
     @SuppressWarnings("ALL")
@@ -152,18 +198,33 @@ class AutoDrainingCounterTest {
 
         private final AtomicInteger count;
         private final Duration drainPeriod;
+        private final Consumer<Integer> drainCallback;
         private final ScheduledExecutorService scheduledExecutor;
         private final AtomicBoolean counting;
 
         public AutoDrainingCounter(Duration drainPeriod) {
+            this(drainPeriod, null);
+        }
+
+        /**
+         * If a drain callback is provided, its implementation should return quickly, since the current
+         * implementation calls it synchronously. Callback implementations can execute asynchronously if desired.
+         */
+        public AutoDrainingCounter(Duration drainPeriod, @Nullable Consumer<Integer> drainCallback) {
             this.count = new AtomicInteger();
             this.drainPeriod = drainPeriod;
+            this.drainCallback = drainCallback;
             this.scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             this.counting = new AtomicBoolean();
         }
 
         public static AutoDrainingCounter createAndStart(Duration drainPeriod) {
-            var counter = new AutoDrainingCounter(drainPeriod);
+            return createAndStart(drainPeriod, null);
+        }
+
+        public static AutoDrainingCounter createAndStart(Duration drainPeriod,
+                                                         @Nullable Consumer<Integer> drainCallback) {
+            var counter = new AutoDrainingCounter(drainPeriod, drainCallback);
             counter.start();
             return counter;
         }
@@ -175,12 +236,17 @@ class AutoDrainingCounterTest {
 
             var periodMillis = drainPeriod.toMillis();
             scheduledExecutor.scheduleWithFixedDelay(
-                    () -> {
-                        var oldCount = count.getAndSet(0);
-                        LOG.trace("Drained counter. Old count was: {}", oldCount);
-                    }, periodMillis, periodMillis, TimeUnit.MILLISECONDS);
+                    () -> drain(), periodMillis, periodMillis, TimeUnit.MILLISECONDS);
 
             counting.set(true);
+        }
+
+        private void drain() {
+            var oldCount = count.getAndSet(0);
+            if (nonNull(drainCallback)) {
+                drainCallback.accept(oldCount);
+            }
+            LOG.trace("Drained counter. Old count was: {}", oldCount);
         }
 
         public boolean isAlive() {
