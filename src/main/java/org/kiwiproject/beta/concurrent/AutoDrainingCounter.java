@@ -2,6 +2,7 @@ package org.kiwiproject.beta.concurrent;
 
 import static java.util.Objects.nonNull;
 
+import com.google.common.annotations.Beta;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
@@ -27,6 +28,7 @@ import java.util.function.Consumer;
  * asynchronously if desired.
  */
 @Slf4j
+@Beta
 public class AutoDrainingCounter implements Closeable {
 
     private final AtomicInteger count;
