@@ -24,7 +24,7 @@
         <kiwi.version>1.1.0</kiwi.version>
         <!-- TODO: Remove logback version once kiwi-parent is updated -->
         <logback-classic.version>1.2.9</logback-classic.version>
-        <servlet-api.version>4.0.4</servlet-api.version>
+        <servlet-api.version>5.0.0</servlet-api.version>
 
         <!-- Versions for optional dependencies -->
         <error_prone_annotations.version>2.10.0</error_prone_annotations.version>
