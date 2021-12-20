@@ -9,6 +9,7 @@ import static org.awaitility.Durations.TWO_HUNDRED_MILLISECONDS;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kiwiproject.base.DefaultEnvironment;
 
@@ -18,6 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@DisplayName("AutoDrainingCounter")
 @Slf4j
 class AutoDrainingCounterTest {
 
