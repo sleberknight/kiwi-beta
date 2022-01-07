@@ -45,11 +45,12 @@ public class SimpleMeterHealthCheck extends HealthCheck {
     }
 
     private static boolean hasAnyErrorsInLast15Minutes(NamedMeter meter) {
-        double estimatedErrorCount = meter.getFifteenMinuteRate() * NUM_SECONDS_IN_15_MINUTES;
+        var fifteenMinuteRate = meter.getFifteenMinuteRate();
+        double estimatedErrorCount = fifteenMinuteRate * NUM_SECONDS_IN_15_MINUTES;
 
         LOG.trace("Meter {}: 15 minute rate : {} , estimated error count: {}",
                 meter.getName(),
-                meter.getFifteenMinuteRate(),
+                fifteenMinuteRate,
                 estimatedErrorCount);
 
         return estimatedErrorCount >= 1.0;
