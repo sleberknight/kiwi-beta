@@ -23,6 +23,7 @@
         <!-- Need explicit Dropwizard version since dropwizard-util isn't defined in kiwi-bom 0.4.0 -->
         <dropwizard.version>2.0.28</dropwizard.version>
         <kiwi.version>1.2.0</kiwi.version>
+        <metrics-healthchecks-severity.version>1.0.2</metrics-healthchecks-severity.version>
 
         <!-- Versions for optional dependencies -->
 
@@ -81,6 +82,12 @@
             <groupId>org.kiwiproject</groupId>
             <artifactId>kiwi</artifactId>
             <version>${kiwi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kiwiproject</groupId>
+            <artifactId>metrics-healthchecks-severity</artifactId>
+            <version>${metrics-healthchecks-severity.version}</version>
         </dependency>
 
         <!-- Requires compile scope since used in the InMemoryAppender -->
