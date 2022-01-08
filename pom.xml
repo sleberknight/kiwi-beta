@@ -29,6 +29,11 @@
 
         <!-- Versions for test dependencies -->
         <kiwi-test.version>1.1.2</kiwi-test.version>
+
+        <!--  Sonar properties -->
+        <sonar.projectKey>sleberknight_kiwi-beta</sonar.projectKey>
+        <sonar.organization>sleberknight</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencyManagement>
