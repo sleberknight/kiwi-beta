@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  * actually not trivial to compute an exact number of errors in the last N time units. Here, this is using
  * the 15-minute rate from the supplied meter and using that to estimate the number of errors. See specifically
  * {@link com.codahale.metrics.MovingAverages} and {@link Meter#Meter(MovingAverages)}.
+ * @see HealthCheckResults
  */
 @Slf4j
 public class SimpleMeterHealthCheck extends HealthCheck {
