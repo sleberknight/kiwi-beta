@@ -14,6 +14,18 @@
     <artifactId>kiwi-beta</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Kiwi Beta (Experimental Code)</name>
+    <description>
+        Experimental code that might eventually move into kiwi, or just to try something out...
+    </description>
+    <url>https://github.com/sleberknight/kiwi-beta</url>
+    <inceptionYear>2021</inceptionYear>
+
+    <scm>
+        <connection>scm:git:https://github.com/sleberknight/kiwi-beta.git</connection>
+        <developerConnection>scm:git:git@github.com:sleberknight/kiwi-beta.git</developerConnection>
+        <url>https://github.com/sleberknight/kiwi-beta</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <kiwi-bom.version>0.6.0</kiwi-bom.version>
