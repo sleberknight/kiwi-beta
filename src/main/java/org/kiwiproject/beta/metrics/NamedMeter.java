@@ -5,6 +5,7 @@ import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Metered;
+import com.google.common.annotations.Beta;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import lombok.experimental.Delegate;
  * A Metrics {@link Meter} that knows its own name.
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Beta
 public class NamedMeter extends Meter {
 
     /**

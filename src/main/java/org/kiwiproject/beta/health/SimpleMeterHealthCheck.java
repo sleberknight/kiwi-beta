@@ -6,6 +6,7 @@ import static org.kiwiproject.metrics.health.HealthCheckResults.newUnhealthyResu
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.MovingAverages;
 import com.codahale.metrics.health.HealthCheck;
+import com.google.common.annotations.Beta;
 import lombok.extern.slf4j.Slf4j;
 import org.kiwiproject.beta.metrics.NamedMeter;
 import org.kiwiproject.metrics.health.HealthCheckResults;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @see HealthCheckResults
  */
 @Slf4j
+@Beta
 public class SimpleMeterHealthCheck extends HealthCheck {
 
     private static final String HEALTHY_MESSAGE = "No errors in the last 15 minutes";
