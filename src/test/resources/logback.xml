@@ -35,6 +35,28 @@
         <appender-ref ref="MEMORY"/>
     </logger>
 
+    <!-- The following loggers MUST exist for KiwiSlf4jExtensionsTest to work properly -->
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jExtensionsTest.TRACE" level="TRACE">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jExtensionsTest.DEBUG" level="DEBUG">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jExtensionsTest.INFO" level="INFO">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jExtensionsTest.WARN" level="WARN">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
+    <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jExtensionsTest.ERROR" level="ERROR">
+        <appender-ref ref="MEMORY"/>
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
