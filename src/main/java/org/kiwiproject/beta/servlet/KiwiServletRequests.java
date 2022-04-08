@@ -6,7 +6,6 @@ import static java.util.Objects.nonNull;
 
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.kiwiproject.collect.KiwiArrays;
 
 import javax.annotation.Nullable;
@@ -18,7 +17,6 @@ import java.util.Optional;
  * Static utilities related to {@link ServletRequest}, mostly related to handling {@link X509Certificate}s.
  */
 @UtilityClass
-@Slf4j
 @Beta
 public class KiwiServletRequests {
 

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.kiwiproject.beta.servlet.KiwiServletRequests;
 import org.mockito.ArgumentMatcher;
 
@@ -19,7 +18,6 @@ import java.security.cert.X509Certificate;
  * Static utilities to create Mockito-based mocks for servlet API code.
  */
 @UtilityClass
-@Slf4j
 @Beta
 public class KiwiServletMocks {
 
