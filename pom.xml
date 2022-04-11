@@ -38,7 +38,7 @@
 
         <!-- Need explicit Dropwizard version since dropwizard-util isn't defined in kiwi-bom 0.4.0 -->
         <camel.version>3.16.0</camel.version>
-        <dropwizard.version>2.0.28</dropwizard.version>
+        <dropwizard.version>2.0.29</dropwizard.version>
         <kiwi.version>1.3.0</kiwi.version>
         <metrics-healthchecks-severity.version>1.0.4</metrics-healthchecks-severity.version>
 
