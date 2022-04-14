@@ -36,11 +36,17 @@
 
         <!-- Versions for required dependencies -->
 
-        <!-- Need explicit Dropwizard version since dropwizard-util isn't defined in kiwi-bom 0.4.0 -->
+        <!-- TODO: Need explicit Dropwizard version since dropwizard-util isn't defined in kiwi-bom until 0.8.0 -->
         <camel.version>3.16.0</camel.version>
         <dropwizard.version>2.0.29</dropwizard.version>
         <kiwi.version>1.3.1</kiwi.version>
         <metrics-healthchecks-severity.version>1.0.5</metrics-healthchecks-severity.version>
+
+        <!--
+            TODO: Using the latest even though kiwi (currently) uses an earlier version (until we release 2.0.0)
+             But for some reason, maven enforcer isn't complaining...
+        -->
+        <spring-data-commons.version>2.6.3</spring-data-commons.version>
 
         <!-- Versions for optional dependencies -->
 
@@ -173,6 +179,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>${spring-data-commons.version}</version>
         </dependency>
 
         <!-- optional dependencies -->
