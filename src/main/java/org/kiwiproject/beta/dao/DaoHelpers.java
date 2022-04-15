@@ -39,8 +39,35 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DaoHelpers {
 
-    private static final String CONNECTOR_ORDER_BY = " order by ";
-    private static final String CONNECTOR_COMMA = ", ";
+    /**
+     * Defines/restricts the values that can be used when generating the ordering clause.
+     * 
+     * @implNote Currently this is very restrictive and will only work in certain languages
+     * such as SQL or HQL.
+     */
+    private enum Connector {
+
+        /**
+         * Separates the "base" query from the order clause.
+         */
+        ORDER_BY(" order by "),
+        
+        /**
+         * Separator to use between fields when there is more than one sort field.
+         */
+        SORT_FIELD_SEPARATOR(", "),
+        
+        /**
+         * Separator to use between the sort field and sort direction.
+         */
+        SORT_DIRECTION_SEPARATOR(" ");
+
+        final String value;
+
+        private Connector(String value) {
+            this.value = value;
+        }
+    }
 
     /**
      * Add sorts to the query restricting by the {@link AllowedFields} for the
@@ -162,14 +189,14 @@ public class DaoHelpers {
         if (isNotBlank(primarySortField)) {
             addSort(query,
                     allowedSortFields,
-                    CONNECTOR_ORDER_BY,
+                    Connector.ORDER_BY,
                     primarySortField,
                     primarySortDirection);
 
             if (isNotBlank(secondarySortField)) {
                 addSort(query,
                         allowedSortFields,
-                        CONNECTOR_COMMA,
+                        Connector.SORT_FIELD_SEPARATOR,
                         secondarySortField,
                         secondarySortDirection);
             }
@@ -246,14 +273,14 @@ public class DaoHelpers {
         var firstSort = KiwiLists.first(nonNullSorts);
         addSort(query,
                 allowedSortFields,
-                CONNECTOR_ORDER_BY,
+                Connector.ORDER_BY,
                 firstSort.getProperty(),
                 toKiwiSortDirectionOrNull(firstSort.getDirection()));
 
         var remainingSorts = KiwiLists.subListExcludingFirst(nonNullSorts);
         remainingSorts.forEach(sort -> addSort(query,
                 allowedSortFields,
-                CONNECTOR_COMMA,
+                Connector.SORT_FIELD_SEPARATOR,
                 sort.getProperty(),
                 toKiwiSortDirectionOrNull(sort.getDirection())));
     }
@@ -266,25 +293,22 @@ public class DaoHelpers {
         return KiwiSort.Direction.valueOf(sortDirection.toUpperCase(Locale.US));
     }
 
-    // TODO Is there any (good) reason not to make this public?
-    // Maybe security reasons on connector?
-    // Could make connector an enum containing only 'order by', comma, etc.
     private static void addSort(StringBuilder query,
             AllowedFields allowedSortFields,
-            String connector,
+            Connector connector,
             String sortField,
             @Nullable KiwiSort.Direction sortDirection) {
 
         checkQueryNotNull(query);
         checkAllowedSortFieldsNotNull(allowedSortFields);
-        checkArgumentNotBlank(connector, "connector must not be blank");
+        checkArgumentNotNull(connector, "connector must not be blank");
         checkArgumentNotBlank(sortField, "sortField must not be blank");
 
         allowedSortFields.assertAllowed(sortField);
 
-        query.append(connector)
+        query.append(connector.value)
                 .append(allowedSortFields.getPrefixedFieldName(sortField))
-                .append(" ")
+                .append(Connector.SORT_DIRECTION_SEPARATOR.value)
                 .append(Optional.ofNullable(sortDirection).orElse(KiwiSort.Direction.ASC));
     }
 
