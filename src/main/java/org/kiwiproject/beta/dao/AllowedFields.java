@@ -91,7 +91,9 @@ public class AllowedFields {
     }
 
     /** 
-     /** Returns true if the given field name is allowed, false otherwise.
+     * Checks whether the field name is allowed
+     * 
+     * @param fieldName the field name
      * @return true if the given field name is allowed, false otherwise
      */
     public boolean isAllowed(String fieldName) {
@@ -100,6 +102,8 @@ public class AllowedFields {
     }
 
     /**
+     * Checks whether the prefixed field name is allowed.
+     * 
      * @param prefixedFieldName the prefixed field name
      * @return true if the given prefixe field name is allowed, false otherwise
      */
@@ -109,6 +113,8 @@ public class AllowedFields {
     }
 
     /**
+     * Checks that the field name is an allowed field.
+     * 
      * @param fieldName the field name to check
      * @throws IllegalArgumentException if the given field name is not allowed
      */
@@ -120,6 +126,8 @@ public class AllowedFields {
     }
 
     /**
+     * Checks that the prefixed field name is allowed.
+     * 
      * @param prefixedFieldName the prefixed field name to check
      * @throws IllegalArgumentException if the given prefixed field name is not allowed
      */
@@ -131,8 +139,10 @@ public class AllowedFields {
     }
 
     /**
+     * Find the prefixed field name for the given (unprefixed) field name.
+     * 
      * @param fieldName the field name to find
-     * @return the full prefixe field name (e.g. u.lastName) for the given field name (e.g. lastName)
+     * @return the full prefixed field name (e.g. u.lastName) for the given field name (e.g. lastName)
      */
     public String getPrefixedFieldName(String fieldName) {
         checkArgumentNotBlank(fieldName);
