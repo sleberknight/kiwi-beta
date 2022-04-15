@@ -27,18 +27,6 @@ import org.springframework.data.domain.Sort;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
-// TODO Allow caller to define the 'connector', by default it is SQL 'order by'?
-// TODO Overloads that accept a String query and returns a new String? Would add lots of methods...
-// TODO Add "quiet" methods that are no-ops if given any disallowed sort fields?
-//  i.e. don't throw exception, but don't modify query, maybe just log warning
-// TODO Option to NOT have AllowedFields? Do we really want to even allow no security?
-// TODO Add "parameter object with builder" to allow building what you want to sort?
-//  or maybe have the whole thing be a builder, which would allow you to specify
-//  either a StringBuilder or a String for the query, and then the builder would have
-//  to be "smart" and branch such that the terminal method is either void or returns
-//  a String depending on whether the builder received a StringBuilder or String for
-//  the query.
-
 /**
  * Some simple utilities useful to data access code that is building queries,
  * for example structured query languages such as SQL or HQL.
