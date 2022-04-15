@@ -62,8 +62,8 @@ public class DaoHelpers {
             AllowedFields allowedSortFields,
             PagingRequest pagingRequest) {
 
-        checkArgumentNotNull(query, "query must not be null");
-        checkArgumentNotNull(allowedSortFields, "allowedFields must not be null");
+        checkQueryNotNull(query);
+        checkAllowedSortFieldsNotNull(allowedSortFields);
         checkArgumentNotNull(pagingRequest, "pagingRequest must not be null");
 
         var primarySortDirection = toKiwiSortDirectionOrNull(pagingRequest.getPrimaryDirection());
@@ -93,8 +93,8 @@ public class DaoHelpers {
             AllowedFields allowedSortFields,
             KiwiSort sort) {
 
-        checkArgumentNotNull(query, "query must not be null");
-        checkArgumentNotNull(allowedSortFields, "allowedFields must not be null");
+        checkQueryNotNull(query);
+        checkAllowedSortFieldsNotNull(allowedSortFields);
         checkArgumentNotNull(sort, "sort must not be null");
 
         var primarySortDirection = toKiwiSortDirectionOrNull(sort.getDirection());
@@ -156,8 +156,8 @@ public class DaoHelpers {
             @Nullable String secondarySortField,
             @Nullable KiwiSort.Direction secondarySortDirection) {
 
-        checkArgumentNotNull(query, "query must not be null");
-        checkArgumentNotNull(allowedSortFields, "allowedFields must not be null");
+        checkQueryNotNull(query);
+        checkAllowedSortFieldsNotNull(allowedSortFields);
 
         logWarningIfOnlySecondarySort(primarySortField, secondarySortField, secondarySortDirection);
 
@@ -216,8 +216,8 @@ public class DaoHelpers {
             AllowedFields allowedSortFields,
             KiwiSort... sorts) {
 
-        checkArgumentNotNull(query, "query must not be null");
-        checkArgumentNotNull(allowedSortFields, "allowedFields must not be null");
+        checkQueryNotNull(query);
+        checkAllowedSortFieldsNotNull(allowedSortFields);
         checkArgumentNotNull(sorts, "sorts (varargs) must not be null");
 
         if (KiwiArrays.isNullOrEmpty(sorts)) {
@@ -240,8 +240,8 @@ public class DaoHelpers {
             AllowedFields allowedSortFields,
             List<KiwiSort> sorts) {
 
-        checkArgumentNotNull(query, "query must not be null");
-        checkArgumentNotNull(allowedSortFields, "allowedFields must not be null");
+        checkQueryNotNull(query);
+        checkAllowedSortFieldsNotNull(allowedSortFields);
         checkArgumentNotNull(sorts, "sorts must not be null");
 
         if (KiwiLists.isNullOrEmpty(sorts)) {
@@ -285,8 +285,8 @@ public class DaoHelpers {
             String sortField,
             @Nullable KiwiSort.Direction sortDirection) {
 
-        checkArgumentNotNull(query, "query must not be null");
-        checkArgumentNotNull(allowedSortFields, "allowedFields must not be null");
+        checkQueryNotNull(query);
+        checkAllowedSortFieldsNotNull(allowedSortFields);
         checkArgumentNotBlank(connector, "connector must not be blank");
         checkArgumentNotBlank(sortField, "sortField must not be blank");
 
@@ -296,5 +296,13 @@ public class DaoHelpers {
                 .append(allowedSortFields.getPrefixedFieldName(sortField))
                 .append(" ")
                 .append(Optional.ofNullable(sortDirection).orElse(KiwiSort.Direction.ASC));
+    }
+
+    private static void checkQueryNotNull(StringBuilder query) {
+        checkArgumentNotNull(query, "query must not be null");
+    }
+
+    private static void checkAllowedSortFieldsNotNull(AllowedFields allowedSortFields) {
+        checkArgumentNotNull(allowedSortFields, "allowedSortFields must not be null");
     }
 }

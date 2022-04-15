@@ -111,8 +111,18 @@ class DaoHelpersTest {
                     .hasToString(BASE_QUERY);
         }
 
-        // TODO Add test for disallowed secondary field: should throw, should not change
-        // query
+        @Test
+        void shouldNotAddSortForDisallowedSecondaryField() {
+            pagingRequest.setPrimarySort("lastName");
+            pagingRequest.setSecondarySort("someOtherField");
+
+            assertThatThrownBy(() -> DaoHelpers.addSorts(query, allowedSortFields, pagingRequest))
+                    .isInstanceOf(IllegalArgumentException.class);
+
+            assertThat(query)
+                    .describedAs("should not change query if field now allowed")
+                    .hasToString(BASE_QUERY);
+        }
     }
 
     @Nested
