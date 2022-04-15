@@ -80,9 +80,9 @@ public class DaoHelpers {
     private static KiwiSort.Direction toKiwiSortDirectionOrNull(@Nullable Sort.Direction sortDirection) {
         if (isNull(sortDirection)) {
             return null;
+        } else {
+            return sortDirection.isAscending() ? Direction.ASC : Direction.DESC;
         }
-
-        return sortDirection.isAscending() ? Direction.ASC : Direction.DESC;
     }
 
     /**
