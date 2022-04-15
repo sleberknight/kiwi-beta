@@ -91,7 +91,7 @@ public class AllowedFields {
     }
 
     /** 
-     * @param fieldName field name to check
+     /** Returns true if the given field name is allowed, false otherwise.
      * @return true if the given field name is allowed, false otherwise
      */
     public boolean isAllowed(String fieldName) {
