@@ -78,10 +78,12 @@ public class DaoHelpers {
     }
 
     private static KiwiSort.Direction toKiwiSortDirectionOrNull(@Nullable Sort.Direction sortDirection) {
-        if (isNull(sortDirection)) {
-            return null;
-        }
-        
+        return isNull(sortDirection) ? null : toKiwiSortDirection(sortDirection);        
+    }
+
+    private static KiwiSort.Direction toKiwiSortDirection(Sort.Direction sortDirection) {
+        checkArgumentNotNull(sortDirection);
+
         return sortDirection.isAscending() ? Direction.ASC : Direction.DESC;
     }
 
