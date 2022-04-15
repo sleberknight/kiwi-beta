@@ -1,9 +1,12 @@
 package org.kiwiproject.beta.dao;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.stream.Collectors.toUnmodifiableMap;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
+import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,10 +37,30 @@ public class AllowedFields {
      * @param fieldNames the field names to allow
      * @return a new instance
      */
-    public static AllowedFields of(String...fieldNames) {
-        // [prefix.optionally.with.multiple.parts.]fieldName
+    public static AllowedFields of(String... fieldNames) {
+        checkArgumentNotNull(fieldNames, "fieldNames must not be null");
+        
+        return AllowedFields.of(Arrays.asList(fieldNames));
+    }
 
-        var fieldNameToPrefixedNameMap = Arrays.stream(fieldNames)
+    /**
+     * Create a new instance from the collection of field names.
+     * <p>
+     * Permits simple or prefixed field names in the format [prefix.optionally.with.multiple.parts.]fieldName.
+     * If the given name is dot-separated, then the field name is extracted as the part after the last dot, while
+     * the part before the last dot is considered the prefix.
+     * <p>
+     * Examples: firstName, u.firstName, user.firstName, account.user.firstName
+     * 
+     * @param fieldNames the field names to allow
+     * @return a new instance
+     * @see #of(String...)
+     */
+    public static AllowedFields of(Collection<String> fieldNames) {
+        checkArgumentNotNull(fieldNames, "fieldNames must not be null");
+        checkArgument(!fieldNames.isEmpty(), "at least one field name must be specified");
+
+        var fieldNameToPrefixedNameMap = fieldNames.stream()
             .map(PrefixAndFieldName::new)
             .collect(toUnmodifiableMap(
                 prefixAndName -> prefixAndName.fieldName, 
@@ -72,6 +95,7 @@ public class AllowedFields {
      * @return true if the given field name is allowed, false otherwise
      */
     public boolean isAllowed(String fieldName) {
+        checkArgumentNotBlank(fieldName);
         return fieldNames.contains(fieldName);
     }
 
@@ -80,6 +104,7 @@ public class AllowedFields {
      * @return true if the given prefixe field name is allowed, false otherwise
      */
     public boolean isPrefixedAllowed(String prefixedFieldName) {
+        checkArgumentNotBlank(prefixedFieldName);
         return fieldNamesToPrefixedNames.containsValue(prefixedFieldName);
     }
 
@@ -88,6 +113,7 @@ public class AllowedFields {
      * @throws IllegalArgumentException if the given field name is not allowed
      */
     public void assertAllowed(String fieldName) {
+        checkArgumentNotBlank(fieldName);
         if (!isAllowed(fieldName)) {
             throw new IllegalArgumentException(fieldName + " is not allowed");
         }
@@ -98,6 +124,7 @@ public class AllowedFields {
      * @throws IllegalArgumentException if the given prefixed field name is not allowed
      */
     public void assertPrefixedAllowed(String prefixedFieldName) {
+        checkArgumentNotBlank(prefixedFieldName);
         if (!isPrefixedAllowed(prefixedFieldName)) {
             throw new IllegalArgumentException(prefixedFieldName + " is not allowed");
         }
@@ -108,6 +135,7 @@ public class AllowedFields {
      * @return the full prefixe field name (e.g. u.lastName) for the given field name (e.g. lastName)
      */
     public String getPrefixedFieldName(String fieldName) {
+        checkArgumentNotBlank(fieldName);
         return fieldNamesToPrefixedNames.get(fieldName);
     }
 }

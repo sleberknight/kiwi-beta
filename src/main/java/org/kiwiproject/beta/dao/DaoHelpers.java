@@ -8,6 +8,7 @@ import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -191,7 +192,7 @@ public class DaoHelpers {
             @Nullable KiwiSort.Direction secondarySortDirection) {
 
         if (onlyContainsSecondarySort(primarySortField, secondarySortField)) {
-            LOG.warn("PagingRequest has secondary sort ({} {}) but no primary sort. Ignoring.",
+            LOG.warn("A secondary sort ({} {}) was specified without a primary sort. Ignoring.",
                     secondarySortField, secondarySortDirection);
         }
     }
@@ -224,7 +225,31 @@ public class DaoHelpers {
             return;
         }
 
-        var nonNullSorts = Arrays.stream(sorts).filter(Objects::nonNull).collect(toList());
+        addSorts(query, allowedSortFields, Arrays.asList(sorts));
+    }
+
+    /**
+     * Adds sorts to the query restricting by the {@link AllowedFields}
+     * for all the specified sorts.
+     * <p>
+     * This allows for the possibility that there are no sort criteria, in
+     * which case the query is not modified.
+     * 
+     * @implNote Any null values in the {@code sorts} list are filtered out
+     */
+    public static void addSorts(StringBuilder query,
+            AllowedFields allowedSortFields,
+            List<KiwiSort> sorts) {
+
+        checkArgumentNotNull(query, "query must not be null");
+        checkArgumentNotNull(allowedSortFields, "allowedFields must not be null");
+        checkArgumentNotNull(sorts, "sorts must not be null");
+
+        if (KiwiLists.isNullOrEmpty(sorts)) {
+            return;
+        }
+
+        var nonNullSorts = sorts.stream().filter(Objects::nonNull).collect(toList());
 
         // Verify all sorts are valid before proceeeding
         nonNullSorts.stream().forEach(sort -> allowedSortFields.assertAllowed(sort.getProperty()));

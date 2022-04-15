@@ -2,6 +2,10 @@ package org.kiwiproject.beta.dao;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +13,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.kiwiproject.test.junit.jupiter.params.provider.AsciiOnlyBlankStringSource;
 
@@ -17,7 +23,7 @@ import org.kiwiproject.test.junit.jupiter.params.provider.AsciiOnlyBlankStringSo
 class AllowedFieldsTest {
 
     @Nested
-    class FactoryMethod {
+    class FactoryMethods {
 
         @Test
         void shouldHandleSimpleFieldNames(SoftAssertions softly) {
@@ -61,7 +67,7 @@ class AllowedFieldsTest {
 
         @ParameterizedTest
         @AsciiOnlyBlankStringSource
-        void shouldNotWAllowBlankFieldNames(String blankName) {
+        void shouldNotAllowBlankFieldNamesInVarargs(String blankName) {
             assertThatThrownBy(() -> AllowedFields.of("age", "zip", blankName))
                     .isExactlyInstanceOf(IllegalArgumentException.class)
                     .hasMessage("field name must not be blank");
@@ -69,11 +75,62 @@ class AllowedFieldsTest {
 
         @ParameterizedTest
         @ValueSource(strings = { ".", ".firstName", "user.lastName.", ".account.user.email.", "account.user.email." })
-        void shouldNotAllowIllegalFieldNames(String illegalName) {
+        void shouldNotAllowIllegalFieldNamesInVarargs(String illegalName) {
             assertThatThrownBy(() -> AllowedFields.of("age", "zip", illegalName))
                     .isExactlyInstanceOf(IllegalArgumentException.class)
                     .hasMessage(
                             "field name must be simple (firstName) or compound (user.firstName, account.user.firstName; cannot being or end with '.' (dot)");
+        }
+
+        @ParameterizedTest
+        @AsciiOnlyBlankStringSource
+        void shouldNotAllowBlankFieldNamesInCollection(String blankName) {
+            var fieldNames = new HashSet<>(Arrays.asList("age", "zip", blankName));
+            assertThatThrownBy(() -> AllowedFields.of(fieldNames))
+                    .isExactlyInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("field name must not be blank");
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = { ".", ".firstName", "user.lastName.", ".account.user.email.", "account.user.email." })
+        void shouldNotAllowIllegalFieldNamesInCollection(String illegalName) {
+            var fieldNames = new HashSet<>(Arrays.asList("age", "zip", illegalName));
+            assertThatThrownBy(() -> AllowedFields.of(fieldNames))
+                    .isExactlyInstanceOf(IllegalArgumentException.class)
+                    .hasMessage(
+                            "field name must be simple (firstName) or compound (user.firstName, account.user.firstName; cannot being or end with '.' (dot)");
+        }
+
+        @ParameterizedTest
+        @NullSource
+        void shouldNotAllowNullFieldNamesVararg(String[] fieldNames) {
+            assertThatThrownBy(() -> AllowedFields.of(fieldNames))
+                    .isExactlyInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("fieldNames must not be null");
+        }
+        
+        @ParameterizedTest
+        @EmptySource
+        void shouldNotAllowEmptyFieldNamesVararg(String[] fieldNames) {
+            assertThatThrownBy(() -> AllowedFields.of(fieldNames))
+                    .isExactlyInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("at least one field name must be specified");
+        }
+
+        @ParameterizedTest
+        @NullSource
+        void shouldNotAllowNullFieldNamesList(List<String> fieldNames) {
+            assertThatThrownBy(() -> AllowedFields.of(fieldNames))
+                    .isExactlyInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("fieldNames must not be null");
+        }
+
+        @ParameterizedTest
+        @EmptySource
+        void shouldNotAllowEmptyFieldNamesList(List<String> fieldNames) {
+            assertThatThrownBy(() -> AllowedFields.of(fieldNames))
+                    .isExactlyInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("at least one field name must be specified");
         }
     }
 
