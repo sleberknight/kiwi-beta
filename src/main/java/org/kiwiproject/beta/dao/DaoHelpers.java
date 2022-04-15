@@ -162,7 +162,6 @@ public class DaoHelpers {
         logWarningIfOnlySecondarySort(primarySortField, secondarySortField, secondarySortDirection);
 
         // Verify all sorts are valid before proceeeding
-        // TODO add an assertAllowedIfNotBlank to AllowedSortFields
         if (isNotBlank(primarySortField)) {
             allowedSortFields.assertAllowed(primarySortField);
         }
