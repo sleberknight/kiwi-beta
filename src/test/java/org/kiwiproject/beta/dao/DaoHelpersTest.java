@@ -49,8 +49,6 @@ class DaoHelpersTest {
             pagingRequest = new PagingRequest();
         }
 
-        // TODO test the arg checks?
-
         @Test
         void shouldDoNothingWhenNoSortsDefined() {
             DaoHelpers.addSorts(query, allowedSortFields, pagingRequest);
@@ -128,8 +126,6 @@ class DaoHelpersTest {
     @Nested
     class AddSortFromSingleKiwiSort {
 
-        // TODO test the arg checks?
-
         @ParameterizedTest
         @EnumSource(KiwiSort.Direction.class)
         void shouldAddSort(KiwiSort.Direction sortDirection) {
@@ -156,8 +152,6 @@ class DaoHelpersTest {
     @Nested
     class AddSortFromSortFieldAndDirection {
 
-        // TODO test the arg checks?
-
         @ParameterizedTest
         @EnumSource(KiwiSort.Direction.class)
         void shouldAddSort(KiwiSort.Direction sortDirection) {
@@ -179,8 +173,6 @@ class DaoHelpersTest {
 
     @Nested
     class AddSortsFromPrimaryAndSecondaryKiwiSort {
-
-        // TODO test the arg checks?
 
         @Test
         void shouldAddSorts() {
@@ -222,8 +214,6 @@ class DaoHelpersTest {
 
     @Nested
     class AddSortsFromPrimaryAndSecondaryFields {
-
-        // TODO test the arg checks?
 
         @ParameterizedTest
         @EnumSource(KiwiSort.Direction.class)
@@ -302,8 +292,6 @@ class DaoHelpersTest {
 
     @Nested
     class AddSortsFromKiwiSortVarags {
-
-        // TODO test the arg checks?
 
         @ParameterizedTest
         @EnumSource(KiwiSort.Direction.class)
