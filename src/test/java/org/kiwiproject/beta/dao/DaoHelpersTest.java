@@ -6,9 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.kiwiproject.base.KiwiStrings.f;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,6 +21,9 @@ import org.kiwiproject.spring.data.KiwiSort;
 import org.kiwiproject.spring.data.PagingRequest;
 import org.kiwiproject.test.junit.jupiter.params.provider.AsciiOnlyBlankStringSource;
 import org.springframework.data.domain.Sort;
+
+import java.util.Arrays;
+import java.util.List;
 
 @DisplayName("DaoHelpers")
 class DaoHelpersTest {
@@ -291,7 +291,7 @@ class DaoHelpersTest {
     }
 
     @Nested
-    class AddSortsFromKiwiSortVarags {
+    class AddSortsFromKiwiSortVarargs {
 
         @ParameterizedTest
         @EnumSource(KiwiSort.Direction.class)

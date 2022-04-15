@@ -2,10 +2,6 @@ package org.kiwiproject.beta.dao;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.api.junit.jupiter.SoftAssertionsExtension;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +13,10 @@ import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.kiwiproject.test.junit.jupiter.params.provider.AsciiOnlyBlankStringSource;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @DisplayName("AllowedFields")
 @ExtendWith(SoftAssertionsExtension.class)

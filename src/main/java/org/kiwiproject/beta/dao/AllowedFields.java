@@ -5,15 +5,14 @@ import static java.util.stream.Collectors.toUnmodifiableMap;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
+import com.google.common.annotations.Beta;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-
-import com.google.common.annotations.Beta;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 
 /**
  * Extremely simply way to whitelist fields, e.g. from a web form.
@@ -103,9 +102,9 @@ public class AllowedFields {
 
     /**
      * Checks whether the prefixed field name is allowed.
-     * 
+     *
      * @param prefixedFieldName the prefixed field name
-     * @return true if the given prefixe field name is allowed, false otherwise
+     * @return true if the given prefixed field name is allowed, false otherwise
      */
     public boolean isPrefixedAllowed(String prefixedFieldName) {
         checkArgumentNotBlank(prefixedFieldName);

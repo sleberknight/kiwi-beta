@@ -7,16 +7,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import com.google.common.annotations.Beta;
-
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.kiwiproject.collect.KiwiArrays;
 import org.kiwiproject.collect.KiwiLists;
 import org.kiwiproject.spring.data.KiwiSort;
@@ -24,8 +17,12 @@ import org.kiwiproject.spring.data.KiwiSort.Direction;
 import org.kiwiproject.spring.data.PagingRequest;
 import org.springframework.data.domain.Sort;
 
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Some simple utilities useful to data access code that is building queries,
@@ -64,7 +61,7 @@ public class DaoHelpers {
 
         final String value;
 
-        private Connector(String value) {
+        Connector(String value) {
             this.value = value;
         }
     }
@@ -267,8 +264,8 @@ public class DaoHelpers {
 
         var nonNullSorts = sorts.stream().filter(Objects::nonNull).collect(toList());
 
-        // Verify all sorts are valid before proceeeding
-        nonNullSorts.stream().forEach(sort -> allowedSortFields.assertAllowed(sort.getProperty()));
+        // Verify all sorts are valid before proceeding
+        nonNullSorts.forEach(sort -> allowedSortFields.assertAllowed(sort.getProperty()));
 
         var firstSort = KiwiLists.first(nonNullSorts);
         addSort(query,
