@@ -1,5 +1,6 @@
 package org.kiwiproject.beta.dao;
 
+import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -90,7 +91,7 @@ public class DaoHelpers {
     }
 
     private static KiwiSort.Direction toKiwiSortDirectionOrNull(@Nullable Sort.Direction sortDirection) {
-        return isNull(sortDirection) ? null : toKiwiSortDirection(sortDirection);        
+        return isNull(sortDirection) ? null : toKiwiSortDirection(sortDirection);
     }
 
     private static KiwiSort.Direction toKiwiSortDirection(Sort.Direction sortDirection) {
@@ -111,7 +112,7 @@ public class DaoHelpers {
         checkAllowedSortFieldsNotNull(allowedSortFields);
         checkArgumentNotNull(sort, "sort must not be null");
 
-        var primarySortDirection = toKiwiSortDirectionOrNull(sort.getDirection());
+        var primarySortDirection = toKiwiSortDirection(sort);
 
         addSort(query, allowedSortFields, sort.getProperty(), primarySortDirection);
     }
@@ -140,8 +141,8 @@ public class DaoHelpers {
         checkArgumentNotNull(primarySort, "primarySort must not be null");
         checkArgumentNotNull(secondarySort, "secondarySort must not be null");
 
-        var primarySortDirection = toKiwiSortDirectionOrNull(primarySort.getDirection());
-        var secondarySortDirection = toKiwiSortDirectionOrNull(secondarySort.getDirection());
+        var primarySortDirection = toKiwiSortDirection(primarySort);
+        var secondarySortDirection = toKiwiSortDirection(secondarySort);
 
         addSorts(query,
                 allowedSortFields,
@@ -272,22 +273,28 @@ public class DaoHelpers {
                 allowedSortFields,
                 Connector.ORDER_BY,
                 firstSort.getProperty(),
-                toKiwiSortDirectionOrNull(firstSort.getDirection()));
+                toKiwiSortDirection(firstSort));
 
         var remainingSorts = KiwiLists.subListExcludingFirst(nonNullSorts);
         remainingSorts.forEach(sort -> addSort(query,
                 allowedSortFields,
                 Connector.SORT_FIELD_SEPARATOR,
                 sort.getProperty(),
-                toKiwiSortDirectionOrNull(sort.getDirection())));
+                toKiwiSortDirection(sort)));
     }
 
-    private static KiwiSort.Direction toKiwiSortDirectionOrNull(String sortDirection) {
-        if (isBlank(sortDirection)) {
-            return null;
-        }
+    /**
+     * @implNote Eventually KiwiSort should have a method to directly obtain the Direction object.
+     * See the proposed KiwiSort feature <a href="https://github.com/kiwiproject/kiwi/discussions/707">here</a>.
+     * For now, we need to convert it manually from a String, and KiwiSort should never have a
+     * null/blank value returned by getDirection() thus the state check below. Also, the value
+     * returned from getDirection() should always be uppercase but be conservative and ensure it is.
+     */
+    private static KiwiSort.Direction toKiwiSortDirection(KiwiSort sort) {
+        checkArgumentNotNull(sort);
+        checkState(isNotBlank(sort.getDirection()), "KiwiSort has a blank direction");
 
-        return KiwiSort.Direction.valueOf(sortDirection.toUpperCase(Locale.US));
+        return KiwiSort.Direction.valueOf(sort.getDirection().toUpperCase(Locale.US));
     }
 
     private static void addSort(StringBuilder query,
