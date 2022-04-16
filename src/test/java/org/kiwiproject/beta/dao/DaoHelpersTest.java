@@ -265,7 +265,7 @@ class DaoHelpersTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = { "salary", "ssn" })
+        @ValueSource(strings = {"salary", "ssn"})
         void shouldNotAddSortForDisallowedPrimarySortField(String primarySortField) {
             assertThatThrownBy(() -> DaoHelpers.addSorts(query, allowedSortFields,
                     primarySortField, KiwiSort.Direction.DESC,
@@ -278,7 +278,7 @@ class DaoHelpersTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = { "salary", "nickname" })
+        @ValueSource(strings = {"salary", "nickname"})
         void shouldNotAddSortForDisallowedSecondarySortField(String secondarySortField) {
             assertThatThrownBy(() -> DaoHelpers.addSorts(query, allowedSortFields,
                     "lastName", KiwiSort.Direction.DESC,

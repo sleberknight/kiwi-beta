@@ -39,7 +39,7 @@ public class DaoHelpers {
 
     /**
      * Defines/restricts the values that can be used when generating the ordering clause.
-     * 
+     *
      * @implNote Currently this is very restrictive and will only work in certain languages
      * such as SQL or HQL.
      */
@@ -49,12 +49,12 @@ public class DaoHelpers {
          * Separates the "base" query from the order clause.
          */
         ORDER_BY(" order by "),
-        
+
         /**
          * Separator to use between fields when there is more than one sort field.
          */
         SORT_FIELD_SEPARATOR(", "),
-        
+
         /**
          * Separator to use between the sort field and sort direction.
          */
@@ -72,8 +72,8 @@ public class DaoHelpers {
      * {@link PagingRequest}.
      */
     public static void addSorts(StringBuilder query,
-            AllowedFields allowedSortFields,
-            PagingRequest pagingRequest) {
+                                AllowedFields allowedSortFields,
+                                PagingRequest pagingRequest) {
 
         checkQueryNotNull(query);
         checkAllowedSortFieldsNotNull(allowedSortFields);
@@ -105,8 +105,8 @@ public class DaoHelpers {
      * {@link KiwiSort}.
      */
     public static void addSort(StringBuilder query,
-            AllowedFields allowedSortFields,
-            KiwiSort sort) {
+                               AllowedFields allowedSortFields,
+                               KiwiSort sort) {
 
         checkQueryNotNull(query);
         checkAllowedSortFieldsNotNull(allowedSortFields);
@@ -122,9 +122,9 @@ public class DaoHelpers {
      * for the sort field and direction.
      */
     public static void addSort(StringBuilder query,
-            AllowedFields allowedSortFields,
-            String sortField,
-            @Nullable KiwiSort.Direction sortDirection) {
+                               AllowedFields allowedSortFields,
+                               String sortField,
+                               @Nullable KiwiSort.Direction sortDirection) {
 
         addSorts(query, allowedSortFields, sortField, sortDirection, null, null);
     }
@@ -134,9 +134,9 @@ public class DaoHelpers {
      * for the primary and secondary sort criteria.
      */
     public static void addSorts(StringBuilder query,
-            AllowedFields allowedSortFields,
-            KiwiSort primarySort,
-            KiwiSort secondarySort) {
+                                AllowedFields allowedSortFields,
+                                KiwiSort primarySort,
+                                KiwiSort secondarySort) {
 
         checkArgumentNotNull(primarySort, "primarySort must not be null");
         checkArgumentNotNull(secondarySort, "secondarySort must not be null");
@@ -158,10 +158,10 @@ public class DaoHelpers {
      * <p>
      * This allows for the possibility that there are no sort criteria, in
      * which case the query is not modified.
-     * 
+     *
      * @implNote If a secondary sort is specified but not a primary sort, then
-     *           a warning is logged, the secondary sort is ignored, and therefore
-     *           the query is not modified.
+     * a warning is logged, the secondary sort is ignored, and therefore
+     * the query is not modified.
      */
     public static void addSorts(
             StringBuilder query,
@@ -202,8 +202,8 @@ public class DaoHelpers {
     }
 
     private static void logWarningIfOnlySecondarySort(String primarySortField,
-            String secondarySortField,
-            @Nullable KiwiSort.Direction secondarySortDirection) {
+                                                      String secondarySortField,
+                                                      @Nullable KiwiSort.Direction secondarySortDirection) {
 
         if (onlyContainsSecondarySort(primarySortField, secondarySortField)) {
             LOG.warn("A secondary sort ({} {}) was specified without a primary sort. Ignoring.",
@@ -224,12 +224,12 @@ public class DaoHelpers {
      * <p>
      * This allows for the possibility that there are no sort criteria, in
      * which case the query is not modified.
-     * 
+     *
      * @implNote Any null values in the {@code sorts} array are filtered out
      */
     public static void addSorts(StringBuilder query,
-            AllowedFields allowedSortFields,
-            KiwiSort... sorts) {
+                                AllowedFields allowedSortFields,
+                                KiwiSort... sorts) {
 
         checkQueryNotNull(query);
         checkAllowedSortFieldsNotNull(allowedSortFields);
@@ -248,12 +248,12 @@ public class DaoHelpers {
      * <p>
      * This allows for the possibility that there are no sort criteria, in
      * which case the query is not modified.
-     * 
+     *
      * @implNote Any null values in the {@code sorts} list are filtered out
      */
     public static void addSorts(StringBuilder query,
-            AllowedFields allowedSortFields,
-            List<KiwiSort> sorts) {
+                                AllowedFields allowedSortFields,
+                                List<KiwiSort> sorts) {
 
         checkQueryNotNull(query);
         checkAllowedSortFieldsNotNull(allowedSortFields);
@@ -298,10 +298,10 @@ public class DaoHelpers {
     }
 
     private static void addSort(StringBuilder query,
-            AllowedFields allowedSortFields,
-            Connector connector,
-            String sortField,
-            @Nullable KiwiSort.Direction sortDirection) {
+                                AllowedFields allowedSortFields,
+                                Connector connector,
+                                String sortField,
+                                @Nullable KiwiSort.Direction sortDirection) {
 
         checkQueryNotNull(query);
         checkAllowedSortFieldsNotNull(allowedSortFields);
