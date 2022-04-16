@@ -74,7 +74,7 @@ class AllowedFieldsTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = { ".", ".firstName", "user.lastName.", ".account.user.email.", "account.user.email." })
+        @ValueSource(strings = {".", ".firstName", "user.lastName.", ".account.user.email.", "account.user.email."})
         void shouldNotAllowIllegalFieldNamesInVarargs(String illegalName) {
             assertThatThrownBy(() -> AllowedFields.of("age", "zip", illegalName))
                     .isExactlyInstanceOf(IllegalArgumentException.class)
@@ -92,7 +92,7 @@ class AllowedFieldsTest {
         }
 
         @ParameterizedTest
-        @ValueSource(strings = { ".", ".firstName", "user.lastName.", ".account.user.email.", "account.user.email." })
+        @ValueSource(strings = {".", ".firstName", "user.lastName.", ".account.user.email.", "account.user.email."})
         void shouldNotAllowIllegalFieldNamesInCollection(String illegalName) {
             var fieldNames = new HashSet<>(Arrays.asList("age", "zip", illegalName));
             assertThatThrownBy(() -> AllowedFields.of(fieldNames))
@@ -108,7 +108,7 @@ class AllowedFieldsTest {
                     .isExactlyInstanceOf(IllegalArgumentException.class)
                     .hasMessage("fieldNames must not be null");
         }
-        
+
         @ParameterizedTest
         @EmptySource
         void shouldNotAllowEmptyFieldNamesVararg(String[] fieldNames) {

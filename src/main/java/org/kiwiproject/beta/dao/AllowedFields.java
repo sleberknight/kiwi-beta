@@ -20,7 +20,7 @@ import java.util.Set;
 @Beta
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AllowedFields {
-    
+
     private final Set<String> fieldNames;
     private final Map<String, String> fieldNamesToPrefixedNames;
 
@@ -32,13 +32,13 @@ public class AllowedFields {
      * the part before the last dot is considered the prefix.
      * <p>
      * Examples: firstName, u.firstName, user.firstName, account.user.firstName
-     * 
+     *
      * @param fieldNames the field names to allow
      * @return a new instance
      */
     public static AllowedFields of(String... fieldNames) {
         checkArgumentNotNull(fieldNames, "fieldNames must not be null");
-        
+
         return AllowedFields.of(Arrays.asList(fieldNames));
     }
 
@@ -50,7 +50,7 @@ public class AllowedFields {
      * the part before the last dot is considered the prefix.
      * <p>
      * Examples: firstName, u.firstName, user.firstName, account.user.firstName
-     * 
+     *
      * @param fieldNames the field names to allow
      * @return a new instance
      * @see #of(String...)
@@ -60,10 +60,10 @@ public class AllowedFields {
         checkArgument(!fieldNames.isEmpty(), "at least one field name must be specified");
 
         var fieldNameToPrefixedNameMap = fieldNames.stream()
-            .map(PrefixAndFieldName::new)
-            .collect(toUnmodifiableMap(
-                prefixAndName -> prefixAndName.fieldName, 
-                prefixAndName -> prefixAndName.prefixedFieldName));
+                .map(PrefixAndFieldName::new)
+                .collect(toUnmodifiableMap(
+                        prefixAndName -> prefixAndName.fieldName,
+                        prefixAndName -> prefixAndName.prefixedFieldName));
 
         return new AllowedFields(Set.copyOf(fieldNameToPrefixedNameMap.keySet()), fieldNameToPrefixedNameMap);
     }
@@ -89,9 +89,9 @@ public class AllowedFields {
         }
     }
 
-    /** 
+    /**
      * Checks whether the field name is allowed
-     * 
+     *
      * @param fieldName the field name
      * @return true if the given field name is allowed, false otherwise
      */
@@ -113,7 +113,7 @@ public class AllowedFields {
 
     /**
      * Checks that the field name is an allowed field.
-     * 
+     *
      * @param fieldName the field name to check
      * @throws IllegalArgumentException if the given field name is not allowed
      */
@@ -126,7 +126,7 @@ public class AllowedFields {
 
     /**
      * Checks that the prefixed field name is allowed.
-     * 
+     *
      * @param prefixedFieldName the prefixed field name to check
      * @throws IllegalArgumentException if the given prefixed field name is not allowed
      */
@@ -139,7 +139,7 @@ public class AllowedFields {
 
     /**
      * Find the prefixed field name for the given (unprefixed) field name.
-     * 
+     *
      * @param fieldName the field name to find
      * @return the full prefixed field name (e.g. u.lastName) for the given field name (e.g. lastName)
      */
