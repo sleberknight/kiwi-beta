@@ -66,6 +66,16 @@ class DaoHelpersTest {
         }
 
         @Test
+        void shouldAddPrimarySortAscending() {
+            pagingRequest.setPrimarySort("lastName");
+            pagingRequest.setPrimaryDirection(Sort.Direction.ASC);
+
+            DaoHelpers.addSorts(query, allowedSortFields, pagingRequest);
+
+            assertThat(query).hasToString(BASE_QUERY + " order by lastName ASC");
+        }
+
+        @Test
         void shouldAddPrimarySortDescending() {
             pagingRequest.setPrimarySort("lastName");
             pagingRequest.setPrimaryDirection(Sort.Direction.DESC);
