@@ -51,7 +51,7 @@
         <!-- Versions for optional dependencies -->
 
         <!-- Versions for test dependencies -->
-        <kiwi-test.version>1.1.5</kiwi-test.version>
+        <kiwi-test.version>2.0.0</kiwi-test.version>
         <mockito-kotlin.version>4.0.0</mockito-kotlin.version>
 
         <!--  Sonar properties -->
