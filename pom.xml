@@ -40,7 +40,7 @@
         <camel.version>3.16.0</camel.version>
         <dropwizard.version>2.0.29</dropwizard.version>
         <kiwi.version>2.0.0</kiwi.version>
-        <metrics-healthchecks-severity.version>1.0.5</metrics-healthchecks-severity.version>
+        <metrics-healthchecks-severity.version>1.0.6</metrics-healthchecks-severity.version>
 
         <!--
             TODO: Using the latest even though kiwi (currently) uses an earlier version (until we release 2.0.0)
