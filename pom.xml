@@ -41,8 +41,7 @@
         <metrics-healthchecks-severity.version>1.0.6</metrics-healthchecks-severity.version>
 
         <!--
-            TODO: Using the latest even though kiwi (currently) uses an earlier version (until we release 2.0.0)
-             But for some reason, maven enforcer isn't complaining...
+            TODO: Remove this once update to kiwi-bom 0.9.1
         -->
         <spring-data-commons.version>2.6.4</spring-data-commons.version>
 
