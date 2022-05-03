@@ -41,7 +41,7 @@
         <metrics-healthchecks-severity.version>1.0.6</metrics-healthchecks-severity.version>
 
         <!--
-            TODO: Remove this once update to kiwi-bom 0.9.1
+            TODO: Remove this once update to kiwi-bom 0.10.0
         -->
         <spring-data-commons.version>2.6.4</spring-data-commons.version>
 
