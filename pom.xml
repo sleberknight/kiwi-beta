@@ -43,7 +43,7 @@
         <!--
             TODO: Remove this once update to kiwi-bom 0.10.0
         -->
-        <spring-data-commons.version>2.6.4</spring-data-commons.version>
+        <spring-data-commons.version>2.7.0</spring-data-commons.version>
 
         <!-- Versions for optional dependencies -->
 
