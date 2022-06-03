@@ -3,14 +3,13 @@ package org.kiwiproject.beta.net;
 import static java.util.stream.Collectors.toSet;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
 import com.google.common.annotations.Beta;
 
-import org.kiwiproject.net.UncheckedMalformedURLException;
+import org.kiwiproject.net.KiwiUrls;
 
 import lombok.experimental.UtilityClass;
 
@@ -39,10 +38,7 @@ public class KiwiUrls2 {
      */
     public static URL hostOnlyUrlFrom(URL url) {
         checkArgumentNotNull(url, "url must not be null");
-        try {
-            return new URL(url.getProtocol() + "://" + url.getAuthority());
-        } catch (MalformedURLException e) {
-            throw new UncheckedMalformedURLException(e);
-        }
+        var urlSpec = url.getProtocol() + "://" + url.getAuthority();
+        return KiwiUrls.createUrlObject(urlSpec);
     }
 }
