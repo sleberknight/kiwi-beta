@@ -24,7 +24,9 @@ import lombok.experimental.UtilityClass;
 public class KiwiUrls2 {
 
     /**
-     * Given a collection of URIs, return a set containing URIs with only the host[:port].
+     * Given a collection of URLs, return a set containing URLs with only the host[:port].
+     *
+     * TODO Would this be better named as 'uniqueAuthorityOnlyUrls' or similar?
      */
     public static Set<URL> uniqueHostOnlyUrls(Collection<URL> urls) {
         checkArgumentNotNull(urls, "urls must not be null");
