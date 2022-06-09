@@ -40,11 +40,6 @@
         <kiwi.version>2.0.0</kiwi.version>
         <metrics-healthchecks-severity.version>1.0.6</metrics-healthchecks-severity.version>
 
-        <!--
-            TODO: Remove this once update to kiwi-bom 0.10.0
-        -->
-        <spring-data-commons.version>2.7.0</spring-data-commons.version>
-
         <!-- Versions for optional dependencies -->
 
         <!-- Versions for test dependencies -->
@@ -126,35 +121,16 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
-            <version>${kotlin.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                    <artifactId>kotlin-stdlib</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                    <artifactId>kotlin-stdlib-common</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>${kotlin.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                    <artifactId>kotlin-stdlib-common</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-common</artifactId>
-            <version>${kotlin.version}</version>
         </dependency>
 
         <dependency>
@@ -184,7 +160,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
-            <version>${spring-data-commons.version}</version>
         </dependency>
 
         <!-- optional dependencies -->
@@ -215,12 +190,6 @@
             <artifactId>kotlin-test-junit5</artifactId>
             <version>${kotlin.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                    <artifactId>kotlin-stdlib</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
