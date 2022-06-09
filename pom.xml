@@ -28,7 +28,7 @@
     </scm>
 
     <properties>
-        <kiwi-bom.version>0.9.1</kiwi-bom.version>
+        <kiwi-bom.version>0.10.0</kiwi-bom.version>
 
         <!-- Kotlin properties -->
         <kotlin.version>1.6.21</kotlin.version>
