@@ -4,6 +4,7 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 import static org.kiwiproject.base.KiwiStrings.f;
 
+import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +23,7 @@ import java.util.jar.Manifest;
  * @see Manifest
  */
 @UtilityClass
+@Beta
 @Slf4j
 public class JarManifests {
 
