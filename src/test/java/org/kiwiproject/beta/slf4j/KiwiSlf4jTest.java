@@ -7,6 +7,7 @@ import static org.kiwiproject.collect.KiwiLists.first;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
 import org.junitpioneer.jupiter.cartesian.CartesianTest.Enum;
 import org.kiwiproject.beta.test.logback.InMemoryAppender;
@@ -98,6 +99,20 @@ class KiwiSlf4jTest {
         var expectedMessage = "a message with varargs: 42, foo, bar, and 84.0";
 
         assertLoggingEvent(loggerLevel, logAtLevel, expectedMessage);
+    }
+
+    @Test
+    void shouldLogMessageWithVariableArgumentsAndThrowable() {
+        var level = Level.WARN;
+        var logger = getLoggerAtLevel(level);
+        var ex = new IOException("i/o failure");
+
+        KiwiSlf4j.log(logger, level, "a message with several args and a Throwable: {}, {}, {}, and {}",
+                "foo", 42, "bar", 84.0, ex);
+
+        var expectedMessage = "a message with several args and a Throwable: foo, 42, bar, and 84.0";
+
+        assertLoggingEvent(level, level, expectedMessage, ex);
     }
 
     @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
