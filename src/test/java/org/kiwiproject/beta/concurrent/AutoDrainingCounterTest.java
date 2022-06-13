@@ -4,6 +4,7 @@ import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.awaitility.Awaitility.await;
+import static org.awaitility.Durations.ONE_HUNDRED_MILLISECONDS;
 import static org.awaitility.Durations.TWO_HUNDRED_MILLISECONDS;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 @DisplayName("AutoDrainingCounter")
 @Slf4j
@@ -183,6 +185,55 @@ class AutoDrainingCounterTest {
                 .until(() -> totalCount.get() == expectedValue);
     }
 
-    // TODO: draining tests...
+    @Test
+    void shouldDrain() {
+        var drainPeriod = Duration.ofMillis(30);
+        counter = new AutoDrainingCounter(drainPeriod);
 
+        incrementCounter(5);
+
+        counter.start();
+
+        waitUntilDrained();
+
+        incrementCounter(2);
+
+        waitUntilDrained();
+
+        incrementCounter(4);
+
+        waitUntilDrained();
+    }
+
+    @Test
+    void shouldDrain_AndTriggerCallback() {
+        var drainPeriod = Duration.ofMillis(30);
+        var drainCount = new AtomicInteger();
+
+        counter = new AutoDrainingCounter(drainPeriod, drainCount::addAndGet);
+        incrementCounter(3);
+
+        counter.start();
+
+        waitUntilDrained();
+        assertThat(drainCount).hasValue(3);
+
+        incrementCounter(2);
+        waitUntilDrained();
+        assertThat(drainCount).hasValue(5);
+
+        incrementCounter(4);
+        waitUntilDrained();
+        assertThat(drainCount).hasValue(9);
+    }
+
+    private void incrementCounter(int times) {
+        IntStream.range(0, times).forEach(i -> counter.incrementAndGet());
+    }
+
+    private void waitUntilDrained() {
+        await().pollInterval(TWENTY_FIVE_MILLISECONDS)
+                .atMost(ONE_HUNDRED_MILLISECONDS)
+                .until(() -> counter.get() == 0);
+    }
 }
