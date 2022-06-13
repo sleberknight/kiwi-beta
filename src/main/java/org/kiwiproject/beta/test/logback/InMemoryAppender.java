@@ -9,6 +9,7 @@ import ch.qos.logback.core.AppenderBase;
 import com.google.common.annotations.Beta;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,6 +52,16 @@ public class InMemoryAppender extends AppenderBase<ILoggingEvent> {
     public synchronized void clearEvents() {
         messageOrder.set(0);
         eventMap.clear();
+    }
+
+    /**
+     * Return a copy of the internal event map. The keys are the message order starting at one, and the values
+     * are the corresponding logging events.
+     *
+     * @return an unmodifiable copy of the event map
+     */
+    public Map<Integer, ILoggingEvent> getEventMap() {
+        return Map.copyOf(eventMap);
     }
 
     public List<ILoggingEvent> getOrderedEvents() {
