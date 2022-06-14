@@ -12,7 +12,7 @@ import org.apache.camel.Route;
 /**
  * Provides a Dropwizard {@link Managed} to start and stop a
  * {@link CamelContext} as your application is started and
- * stooped, respectively.
+ * stopped, respectively.
  */
 @Beta
 @Slf4j
