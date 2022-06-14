@@ -34,12 +34,12 @@ class KiwiUrls2Test {
         @Test
         void shouldReturnUniqueHosts() {
             var urls = Stream.of(
-                    "https://dev-jump-proxy-1.acme.com/proxy/registry1/eureka",
-                    "https://dev-jump-proxy-1.acme.com/proxy/registry2/eureka",
-                    "https://dev-jump-proxy-2.acme.com/proxy/registry1/eureka",
-                    "https://dev-jump-proxy-2.acme.com/proxy/registry2/eureka",
-                    "https://dev-jump-proxy-1.acme.com/proxy/discovery",
-                    "https://dev-jump-proxy-2.acme.com/proxy/discovery")
+                            "https://dev-jump-proxy-1.acme.com/proxy/registry1/eureka",
+                            "https://dev-jump-proxy-1.acme.com/proxy/registry2/eureka",
+                            "https://dev-jump-proxy-2.acme.com/proxy/registry1/eureka",
+                            "https://dev-jump-proxy-2.acme.com/proxy/registry2/eureka",
+                            "https://dev-jump-proxy-1.acme.com/proxy/discovery",
+                            "https://dev-jump-proxy-2.acme.com/proxy/discovery")
                     .map(KiwiUrls::createUrlObject)
                     .collect(toList());
 
@@ -48,20 +48,20 @@ class KiwiUrls2Test {
             assertThat(uniqueHostOnlyUrls)
                     .extracting(URL::toString)
                     .containsExactlyInAnyOrder(
-                        "https://dev-jump-proxy-1.acme.com",
-                        "https://dev-jump-proxy-2.acme.com"
+                            "https://dev-jump-proxy-1.acme.com",
+                            "https://dev-jump-proxy-2.acme.com"
                     );
         }
 
         @Test
         void shouldReturnUniqueHosts_AndRetainPort() {
             var urls = Stream.of(
-                    "https://dev-jump-proxy-1.acme.com:7443/proxy/registry1/eureka",
-                    "https://dev-jump-proxy-1.acme.com:7443/proxy/registry2/eureka",
-                    "https://dev-jump-proxy-2.acme.com:7443/proxy/registry1/eureka",
-                    "https://dev-jump-proxy-2.acme.com:7443/proxy/registry2/eureka",
-                    "https://dev-jump-proxy-1.acme.com:7443/proxy/discovery",
-                    "https://dev-jump-proxy-2.acme.com:7443/proxy/discovery")
+                            "https://dev-jump-proxy-1.acme.com:7443/proxy/registry1/eureka",
+                            "https://dev-jump-proxy-1.acme.com:7443/proxy/registry2/eureka",
+                            "https://dev-jump-proxy-2.acme.com:7443/proxy/registry1/eureka",
+                            "https://dev-jump-proxy-2.acme.com:7443/proxy/registry2/eureka",
+                            "https://dev-jump-proxy-1.acme.com:7443/proxy/discovery",
+                            "https://dev-jump-proxy-2.acme.com:7443/proxy/discovery")
                     .map(KiwiUrls::createUrlObject)
                     .collect(toList());
 
@@ -70,8 +70,8 @@ class KiwiUrls2Test {
             assertThat(uniqueHostOnlyUrls)
                     .extracting(URL::toString)
                     .containsExactlyInAnyOrder(
-                        "https://dev-jump-proxy-1.acme.com:7443",
-                        "https://dev-jump-proxy-2.acme.com:7443"
+                            "https://dev-jump-proxy-1.acme.com:7443",
+                            "https://dev-jump-proxy-2.acme.com:7443"
                     );
         }
     }

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 @DisplayName("ManagedCamelContext")
 class ManagedCamelContextTest {
-    
+
     private ManagedCamelContext managedCamelContext;
     private CamelContext camelContext;
 
