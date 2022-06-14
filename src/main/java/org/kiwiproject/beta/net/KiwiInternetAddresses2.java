@@ -1,16 +1,15 @@
 package org.kiwiproject.beta.net;
 
-import lombok.Value;
-import lombok.experimental.UtilityClass;
-
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
+
+import com.google.common.annotations.Beta;
+import lombok.Value;
+import lombok.experimental.UtilityClass;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.function.Supplier;
-
-import com.google.common.annotations.Beta;
 
 /**
  * Utilities related to internet addresses.
@@ -56,7 +55,7 @@ public class KiwiInternetAddresses2 {
                 return SimpleAddressHolder.of(hostname, ip);
             } catch (UnknownHostException e) {
                 throw new IllegalStateException(
-                    "Received an unexpected unknown host exception trying to get local host", e);
+                        "Received an unexpected unknown host exception trying to get local host", e);
             }
         }
 
