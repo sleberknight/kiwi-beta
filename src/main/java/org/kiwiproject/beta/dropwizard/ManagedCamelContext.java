@@ -17,7 +17,7 @@ import org.apache.camel.Route;
 @Beta
 @Slf4j
 public class ManagedCamelContext implements Managed {
-    
+
     private final CamelContext camelContext;
 
     public ManagedCamelContext(CamelContext camelContext) {
@@ -30,8 +30,8 @@ public class ManagedCamelContext implements Managed {
         camelContext.start();
 
         LOG.info("Started Camel context has {} routes. Route IDs: {}",
-            lazy(() -> camelContext.getRoutes().size()),
-            lazy(() -> camelContext.getRoutes().stream().map(Route::getId).collect(toList())));
+                lazy(() -> camelContext.getRoutes().size()),
+                lazy(() -> camelContext.getRoutes().stream().map(Route::getId).collect(toList())));
     }
 
     @Override

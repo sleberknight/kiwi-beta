@@ -250,7 +250,7 @@ class ProcessOutputHandlerTest {
     private static void shutdownExecutorAndAwaitTermination(ExecutorService executor) throws InterruptedException {
         executor.shutdown();
 
-        //noinspection ResultOfMethodCallIgnored
+        // noinspection ResultOfMethodCallIgnored
         executor.awaitTermination(5, TimeUnit.SECONDS);
     }
 }
