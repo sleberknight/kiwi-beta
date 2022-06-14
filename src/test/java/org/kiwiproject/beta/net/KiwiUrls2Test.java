@@ -4,16 +4,16 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-import java.net.URL;
-import java.util.List;
-import java.util.stream.Stream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.kiwiproject.net.KiwiUrls;
+
+import java.net.URL;
+import java.util.List;
+import java.util.stream.Stream;
 
 @DisplayName("KiwiUrls2")
 class KiwiUrls2Test {

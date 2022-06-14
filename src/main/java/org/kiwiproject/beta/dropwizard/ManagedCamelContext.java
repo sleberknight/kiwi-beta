@@ -4,12 +4,10 @@ import static java.util.stream.Collectors.toList;
 import static org.kiwiproject.logging.LazyLogParameterSupplier.lazy;
 
 import com.google.common.annotations.Beta;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Route;
-
 import io.dropwizard.lifecycle.Managed;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Route;
 
 /**
  * Provides a Dropwizard {@link Managed} to start and stop a
