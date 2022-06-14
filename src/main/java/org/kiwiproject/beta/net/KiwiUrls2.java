@@ -3,15 +3,13 @@ package org.kiwiproject.beta.net;
 import static java.util.stream.Collectors.toSet;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
+import com.google.common.annotations.Beta;
+import lombok.experimental.UtilityClass;
+import org.kiwiproject.net.KiwiUrls;
+
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
-
-import com.google.common.annotations.Beta;
-
-import org.kiwiproject.net.KiwiUrls;
-
-import lombok.experimental.UtilityClass;
 
 /**
  * Utilities related to URLs.
