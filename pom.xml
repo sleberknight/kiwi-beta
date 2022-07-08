@@ -38,7 +38,7 @@
 
         <camel.version>3.18.0</camel.version>
         <kiwi.version>2.1.0</kiwi.version>
-        <metrics-healthchecks-severity.version>1.0.6</metrics-healthchecks-severity.version>
+        <metrics-healthchecks-severity.version>1.0.7</metrics-healthchecks-severity.version>
 
         <!-- Versions for optional dependencies -->
 
