@@ -9,6 +9,8 @@ import static org.mockito.Mockito.mock;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 import org.kiwiproject.test.junit.jupiter.ClearBoxTest;
 
 import java.net.URI;
@@ -98,8 +100,15 @@ class JarManifestsTest {
             assertThat(manifestOptional).isEmpty();
         }
 
-        @ClearBoxTest
-            // mocks the SecurityManager
+        // This test is causing stack overflows in specic situations, such as when GitHub actions
+        // runs the tests in JDK 11 (but not 17). Or, when running only the JarManifestsTest on the
+        // command line, i.e. 'mvn test -Dtest=JarManifestsTest*' using JDK 11 (but not 17). Since
+        // we're only running GitHub actions on JDK 11 and 17, specifically disable only on 11. For
+        // some strange reason, running all the tests (mvn test) works on JDK 11 (and 17). Of course,
+        // JDK 17 deprecates the SecurityManager for removal, so perhaps this test should be removed.
+        @DisabledOnJre(value = JRE.JAVA_11,
+                       disabledReason = "Causes StackOverflow; need to investigate why")
+        @ClearBoxTest("mocks the SecurityManager")
         void shouldReturnEmptyOptional_WhenExceptionOccursFindingIt() {
             var originalSecurityManager = System.getSecurityManager();
 
