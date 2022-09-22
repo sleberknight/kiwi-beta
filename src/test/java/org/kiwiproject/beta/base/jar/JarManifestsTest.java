@@ -2,18 +2,16 @@ package org.kiwiproject.beta.base.jar;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnJre;
-import org.junit.jupiter.api.condition.JRE;
+import org.kiwiproject.beta.base.jar.JarManifests.ClassHolder;
 import org.kiwiproject.test.junit.jupiter.ClearBoxTest;
 
 import java.net.URI;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
 import java.util.jar.Attributes;
 
 @DisplayName("JarManifests")
@@ -100,34 +98,32 @@ class JarManifestsTest {
             assertThat(manifestOptional).isEmpty();
         }
 
-        // This test is causing stack overflows in specic situations, such as when GitHub actions
-        // runs the tests in JDK 11 (but not 17). Or, when running only the JarManifestsTest on the
-        // command line, i.e. 'mvn test -Dtest=JarManifestsTest*' using JDK 11 (but not 17). Since
-        // we're only running GitHub actions on JDK 11 and 17, specifically disable only on 11. For
-        // some strange reason, running all the tests (mvn test) works on JDK 11 (and 17). Of course,
-        // JDK 17 deprecates the SecurityManager for removal, so perhaps this test should be removed.
-        @DisabledOnJre(value = JRE.JAVA_11,
-                       disabledReason = "Causes StackOverflow; need to investigate why")
-        @ClearBoxTest("mocks the SecurityManager")
+        @ClearBoxTest("Calls non-public getManifest(ClassHolder) to test exception in ProtectionDomain")
         void shouldReturnEmptyOptional_WhenExceptionOccursFindingIt() {
-            var originalSecurityManager = System.getSecurityManager();
+            var classHolder = new ClassHolder(String.class) {
+                @Override
+                ProtectionDomain getProtectionDomain() {
+                    throw new SecurityException("Access Denied!");
+                }
+            };
 
-            try {
-                // Create a mock SecurityManager that prevents access to the ProtectionDomain
-                var mockSecurityManager = mock(SecurityManager.class);
-                doThrow(new SecurityException("Access Denied!"))
-                        .when(mockSecurityManager)
-                        .checkPermission(argThat(permission -> "getProtectionDomain".equals(permission.getName())));
+            var manifestOptional = JarManifests.getManifest(classHolder);
+            assertThat(manifestOptional).isEmpty();
+        }
 
-                System.setSecurityManager(mockSecurityManager);
+        @ClearBoxTest("Calls non-public getManifest(ClassHolder) to test null location in CodeSource")
+        void shouldReturnEmptyOptional_WhenCodeSource_ReturnsNullLocation() {
+            var codeSource = new CodeSource(/* location */ null, new Certificate[0]);
+            var protectionDomain = new ProtectionDomain(codeSource, null);
+            var classHolder = new ClassHolder(String.class) {
+                @Override
+                ProtectionDomain getProtectionDomain() {
+                    return protectionDomain;
+                }
+            };
 
-                var manifestOptional = JarManifests.getManifest(String.class);
-                assertThat(manifestOptional).isEmpty();
-
-            } finally {
-                // Make sure we reset it!
-                System.setSecurityManager(originalSecurityManager);
-            }
+            var manifestOptional = JarManifests.getManifest(classHolder);
+            assertThat(manifestOptional).isEmpty();
         }
     }
 

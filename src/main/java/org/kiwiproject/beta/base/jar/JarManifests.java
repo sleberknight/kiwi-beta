@@ -5,12 +5,16 @@ import static java.util.stream.Collectors.toMap;
 import static org.kiwiproject.base.KiwiStrings.f;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.VisibleForTesting;
+
+import lombok.AllArgsConstructor;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.security.ProtectionDomain;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -60,21 +64,49 @@ public class JarManifests {
                 .orElseThrow(() -> new IllegalStateException("Unable to get manifest for " + theClass));
     }
 
-    public static Optional<Manifest> getManifest(Class<?> klass) {
+    public static Optional<Manifest> getManifest(Class<?> theClass) {
+        var classHolder = new ClassHolder(theClass);
+        return getManifest(classHolder);
+    }
+
+    /**
+     * @implNote Accepts a ClassHolder that can be mocked or overridden for testing purposes.
+     * This is necessary to test all conditions, since Class is final and cannot be mocked.
+     * ProtectionDomain is not final, but its getCodeSource() method is, so it also cannot
+     * be mocked.
+     */
+    @VisibleForTesting
+    static Optional<Manifest> getManifest(ClassHolder holder) {
+        var theClass = holder.getContainedClass();
         try {
-            var codeSource = klass.getProtectionDomain().getCodeSource();
+            var codeSource = holder.getProtectionDomain().getCodeSource();
             if (nonNull(codeSource)) {
                 var location = codeSource.getLocation();
+                LOG.trace("CodeSource location of {}: {}", theClass, location);
                 if (nonNull(location)) {
                     return getManifest(location.toURI());
                 }
             }
 
-            LOG.warn("Unable to get manifest of JAR file for {}", klass);
+            LOG.warn("Unable to get manifest of JAR file for {}", theClass);
             return Optional.empty();
         } catch (Exception e) {
-            LOG.error("Error getting manifest of JAR for {}", klass, e);
+            LOG.error("Error getting manifest of JAR for {}", theClass, e);
             return Optional.empty();
+        }
+    }
+
+    @VisibleForTesting
+    @AllArgsConstructor
+    static class ClassHolder {
+        private final Class<?> theClass;
+
+        Class<?> getContainedClass() {
+            return theClass;
+        }
+
+        ProtectionDomain getProtectionDomain() {
+            return theClass.getProtectionDomain();
         }
     }
 
