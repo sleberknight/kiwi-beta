@@ -2,6 +2,7 @@
 
 [![Build](https://github.com/sleberknight/kiwi-beta/actions/workflows/maven.yml/badge.svg)](https://github.com/sleberknight/kiwi-beta/actions?query=workflow%3Abuild)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sleberknight_kiwi-beta&metric=alert_status)](https://sonarcloud.io/project/overview?id=sleberknight_kiwi-beta)
+[![Lift](https://lift.sonatype.com/api/badge/github.com/sleberknight/kiwi-beta)](https://lift.sonatype.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 A playground for experimental code that might or might not ever make it into [kiwi](https://github.com/kiwiproject/kiwi)
