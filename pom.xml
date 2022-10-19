@@ -28,7 +28,7 @@
     </scm>
 
     <properties>
-        <kiwi-bom.version>0.21.0</kiwi-bom.version>
+        <kiwi-bom.version>0.22.0</kiwi-bom.version>
 
         <!-- Kotlin properties -->
         <kotlin.version>1.7.20</kotlin.version>
@@ -62,6 +62,20 @@
                 <version>${kiwi-bom.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
+            </dependency>
+
+            <!--
+                Force activation version to resolve conflict between logback-classic and spring-data-commons.
+                logback-classic has an optional dependency on com.sun.mail:javax.mail:jar:1.6.2 which depends
+                on javax.activation:activation:1.1. spring-data-commons 2.x has a dependency on
+                javax.activation:activation:1.1.1 via its parent POM and a profile that activates on JDK 11+.
+                This has been removed in the main branch for spring-data-commons 3.x. The exact commit where
+                it was removed is: https://github.com/spring-projects/spring-data-build/commit/ced9f751e63bd18ad31fe05cbfdfcfc5b295189a
+            -->
+            <dependency>
+                <groupId>javax.activation</groupId>
+                <artifactId>activation</artifactId>
+                <version>1.1.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
