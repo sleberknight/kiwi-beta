@@ -17,5 +17,8 @@ buildNumber.properties
 .idea
 *.iml
 
+# Fleet settings
+.fleet
+
 # Deployment log
 maven-central-deploy.log
