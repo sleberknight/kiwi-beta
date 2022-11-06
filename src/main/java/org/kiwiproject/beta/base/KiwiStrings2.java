@@ -36,7 +36,7 @@ public class KiwiStrings2 {
      * Convert a camelCase value to snake_case.
      *
      * @param value the camelCase value
-     * @return Optional containing the converted snake_case value, or an empty Optional
+     * @return Optional containing the converted snake_case value, or an empty Optional if the input value is blank
      */
     public static Optional<String> camelToSnakeCaseOrEmpty(@Nullable String value) {
         return Optional.ofNullable(camelToSnakeCaseOrNull(value));
