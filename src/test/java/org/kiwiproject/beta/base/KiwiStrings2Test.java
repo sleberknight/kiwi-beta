@@ -6,8 +6,11 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.kiwiproject.test.junit.jupiter.params.provider.AsciiOnlyBlankStringSource;
+
+import java.util.stream.Stream;
 
 @DisplayName("KiwiStrings2")
 public class KiwiStrings2Test {
@@ -24,18 +27,7 @@ public class KiwiStrings2Test {
         }
 
         @ParameterizedTest
-        @CsvSource({
-                "id, id",
-                "source, source",
-                "tagsJson, tags_json",
-                "createdAt, created_at",
-                "createdById, created_by_id",
-                "expirationDate, expiration_date",
-                "MarkedForRemoval, marked_for_removal",
-                "DeletedAt, deleted_at",
-                "created_at, created_at",
-                "updated_at, updated_at",
-        })
+        @MethodSource("org.kiwiproject.beta.base.KiwiStrings2Test#camelCaseValues")
         void shouldConvertTo_SnakeCase(String input, String expected) {
             assertThat(KiwiStrings2.camelToSnakeCase(input)).isEqualTo(expected);
         }
@@ -51,18 +43,7 @@ public class KiwiStrings2Test {
         }
 
         @ParameterizedTest
-        @CsvSource({
-                "id, id",
-                "source, source",
-                "tagsJson, tags_json",
-                "createdAt, created_at",
-                "createdById, created_by_id",
-                "expirationDate, expiration_date",
-                "MarkedForRemoval, marked_for_removal",
-                "DeletedAt, deleted_at",
-                "created_at, created_at",
-                "updated_at, updated_at",
-        })
+        @MethodSource("org.kiwiproject.beta.base.KiwiStrings2Test#camelCaseValues")
         void shouldConvertTo_SnakeCase(String input, String expected) {
             assertThat(KiwiStrings2.camelToSnakeCaseOrEmpty(input)).contains(expected);
         }
@@ -78,20 +59,23 @@ public class KiwiStrings2Test {
         }
 
         @ParameterizedTest
-        @CsvSource({
-                "id, id",
-                "source, source",
-                "tagsJson, tags_json",
-                "createdAt, created_at",
-                "createdById, created_by_id",
-                "expirationDate, expiration_date",
-                "MarkedForRemoval, marked_for_removal",
-                "DeletedAt, deleted_at",
-                "created_at, created_at",
-                "updated_at, updated_at",
-        })
+        @MethodSource("org.kiwiproject.beta.base.KiwiStrings2Test#camelCaseValues")
         void shouldConvertTo_SnakeCase(String input, String expected) {
             assertThat(KiwiStrings2.camelToSnakeCaseOrNull(input)).isEqualTo(expected);
         }
+    }
+
+    static Stream<Arguments> camelCaseValues() {
+        return Stream.of(
+                Arguments.of("id", "id"),
+                Arguments.of("source", "source"),
+                Arguments.of("tagsJson", "tags_json"),
+                Arguments.of("createdAt", "created_at"),
+                Arguments.of("createdById", "created_by_id"),
+                Arguments.of("expirationDate", "expiration_date"),
+                Arguments.of("MarkedForRemoval", "marked_for_removal"),
+                Arguments.of("DeletedAt", "deleted_at"),
+                Arguments.of("created_at", "created_at"),
+                Arguments.of("updated_at", "updated_at"));
     }
 }
