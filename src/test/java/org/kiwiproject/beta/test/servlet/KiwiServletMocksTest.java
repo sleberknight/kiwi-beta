@@ -1,10 +1,13 @@
 package org.kiwiproject.beta.test.servlet;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.kiwiproject.beta.servlet.KiwiServletRequests;
 
 import java.security.cert.X509Certificate;
@@ -44,7 +47,90 @@ class KiwiServletMocksTest {
     @Nested
     class X509CertificateArgumentMatchers {
 
-        // TODO...
+        @Test
+        void shouldMatchExpectedCertArrayBySubjectDN() {
+            var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
+            var matcher = KiwiServletMocks.matchesExpectedCertArrayBySubjectDN(dn);
+
+            var cert = KiwiServletMocks.mockX509Certificate(dn);
+            var certs = new X509Certificate[] {cert};
+            assertThat(matcher.matches(certs)).isTrue();
+        }
+
+        @Test
+        void shouldThrowWhenDoesNotMatchExpectedCertArrayBySubjectDN() {
+            var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
+            var matcher = KiwiServletMocks.matchesExpectedCertArrayBySubjectDN(dn);
+
+            var cert = KiwiServletMocks.mockX509Certificate("CN=Jane Doe, OU=Test, O=Kiwiproject, C=US");
+            var certs = new X509Certificate[] {cert};
+
+            assertThatThrownBy(() -> matcher.matches(certs))
+                    .isInstanceOf(AssertionError.class);
+        }
+
+        @Test
+        void shouldMatchExpectedCertBySubjectDN() {
+            var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
+            var matcher = KiwiServletMocks.matchesExpectedCertBySubjectDN(dn);
+
+            var cert = KiwiServletMocks.mockX509Certificate(dn);
+            assertThat(matcher.matches(cert)).isTrue();
+        }
+
+        @Test
+        void shouldThrowWhenDoesNotMatchExpectedCertBySubjectDN() {
+            var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
+            var matcher = KiwiServletMocks.matchesExpectedCertBySubjectDN(dn);
+
+            var cert = KiwiServletMocks.mockX509Certificate("CN=Jane Doe, OU=Test, O=Kiwiproject, C=US");
+            assertThatThrownBy(() -> matcher.matches(cert))
+                    .isInstanceOf(AssertionError.class);
+        }
+
+//
+
+        @Test
+        void shouldMatchExpectedCertArrayByX500PrincipalName() {
+            var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
+            var matcher = KiwiServletMocks.matchesCertArrayByX500PrincipalName(dn);
+
+            var cert = KiwiServletMocks.mockX509Certificate(dn);
+            var certs = new X509Certificate[] {cert};
+            assertThat(matcher.matches(certs)).isTrue();
+        }
+
+        @Test
+        void shouldThrowWhenDoesNotMatchExpectedCertArrayByX500PrincipalName() {
+            var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
+            var matcher = KiwiServletMocks.matchesCertArrayByX500PrincipalName(dn);
+
+            var cert = KiwiServletMocks.mockX509Certificate("CN=Jane Doe, OU=Test, O=Kiwiproject, C=US");
+            var certs = new X509Certificate[] {cert};
+
+            assertThatThrownBy(() -> matcher.matches(certs))
+                    .isInstanceOf(AssertionError.class);
+        }
+
+        @Test
+        void shouldMatchExpectedCertByX500PrincipalName() {
+            var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
+            var matcher = KiwiServletMocks.matchesExpectedCertByX500PrincipalName(dn);
+
+            var cert = KiwiServletMocks.mockX509Certificate(dn);
+            assertThat(matcher.matches(cert)).isTrue();
+        }
+
+        @Test
+        void shouldThrowWhenDoesNotMatchExpectedCertByX500PrincipalName() {
+            var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
+            var matcher = KiwiServletMocks.matchesExpectedCertByX500PrincipalName(dn);
+
+            var cert = KiwiServletMocks.mockX509Certificate("CN=Jane Doe, OU=Test, O=Kiwiproject, C=US");
+            assertThatThrownBy(() -> matcher.matches(cert))
+                    .isInstanceOf(AssertionError.class);
+        }
+
     }
 }
 
