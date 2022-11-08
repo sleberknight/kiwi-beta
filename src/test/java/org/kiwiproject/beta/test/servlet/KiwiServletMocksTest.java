@@ -88,8 +88,6 @@ class KiwiServletMocksTest {
                     .isInstanceOf(AssertionError.class);
         }
 
-//
-
         @Test
         void shouldMatchExpectedCertArrayByX500PrincipalName() {
             var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
