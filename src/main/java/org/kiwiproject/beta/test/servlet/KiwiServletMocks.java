@@ -51,7 +51,8 @@ public class KiwiServletMocks {
      * an instance of the <em>final</em> class {@link X500Principal}, we can't mock it and instead a "real"
      * instance of {@link X500Principal} having the given distinguished name is returned. Also see
      * <a href="https://softwareengineering.stackexchange.com/questions/173396/deprecated-vs-denigrated-in-javadoc">StackOverflow entry</a>
-     * regarding the getSubjectDN method being "denigrated".
+     * regarding the getSubjectDN method being "denigrated". And, Java 16 deprecated {@link X509Certificate#getSubjectDN()}
+     * though (as of this writing on Nov. 8, 2022) not for removal.
      */
     public static X509Certificate mockX509Certificate(String dn) {
         var cert = mock(X509Certificate.class);
