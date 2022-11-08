@@ -83,6 +83,9 @@ public class KiwiServletMocks {
         };
     }
 
+    /**
+     * Argument matcher that matches a certificate having the given subject DN.
+     */
     public static ArgumentMatcher<X509Certificate> matchesExpectedCertBySubjectDN(String subjectDn) {
 
         return cert -> {
@@ -102,18 +105,29 @@ public class KiwiServletMocks {
         return object -> {
             assertThat(object).isInstanceOf(X509Certificate[].class);
 
+            // Create an X500Principal to compare against, so that differences in whitespace are ignored.
+            // X500Principal removes whitespace between components such that "CN=John Doe, OU=Test Org"
+            // becomes "CN=John Doe,OU=Test Org".
+            var x500Principal = new X500Principal(name);
             assertThat(object)
                     .extracting(cert -> cert.getSubjectX500Principal().getName())
-                    .containsExactly(name);
+                    .containsExactly(x500Principal.getName());
 
             return true;
         };
     }
 
+    /**
+     * Argument matcher that matches a certificate having an {@link X500Principal} with the given name.
+     */
     public static ArgumentMatcher<X509Certificate> matchesExpectedCertByX500PrincipalName(String name) {
 
         return cert -> {
-            assertThat(cert.getSubjectX500Principal().getName()).isEqualTo(name);
+            // Create an X500Principal to compare against, so that differences in whitespace are ignored.
+            // X500Principal removes whitespace between components such that "CN=John Doe, OU=Test Org"
+            // becomes "CN=John Doe,OU=Test Org".
+            var x500Principal = new X500Principal(name);
+            assertThat(cert.getSubjectX500Principal().getName()).isEqualTo(x500Principal.getName());
 
             return true;
         };
