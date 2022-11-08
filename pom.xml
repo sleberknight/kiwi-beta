@@ -131,7 +131,6 @@
             <version>${kiwi.version}</version>
         </dependency>
 
-        <!-- Have to do some kotlin exclusions since kiwi-bom is using kotlin 1.4.10 at present -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
