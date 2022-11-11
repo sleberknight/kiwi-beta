@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class KiwiStrings2 {
 
-    private static Pattern NULL_CHAR_PATTERN = Pattern.compile("\u0000");
+    private static final Pattern NULL_CHAR_PATTERN = Pattern.compile("\u0000");
 
     /**
      * Convert a camelCase value to snake_case.
