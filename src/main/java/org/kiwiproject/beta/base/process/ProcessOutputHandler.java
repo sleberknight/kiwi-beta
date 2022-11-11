@@ -8,11 +8,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import lombok.extern.slf4j.Slf4j;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kiwiproject.base.DefaultEnvironment;
 import org.kiwiproject.base.KiwiEnvironment;
 
-import javax.annotation.Nonnull;
 import java.io.Closeable;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -243,7 +244,7 @@ public class ProcessOutputHandler implements Closeable {
             }
 
             @Override
-            public void onFailure(@Nonnull Throwable error) {
+            public void onFailure(@NonNull Throwable error) {
                 LOG.error("Handler for process {} had an error", processId, error);
             }
         };
