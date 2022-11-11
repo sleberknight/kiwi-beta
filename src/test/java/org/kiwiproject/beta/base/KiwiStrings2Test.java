@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -77,5 +78,52 @@ public class KiwiStrings2Test {
                 Arguments.of("DeletedAt", "deleted_at"),
                 Arguments.of("created_at", "created_at"),
                 Arguments.of("updated_at", "updated_at"));
+    }
+
+    @Nested
+    class ReplaceNullCharactersWithEmpty {
+
+        @Test
+        void shouldReturnNullString_WhenGivenNull() {
+            assertThat(KiwiStrings2.replaceNullCharactersWithEmpty(null)).isNull();
+        }
+
+        @Test
+        void shouldReplaceNullCharacters() {
+            var str = "this string \u0000 contains several \u0000 characters in \u0000 it";
+            assertThat(KiwiStrings2.replaceNullCharactersWithEmpty(str))
+                    .isEqualTo("this string  contains several  characters in  it");
+        }
+
+        @Test
+        void shouldReturnSameString_WhenDoesNotContainNullCharacters() {
+            var str = "this string does NOT contain any null characters in it";
+            assertThat(KiwiStrings2.replaceNullCharactersWithEmpty(str))
+                    .isSameAs(str);
+        }
+    }
+
+    @Nested
+    class ReplaceNullCharacters {
+
+        @Test
+        void shouldReturnDefaultValue_WhenGivenNull() {
+            assertThat(KiwiStrings2.replaceNullCharacters(null, "", "42"))
+                    .isEqualTo("42");
+        }
+
+        @Test
+        void shouldReplaceNullCharacters() {
+            var str = "this string \u0000 contains several \u0000 characters in \u0000 it";
+            assertThat(KiwiStrings2.replaceNullCharacters(str, "NULL", ""))
+                    .isEqualTo("this string NULL contains several NULL characters in NULL it");
+        }
+
+        @Test
+        void shouldReturnSameString_WhenDoesNotContainNullCharacters() {
+            var str = "this string does NOT contain any null characters in it";
+            assertThat(KiwiStrings2.replaceNullCharacters(str, "", null))
+                    .isSameAs(str);
+        }
     }
 }

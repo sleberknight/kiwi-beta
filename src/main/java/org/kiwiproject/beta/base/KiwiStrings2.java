@@ -8,6 +8,7 @@ import lombok.experimental.UtilityClass;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Utilities related to strings.
@@ -19,6 +20,8 @@ import java.util.Optional;
 @Beta
 @UtilityClass
 public class KiwiStrings2 {
+
+    private static Pattern NULL_CHAR_PATTERN = Pattern.compile("\u0000");
 
     /**
      * Convert a camelCase value to snake_case.
@@ -54,5 +57,30 @@ public class KiwiStrings2 {
         }
 
         return CaseFormat.LOWER_CAMEL.converterTo(CaseFormat.LOWER_UNDERSCORE).convert(value);
+    }
+
+    /**
+     * Replace null characters (Unicode U+0000) in {@code str} with an empty string.
+     *
+     * @param str the string to replace within
+     * @return a string with null characters replaced, or the original string if no null characters exist in it
+     */
+    public static String replaceNullCharactersWithEmpty(@Nullable String str) {
+        return replaceNullCharacters(str, "", null);
+    }
+
+    /**
+     * Replace null characters (Unicode U+0000) in {@code str} with the given replacement string. If the input
+     * string is null, thne the default value is returned.
+     *
+     * @param str the string to replace within
+     * @param replacement the replacement string
+     * @param defaultValue the value to return if {@code str} is null
+     * @return a string with null characters replaced, or the original string if no null characters exist in it
+     */
+    public static String replaceNullCharacters(@Nullable String str, String replacement, @Nullable String defaultValue) {
+        return Optional.ofNullable(str)
+                .map(s -> NULL_CHAR_PATTERN.matcher(s).replaceAll(replacement))
+                .orElse(defaultValue);
     }
 }
