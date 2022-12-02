@@ -1,0 +1,29 @@
+package org.kiwiproject.beta.annotation;
+
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+
+import com.google.common.annotations.Beta;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * When placed on a method or constructor, indicates that the member is called via
+ * reflection, and is this used and should not be considered for removal. When placed
+ * on a field, indicates that the field is accesssed via reflection to get or set it.
+ * <p>
+ * When this annotation is present, you might also consider adding {@code @SuppressWarnings("unused")}.
+ * This is necessary since {@link SuppressWarnings} is not {@link Inherited} so we cannot
+ * include it in this annotation.
+ */
+@Beta
+@Documented
+@Target({ElementType.METHOD, CONSTRUCTOR, FIELD})
+@Retention(RetentionPolicy.SOURCE)
+public @interface AccessedViaReflection {
+}
