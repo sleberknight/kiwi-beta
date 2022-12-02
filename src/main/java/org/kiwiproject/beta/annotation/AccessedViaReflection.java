@@ -2,11 +2,11 @@ package org.kiwiproject.beta.annotation;
 
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
 
 import com.google.common.annotations.Beta;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,9 +21,14 @@ import java.lang.annotation.Target;
  * This is necessary since {@link SuppressWarnings} is not {@link Inherited} so we cannot
  * include it in this annotation.
  */
-@Beta
 @Documented
-@Target({ElementType.METHOD, CONSTRUCTOR, FIELD})
+@Target({METHOD, CONSTRUCTOR, FIELD})
 @Retention(RetentionPolicy.SOURCE)
+@Beta
 public @interface AccessedViaReflection {
+
+    /**
+     * A description of when, where, why, how this annotated element is accessed via reflection.
+     */
+    String value();
 }
