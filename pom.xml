@@ -12,7 +12,7 @@
     </parent>
 
     <artifactId>kiwi-beta</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>Kiwi Beta (Experimental Code)</name>
     <description>
         Experimental code that might eventually move into kiwi, or just to try something out...
@@ -34,9 +34,11 @@
         <kotlin.version>1.7.22</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
-        <!-- Versions for required dependencies -->
+        <!-- Versions for required/provided dependencies -->
 
         <camel.version>3.19.0</camel.version>
+        <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
+        <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
         <kiwi.version>2.3.0</kiwi.version>
         <metrics-healthchecks-severity.version>1.0.9</metrics-healthchecks-severity.version>
 
@@ -123,6 +125,20 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.xml.soap</groupId>
+            <artifactId>jakarta.xml.soap-api</artifactId>
+            <version>${jakarta.xml.soap-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+            <version>${jakarta.xml.ws-api.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
