@@ -51,6 +51,24 @@ class CatchingRunnable2Test {
     }
 
     @Test
+    void shouldCreateUsingFactory_WithRunnableandExceptionConsumer() {
+        Runnable runnable = () -> {
+            callCount.incrementAndGet();
+            throw new RuntimeException("oop");
+        };
+
+        var handleExceptionCount = new AtomicInteger();
+        var safeRunnable = CatchingRunnable2.of(runnable, ex -> {
+            handleExceptionCount.incrementAndGet();
+        });
+
+        safeRunnable.run();
+
+        assertThat(callCount).hasValue(1);
+        assertThat(handleExceptionCount).hasValue(1);
+    }
+
+    @Test
     void shouldCreateUsingFactory_WithNameAndRunnable() {
         var safeRunnable = CatchingRunnable2.of("incrementAndGet-1", callCount::incrementAndGet);
         assertThat(safeRunnable.name()).contains("incrementAndGet-1");
