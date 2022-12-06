@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 import static org.kiwiproject.collect.KiwiMaps.newLinkedHashMap;
 
+import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Streams;
 
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @UtilityClass
 @Slf4j
+@Beta
 public class SOAPFaults {
 
     /**
@@ -64,11 +66,25 @@ public class SOAPFaults {
         return true;
     }
 
+    /**
+     * Log detailed information about the {@link SOAPFault} contained inside the {@link SOAPFaultException}.
+     *
+     * @param context a description that will be included in the log message, for easier traceability
+     * @param exception the {@link SOAPFaultException} containing the {@link SOAPFault} to log information about
+     * @param logger the SLF4J {@link Logger} to use for logging
+     */
     public static void logSoapFault(String context, SOAPFaultException exception, Logger logger) {
         checkArgumentNotNull(exception);
         logSoapFault(context, exception.getFault(), logger);
     }
 
+    /**
+     * Log detailed information about the {@link SOAPFault}.
+     *
+     * @param context a description that will be included in the log message, for easier traceability
+     * @param fault the {@link SOAPFault} to log information about
+     * @param logger the SLF4J {@link Logger} to use for logging
+     */
     public static void logSoapFault(String context, SOAPFault fault, Logger logger) {
         checkArgumentNotNull(fault);
         checkArgumentNotNull(logger);
@@ -86,6 +102,12 @@ public class SOAPFaults {
         return isBlank(context) ? "unspecified" : context;
     }
 
+    /**
+     * Convert the {@link SOAPFault} into a map containing the fault properties.
+     *
+     * @param fault the {@link SOAPFault} to convert into a map
+     * @return map containing fault properties
+     */
     public static Map<String, Object> soapFaultAsMap(SOAPFault fault) {
         checkArgumentNotNull(fault);
 
