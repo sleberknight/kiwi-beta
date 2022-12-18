@@ -1,8 +1,12 @@
 package org.kiwiproject.beta.jdbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.kiwiproject.beta.jdbc.KiwiJdbcMetaData.resultSetContainsColumnLabel;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +21,8 @@ import org.kiwiproject.test.junit.jupiter.H2FileBasedDatabaseExtension;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 @DisplayName("KiwiJdbcMetaData")
@@ -79,6 +85,36 @@ class KiwiJdbcMetaDataTest {
                         () -> assertThat(resultSetContainsColumnLabel(rs, "AGE")).isTrue()
                 );
             });
+        }
+
+        @Test
+        void shouldThrowRuntimeSQLException_WhenResultSet_ThrowsSQLExceptionGettingMetaData() throws SQLException {
+            // noinspection resource
+            var rs = mock(ResultSet.class);
+            var reason = "MetaData not supported for some reason";
+            when(rs.getMetaData()).thenThrow(new SQLException(reason));
+
+            assertThatThrownBy(() -> resultSetContainsColumnLabel(rs, "created_at"))
+                    .isExactlyInstanceOf(RuntimeSQLException.class)
+                    .hasCauseInstanceOf(SQLException.class)
+                    .hasMessageContaining(reason);
+        }
+
+        @Test
+        void shouldThrowRuntimeSQLException_WhenMetaData_ThrowsSQLExceptionGettingLabel() throws SQLException {
+            var metaData = mock(ResultSetMetaData.class);
+            when(metaData.getColumnCount()).thenReturn(42);
+            var reason = "No column label for you!";
+            when(metaData.getColumnLabel(anyInt())).thenThrow(new SQLException(reason));
+
+            // noinspection resource
+            var rs = mock(ResultSet.class);
+            when(rs.getMetaData()).thenReturn(metaData);
+
+            assertThatThrownBy(() -> resultSetContainsColumnLabel(rs, "created_at"))
+                    .isExactlyInstanceOf(RuntimeSQLException.class)
+                    .hasCauseInstanceOf(SQLException.class)
+                    .hasMessageContaining(reason);
         }
     }
 
