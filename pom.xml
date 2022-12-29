@@ -58,6 +58,20 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!--
+                NOTE:
+                Override the Kotlin version defined in kiwi-bom; this MUST come before kiwi-bom
+                or else the version defined in kiwi-bom takes precedence.
+             -->
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-bom</artifactId>
+                <version>${kotlin.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+
             <dependency>
                 <groupId>org.kiwiproject</groupId>
                 <artifactId>kiwi-bom</artifactId>
@@ -218,7 +232,6 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit5</artifactId>
-            <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
 
