@@ -21,11 +21,16 @@ import java.lang.annotation.Target;
  * <p>
  * At the very least, adding this annotation makes it clear that a parameter might be changed in
  * some way. And, it can also illustrate poor design if this annotation is "all over the place"
- * in a code base. Mutating constructor and parameters should be the exception, not the rule.
+ * in a code base. Mutating constructor and method parameters should be the exception, not the rule.
  */
 @Documented
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.CLASS)
 @Beta
 public @interface MutableParam {
+
+    /**
+     * Optional description about the possible parameter mutation.
+     */
+    String value() default "";
 }
