@@ -13,18 +13,34 @@ import java.util.Comparator;
 public class KiwiComparators {
 
     public static Comparator<Instant> comparingInstantTruncatedToMillis() {
-        return Comparator.comparing(i -> i.truncatedTo(ChronoUnit.MILLIS));
+        return comparingInstantTruncatedTo(ChronoUnit.MILLIS);
+    }
+
+    public static Comparator<Instant> comparingInstantTruncatedTo(ChronoUnit unit) {
+        return Comparator.comparing(i -> i.truncatedTo(unit));
     }
 
     public static Comparator<LocalDateTime> comparingLocalDateTimeTruncatedToMillis() {
-        return Comparator.comparing(ldt -> ldt.truncatedTo(ChronoUnit.MILLIS));
+        return comparingLocalDateTimeTruncatedTo(ChronoUnit.MILLIS);
+    }
+
+    public static Comparator<LocalDateTime> comparingLocalDateTimeTruncatedTo(ChronoUnit unit) {
+        return Comparator.comparing(ldt -> ldt.truncatedTo(unit));
     }
 
     public static Comparator<ZonedDateTime> comparingZonedDateTimeTruncatedToMillis() {
-        return Comparator.comparing(zdt -> zdt.truncatedTo(ChronoUnit.MILLIS));
+        return comparingZonedDateTimeTruncatedTo(ChronoUnit.MILLIS);
+    }
+
+    public static Comparator<ZonedDateTime> comparingZonedDateTimeTruncatedTo(ChronoUnit unit) {
+        return Comparator.comparing(zdt -> zdt.truncatedTo(unit));
     }
 
     public static Comparator<OffsetDateTime> comparingOffsetDateTimeTruncatedToMillis() {
-        return Comparator.comparing(odt -> odt.truncatedTo(ChronoUnit.MILLIS));
+        return comparingOffsetDateTimeTruncatedTo(ChronoUnit.MILLIS);
+    }
+
+    public static Comparator<OffsetDateTime> comparingOffsetDateTimeTruncatedTo(ChronoUnit unit) {
+        return Comparator.comparing(odt -> odt.truncatedTo(unit));
     }
 }
