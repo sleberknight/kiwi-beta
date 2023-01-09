@@ -2,6 +2,8 @@ package org.kiwiproject.beta.util.comparator;
 
 import lombok.experimental.UtilityClass;
 
+import com.google.common.annotations.Beta;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -10,6 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
 @UtilityClass
+@Beta
 public class KiwiComparators {
 
     public static Comparator<Instant> comparingInstantTruncatedToMillis() {
