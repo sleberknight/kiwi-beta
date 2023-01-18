@@ -81,11 +81,11 @@ class TimestampingLoggerTest {
 
         assertThat(eventMessages).hasSize(4);
         assertThat(first(eventMessages)).isEqualTo("User created with id 42");
-        assertThat(second(eventMessages)).isEqualTo(" -- Time spent (since previous log): N/A (no previous timestamp)");
+        assertThat(second(eventMessages)).isEqualTo("[elapsed time since previous: N/A (no previous timestamp)]");
         assertThat(third(eventMessages)).isEqualTo("Order updated with id 336");
-        assertThat(fourth(eventMessages)).startsWith(" -- Time spent (since previous log): ")
+        assertThat(fourth(eventMessages)).startsWith("[elapsed time since previous: ")
                 .contains(" nanoseconds /")
-                .endsWith(" millis");
+                .endsWith(" millis]");
     }
 
     @Test
@@ -133,7 +133,7 @@ class TimestampingLoggerTest {
                 .contains(fifth(messages), atIndex(8));
 
         var timeSpentMessages = eventMessages.stream()
-                .filter(eventMessage -> eventMessage.startsWith(" -- Time spent"))
+                .filter(eventMessage -> eventMessage.startsWith("[elapsed time since previous:"))
                 .collect(toList());
 
         assertThat(timeSpentMessages)
@@ -142,14 +142,14 @@ class TimestampingLoggerTest {
 
         assertThat(first(timeSpentMessages))
                 .describedAs("First elapsed time message should say there is no previous timestamp")
-                .isEqualTo(" -- Time spent (since previous log): N/A (no previous timestamp)");
+                .isEqualTo("[elapsed time since previous: N/A (no previous timestamp)]");
 
         subListExcludingFirst(timeSpentMessages).forEach(timeSpentMessage ->
                 assertThat(timeSpentMessage)
                         .describedAs("Rest of elapsed time messages should include nanoseconds and millis")
-                        .startsWith(" -- Time spent (since previous log): ")
+                        .startsWith("[elapsed time since previous: ")
                         .contains(" nanoseconds / ")
-                        .endsWith(" millis"));
+                        .endsWith(" millis]"));
     }
 
     @Test
@@ -161,11 +161,11 @@ class TimestampingLoggerTest {
 
         assertThat(eventMessages).hasSize(2);
         assertThat(first(eventMessages))
-                .isEqualTo("User created with id 24 -- Time spent (since previous log): N/A (no previous timestamp)");
+                .isEqualTo("User created with id 24 [elapsed time since previous: N/A (no previous timestamp)]");
         assertThat(second(eventMessages))
-                .startsWith("Order updated with id 84 -- Time spent (since previous log): ")
+                .startsWith("Order updated with id 84 [elapsed time since previous: ")
                 .contains(" nanoseconds / ")
-                .endsWith(" millis");
+                .endsWith(" millis]");
     }
 
     @Test
@@ -209,13 +209,13 @@ class TimestampingLoggerTest {
 
         assertThat(first(eventMessages))
                 .describedAs("First appended elapsed time message should say there is no previous timestamp")
-                .isEqualTo("At time 0 -- Time spent (since previous log): N/A (no previous timestamp)");
+                .isEqualTo("At time 0 [elapsed time since previous: N/A (no previous timestamp)]");
 
         IntStream.range(1, 4).forEach(i ->
                 assertThat(eventMessages.get(i))
                         .describedAs("Rest of appended elapsed time messages should include nanoseconds and millis")
-                        .startsWith("At time " + i + " -- Time spent (since previous log): ")
+                        .startsWith("At time " + i + " [elapsed time since previous: ")
                         .contains(" nanoseconds / ")
-                        .endsWith(" millis"));
+                        .endsWith(" millis]"));
     }
 }

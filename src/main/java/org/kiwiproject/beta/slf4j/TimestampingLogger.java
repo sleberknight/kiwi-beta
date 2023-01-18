@@ -81,11 +81,11 @@ public class TimestampingLogger {
         if (previousTimestamp > 0) {
             var diffInNanos = now - previousTimestamp;
             KiwiSlf4j.log(logger, level,
-                    " -- Time spent (since previous log): {} nanoseconds / {} millis",
+                    "[elapsed time since previous: {} nanoseconds / {} millis]",
                     diffInNanos, Duration.ofNanos(diffInNanos).toMillis());
         } else {
             KiwiSlf4j.log(logger, level,
-                    " -- Time spent (since previous log): N/A (no previous timestamp)");
+                    "[elapsed time since previous: N/A (no previous timestamp)]");
         }
     }
 
@@ -136,11 +136,11 @@ public class TimestampingLogger {
         if (previousTimestamp > 0) {
             var diffInNanos = now - previousTimestamp;
             KiwiSlf4j.log(logger, level,
-                    "{} -- Time spent (since previous log): {} nanoseconds / {} millis",
+                    "{} [elapsed time since previous: {} nanoseconds / {} millis]",
                     formattedMessage, diffInNanos, Duration.ofNanos(diffInNanos).toMillis());
         } else {
             KiwiSlf4j.log(logger, level,
-                    "{} -- Time spent (since previous log): N/A (no previous timestamp)",
+                    "{} [elapsed time since previous: N/A (no previous timestamp)]",
                     formattedMessage);
         }
     }
