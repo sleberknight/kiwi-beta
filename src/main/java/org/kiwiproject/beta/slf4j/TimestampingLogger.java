@@ -90,49 +90,49 @@ public class TimestampingLogger {
     }
 
     /**
-     * Logs a message including elapsed time message at TRACE level.
+     * Logs a message at TRACE level and appends an elapsed time message.
      *
      * @param message the message or message template
      * @param args    the arguments to the message template, if any
-     * @see #logEmbeddingElapsed(Level, String, Object...)
+     * @see #logAppendingElapsed(Level, String, Object...)
      */
-    public void traceLogEmbeddingElapsed(String message, Object... args) {
-        logEmbeddingElapsed(Level.TRACE, message, args);
+    public void traceLogAppendingElapsed(String message, Object... args) {
+        logAppendingElapsed(Level.TRACE, message, args);
     }
 
     /**
-     * Logs a message including elapsed time message at DEBUG level.
+     * Logs a message at DEBUG level and appends an elapsed time message.
      *
      * @param message the message or message template
      * @param args    the arguments to the message template, if any
-     * @see #logEmbeddingElapsed(Level, String, Object...)
+     * @see #logAppendingElapsed(Level, String, Object...)
      */
-    public void debugLogEmbeddingElapsed(String message, Object... args) {
-        logEmbeddingElapsed(Level.DEBUG, message, args);
+    public void debugLogAppendingElapsed(String message, Object... args) {
+        logAppendingElapsed(Level.DEBUG, message, args);
     }
 
     /**
-     * Logs the given message along with the elapsed time since the previous log.
+     * Logs a message at the given level and appends an elapsed time message.
      * This results in a single log message containing the original message followed by the elapsed time message.
      *
      * @param level   the level at which to log the message and elapsed time message
      * @param message the message or message template
      * @param args    the arguments to the message template, if any
      */
-    public void logEmbeddingElapsed(Level level, String message, Object... args) {
+    public void logAppendingElapsed(Level level, String message, Object... args) {
         if (KiwiSlf4j.isEnabled(logger, level)) {
             var now = System.nanoTime();
             var formattedMessage = KiwiStrings.f(message, args);
-            logEmbeddedElapsedSincePreviousTimestamp(logger, level, formattedMessage, now, previousTimestamp);
+            logAppendingElapsedSincePreviousTimestamp(logger, level, formattedMessage, now, previousTimestamp);
             previousTimestamp = now;
         }
     }
 
-    private static void logEmbeddedElapsedSincePreviousTimestamp(Logger logger,
-                                                                 Level level,
-                                                                 String formattedMessage,
-                                                                 long now,
-                                                                 long previousTimestamp) {
+    private static void logAppendingElapsedSincePreviousTimestamp(Logger logger,
+                                                                  Level level,
+                                                                  String formattedMessage,
+                                                                  long now,
+                                                                  long previousTimestamp) {
         if (previousTimestamp > 0) {
             var diffInNanos = now - previousTimestamp;
             KiwiSlf4j.log(logger, level,

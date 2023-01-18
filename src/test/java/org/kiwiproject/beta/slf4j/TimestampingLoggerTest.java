@@ -153,9 +153,9 @@ class TimestampingLoggerTest {
     }
 
     @Test
-    void shouldLogEmbeddingElapsedTimeWithArguments() {
-        timestampingLogger.logEmbeddingElapsed(Level.TRACE, "{} created with id {}", "User", 24);
-        timestampingLogger.logEmbeddingElapsed(Level.TRACE, "{} updated with id {}", "Order", 84);
+    void shouldLogAppendingElapsedTimeWithArguments() {
+        timestampingLogger.logAppendingElapsed(Level.TRACE, "{} created with id {}", "User", 24);
+        timestampingLogger.logAppendingElapsed(Level.TRACE, "{} updated with id {}", "Order", 84);
 
         List<String> eventMessages = appender.getOrderedEventMessages();
 
@@ -169,32 +169,32 @@ class TimestampingLoggerTest {
     }
 
     @Test
-    void shouldNotLogEmbeddingElapsedTimeWhenLevelIsInactive() {
+    void shouldNotLogAppendingElapsedTimeWhenLevelIsInactive() {
         logbackLogger.setLevel(ch.qos.logback.classic.Level.ERROR);
 
-        timestampingLogger.logEmbeddingElapsed(Level.WARN, "Should not see this!");
+        timestampingLogger.logAppendingElapsed(Level.WARN, "Should not see this!");
         assertThat(appender.getOrderedEventMessages()).isEmpty();
     }
 
     @Test
-    void shouldTraceLogEmbeddingElapsedTime() {
-        messages.forEach(message -> timestampingLogger.traceLogEmbeddingElapsed(message));
-        assertEmbeddedElapsedEventMessages(Level.TRACE);
+    void shouldTraceLogAppendingElapsedTime() {
+        messages.forEach(message -> timestampingLogger.traceLogAppendingElapsed(message));
+        assertAppendedElapsedEventMessages(Level.TRACE);
     }
 
     @Test
-    void shouldDebugLogEmbeddingElapsedTime() {
-        messages.forEach(message -> timestampingLogger.debugLogEmbeddingElapsed(message));
-        assertEmbeddedElapsedEventMessages(Level.DEBUG);
+    void shouldDebugLogAppendingElapsedTime() {
+        messages.forEach(message -> timestampingLogger.debugLogAppendingElapsed(message));
+        assertAppendedElapsedEventMessages(Level.DEBUG);
     }
 
     @Test
-    void shouldLogEmbeddingElapsedTime() {
-        messages.forEach(message -> timestampingLogger.logEmbeddingElapsed(Level.WARN, message));
-        assertEmbeddedElapsedEventMessages(Level.WARN);
+    void shouldLogAppendingElapsedTime() {
+        messages.forEach(message -> timestampingLogger.logAppendingElapsed(Level.WARN, message));
+        assertAppendedElapsedEventMessages(Level.WARN);
     }
 
-    private void assertEmbeddedElapsedEventMessages(Level expectedLevel) {
+    private void assertAppendedElapsedEventMessages(Level expectedLevel) {
         List<ILoggingEvent> orderedEvents = appender.getOrderedEvents();
         var expectedLogbackLevel = ch.qos.logback.classic.Level.convertAnSLF4JLevel(expectedLevel);
         assertThat(orderedEvents)
@@ -208,12 +208,12 @@ class TimestampingLoggerTest {
                 .hasSize(5);
 
         assertThat(first(eventMessages))
-                .describedAs("First embedded elapsed time message should say there is no previous timestamp")
+                .describedAs("First appended elapsed time message should say there is no previous timestamp")
                 .isEqualTo("At time 0 -- Time spent (since previous log): N/A (no previous timestamp)");
 
         IntStream.range(1, 4).forEach(i ->
                 assertThat(eventMessages.get(i))
-                        .describedAs("Rest of embedded elapsed time messages should include nanoseconds and millis")
+                        .describedAs("Rest of appended elapsed time messages should include nanoseconds and millis")
                         .startsWith("At time " + i + " -- Time spent (since previous log): ")
                         .contains(" nanoseconds / ")
                         .endsWith(" millis"));
