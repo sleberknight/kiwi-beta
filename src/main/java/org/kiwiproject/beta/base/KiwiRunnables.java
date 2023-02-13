@@ -1,10 +1,8 @@
 package org.kiwiproject.beta.base;
 
 import com.google.common.annotations.Beta;
-
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-
 import org.kiwiproject.base.CatchingRunnable;
 
 import java.util.Arrays;
@@ -42,12 +40,7 @@ public class KiwiRunnables {
          * @return a new ThrowingRunnable that wraps the original Runnable
          */
         static ThrowingRunnable of(Runnable runnable) {
-            return new ThrowingRunnable() {
-                @Override
-                public void run() {
-                    runnable.run();
-                }
-            };
+            return runnable::run;
         }
 
         /**
@@ -58,14 +51,11 @@ public class KiwiRunnables {
          */
         default Runnable toRunnable() {
             var outer = this;
-            return new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        outer.run();
-                    } catch (Exception e) {
-                        throw new RuntimeException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
-                    }
+            return () -> {
+                try {
+                    outer.run();
+                } catch (Exception e) {
+                    throw new RuntimeException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
                 }
             };
         }

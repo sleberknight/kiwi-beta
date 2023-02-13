@@ -49,6 +49,7 @@ class KiwiCloseablesTest {
     static class NiceStoppable {
         boolean stopped;
 
+        @SuppressWarnings("unused")
         public void stop() {
             stopped = true;
         }
@@ -57,6 +58,7 @@ class KiwiCloseablesTest {
     static class BadStoppable {
         boolean stopAttempted;
 
+        @SuppressWarnings("unused")
         public void stop() {
             stopAttempted = true;
             throw new RuntimeException("Unable to stop!");
@@ -75,6 +77,7 @@ class KiwiCloseablesTest {
     static class ThingCanBeClosed {
         boolean closed;
 
+        @SuppressWarnings("unused")
         public void close() throws IOException {
             closed = true;
         }
@@ -275,7 +278,7 @@ class KiwiCloseablesTest {
 
             assertThatIllegalStateException()
                     .isThrownBy(() -> KiwiCloseables.closeQuietly(descriptor))
-                    .withMessage( "invalid CloseDescriptor! closeMethodName is blank!");
+                    .withMessage("invalid CloseDescriptor! closeMethodName is blank!");
         }
     }
 
@@ -388,7 +391,7 @@ class KiwiCloseablesTest {
             var o5Descriptor = CloseDescriptor.of(o5, "close");
 
             var closeResults = KiwiCloseables.closeAll(
-                null, o1, o2Descriptor, null, o3, o4Descriptor, o5Descriptor, null);
+                    null, o1, o2Descriptor, null, o3, o4Descriptor, o5Descriptor, null);
 
             assertThat(o1.closeAttempted).isTrue();
             assertThat(o2.stopped).isTrue();
@@ -519,7 +522,7 @@ class KiwiCloseablesTest {
 
             assertThatIllegalStateException()
                     .isThrownBy(() -> KiwiCloseables.close(descriptor))
-                    .withMessage( "invalid CloseDescriptor! closeMethodName is blank!");
+                    .withMessage("invalid CloseDescriptor! closeMethodName is blank!");
         }
     }
 }

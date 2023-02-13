@@ -39,7 +39,7 @@ class KiwiRunnablesTest {
 
             var tr = ThrowingRunnable.of(r);
 
-            assertThatThrownBy(() -> tr.run())
+            assertThatThrownBy(tr::run)
                     .isExactlyInstanceOf(RuntimeException.class)
                     .hasMessage("oops");
         }
@@ -66,7 +66,7 @@ class KiwiRunnablesTest {
             var tr = ThrowingRunnable.of(cr);
             tr.run();
 
-            assertThatCode(() -> tr.run()).doesNotThrowAnyException();
+            assertThatCode(tr::run).doesNotThrowAnyException();
 
             assertThat(called).isTrue();
         }
@@ -92,12 +92,12 @@ class KiwiRunnablesTest {
             };
 
             var r = tr.toRunnable();
-            var thrown = catchException(() -> r.run());
+            var thrown = catchException(r::run);
 
             assertThat(thrown)
-                .isExactlyInstanceOf(RuntimeException.class)
-                .hasCauseExactlyInstanceOf(IOException.class)
-                .hasMessage("Re-throwing Exception thrown by wrapped ThrowingRunnable");
+                    .isExactlyInstanceOf(RuntimeException.class)
+                    .hasCauseExactlyInstanceOf(IOException.class)
+                    .hasMessage("Re-throwing Exception thrown by wrapped ThrowingRunnable");
 
             assertThat(thrown.getCause()).hasMessage("I/O oops");
         }
@@ -124,7 +124,7 @@ class KiwiRunnablesTest {
 
             var cr = tr.toCatchingRunnable();
 
-            assertThatCode(() -> cr.run()).doesNotThrowAnyException();
+            assertThatCode(cr::run).doesNotThrowAnyException();
         }
 
         @Test
@@ -149,7 +149,7 @@ class KiwiRunnablesTest {
 
             var cr2 = tr.toCatchingRunnable2();
 
-            assertThatCode(() -> cr2.run()).doesNotThrowAnyException();
+            assertThatCode(cr2::run).doesNotThrowAnyException();
         }
     }
 
@@ -167,7 +167,7 @@ class KiwiRunnablesTest {
                     () -> called2.set(true),
                     () -> called3.set(true));
 
-                    assertThat(called1).isTrue();
+            assertThat(called1).isTrue();
             assertThat(called2).isTrue();
             assertThat(called3).isTrue();
         }
@@ -189,7 +189,7 @@ class KiwiRunnablesTest {
                         throw new IOException("I/O failed");
                     });
 
-                    assertThat(called1).isTrue();
+            assertThat(called1).isTrue();
             assertThat(called2).isTrue();
             assertThat(called3).isTrue();
         }

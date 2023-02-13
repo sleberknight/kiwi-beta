@@ -9,14 +9,12 @@ import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kiwiproject.beta.slf4j.KiwiSlf4j;
 import org.slf4j.event.Level;
@@ -78,13 +76,13 @@ public class KiwiCloseables {
      * <p>
      * Before using this method, consider whether it is safe to ignore exceptions thrown while closing an I/O resource.
      * It might be safe when using "input" objects such as when reading a file or an input stream, but it generally
-     * is not safe when writing a file or to an output stream. Consider using {@link #closeAll(Object ...)}.
+     * is not safe when writing a file or to an output stream. Consider using {@link #closeAll(Object...)}.
      * <p>
      * The objects may be instances of {@link CloseDescriptor} to provide a custom name for the "close" method.
      * Otherwise, each object is assumed to use the default method name "close".
      *
      * @param objects the objects to close
-     * @see #closeAll(Object ...)
+     * @see #closeAll(Object...)
      */
     public static void closeAllQuietly(Object... objects) {
         validateNonNullVarargs(objects);
