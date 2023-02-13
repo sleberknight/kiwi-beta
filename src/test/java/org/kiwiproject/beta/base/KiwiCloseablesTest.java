@@ -63,6 +63,15 @@ class KiwiCloseablesTest {
         }
     }
 
+    static class SecretStoppable {
+        boolean closed;
+
+        @SuppressWarnings("unused")
+        private void stop() {
+            closed = true;
+        }
+    }
+
     static class ThingCanBeClosed {
         boolean closed;
 
@@ -423,6 +432,17 @@ class KiwiCloseablesTest {
             var closeResult = KiwiCloseables.close(descriptor);
 
             assertThat(closeable.closed).isTrue();
+            assertThat(closeResult.closed()).isTrue();
+        }
+
+        @Test
+        void shouldCloseWhenCloseMethodIsPrivate() {
+            var stoppable = new SecretStoppable();
+            var descriptor = CloseDescriptor.of(stoppable, "stop");
+
+            var closeResult = KiwiCloseables.close(descriptor);
+
+            assertThat(stoppable.closed).isTrue();
             assertThat(closeResult.closed()).isTrue();
         }
 

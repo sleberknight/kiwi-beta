@@ -271,15 +271,13 @@ public class KiwiCloseables {
 
     private static Exception tryCloseObject(Object object, String methodName) {
         try {
-            var method = object.getClass().getMethod(methodName);
+            var method = object.getClass().getDeclaredMethod(methodName);
             method.setAccessible(true);
             method.invoke(object);
             return null;
         } catch (Exception e) {
             return e;
         }
-
-        // TODO Add tests that close objects with private "close" methods
 
         // TODO Delete this??? Using reflection (above) allows us to throw Exception instead of Throwable, which seems better...
         // try {

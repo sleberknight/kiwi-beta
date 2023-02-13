@@ -5,6 +5,8 @@ import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
+import org.kiwiproject.base.CatchingRunnable;
+
 import java.util.Arrays;
 
 /**
@@ -17,14 +19,87 @@ public class KiwiRunnables {
 
     /**
      * A variation on {@link Runnable} which allows exceptions to be thrown.
+     * <p>
+     * Note that since it has no relation to {@link Runnable} it can't be used in things like Java's
+     * concurrency classes that expect {@link Runnable}. However, you can use the provided conversion
+     * methods to convert into {@link Runnable} objects.
      */
     @FunctionalInterface
     public interface ThrowingRunnable {
+
+        /**
+         * Does something that might throw a checked exception.
+         *
+         * @throws Exception if something went wrong
+         */
         @SuppressWarnings("java:S112")
         void run() throws Exception;
-    }
 
-    // TODO Add a default method in ThrowingRunnable to convert to Runnable and/or to CatchingRunnable?
+        /**
+         * Convert a plain {@link Runnable} into a {@link ThrowingRunnable}.
+         *
+         * @param runnable the Runnable to convert
+         * @return a new ThrowingRunnable that wraps the original Runnable
+         */
+        static ThrowingRunnable of(Runnable runnable) {
+            return new ThrowingRunnable() {
+                @Override
+                public void run() {
+                    runnable.run();
+                }
+            };
+        }
+
+        /**
+         * Converts this instance to a {@link Runnable} which catches any {@link Exception} that is thrown and wraps
+         * it in a {@link RuntimeException}.
+         *
+         * @return a new {@link Runnable} instance
+         */
+        default Runnable toRunnable() {
+            var outer = this;
+            return new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        outer.run();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
+                    }
+                }
+            };
+        }
+
+        /**
+         * Converts this instance to a {@link CatchingRunnable}.
+         *
+         * @return a new CatchingRunnable instance
+         */
+        default CatchingRunnable toCatchingRunnable() {
+            var outer = this;
+            return new CatchingRunnable() {
+
+                @Override
+                public void runSafely() {
+                    try {
+                        outer.run();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
+                    }
+                }
+
+            };
+        }
+
+        /**
+         * Converts this instance to a {@link CatchingRunnable2}.
+         *
+         * @return a new CatchingRunnable2 instance
+         */
+        default CatchingRunnable2 toCatchingRunnable2() {
+            return CatchingRunnable2.of(toRunnable());
+        }
+    }
 
     /**
      * Run all the {@link ThrowingRunnable} instances, ignoring exceptions.
@@ -48,7 +123,5 @@ public class KiwiRunnables {
         }
     }
 
-    // TODO Variants that accept actual Runnable??? Obviously they could only ignore RuntimeExceptions
-
-    // TODO variants for Runnable and/or ThrowingRunnable that capture exceptions and return a List<RunResult>???
+    // TODO variants that capture exceptions and return a List<RunResult>???
 }
