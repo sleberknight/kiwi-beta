@@ -319,6 +319,11 @@ class KiwiCloseablesTest {
             assertThat(result.hasError()).isTrue();
             assertThat(result.error()).isSameAs(ioException);
         }
+
+        @Test
+        void shouldNotAllowNullExceptionWhenCreatingForError() {
+            assertThatIllegalArgumentException().isThrownBy(() -> CloseResult.ofError(null));
+        }
     }
 
     @Nested

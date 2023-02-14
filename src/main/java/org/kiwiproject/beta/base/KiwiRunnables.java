@@ -1,11 +1,22 @@
 package org.kiwiproject.beta.base;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toUnmodifiableList;
+import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
+
 import com.google.common.annotations.Beta;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kiwiproject.base.CatchingRunnable;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Static utilities related to {@link Runnable}.
@@ -120,5 +131,79 @@ public class KiwiRunnables {
         }
     }
 
-    // TODO variants that capture exceptions and return a List<RunResult>???
+    /**
+     * Represents the result of an attempt to run a {@link ThrowingRunnable}.
+     */
+    @Accessors(fluent = true)
+    @Getter
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class RunResult {
+
+        /**
+         * If an error occurred while running an object, this contains the {@link Exception} that was thrown.
+         * If there was no error, this will be {@code null}.
+         */
+        @Nullable
+        private Exception error;
+
+        /**
+         * Create a new "successfully run" instance.
+         *
+         * @return a new instance representing a successful run
+         */
+        public static RunResult ofSuccess() {
+            return new RunResult(null);
+        }
+
+        /**
+         * Create a new "failed run" instance.
+         *
+         * @param exception the error that occurred while running an object
+         * @return a new instance representing the failed run
+         */
+        public static RunResult ofError(Exception exception) {
+            checkArgumentNotNull(exception);
+            return new RunResult(exception);
+        }
+
+        /**
+         * @return true if the operation succeeded; otherwise false
+         */
+        public boolean success() {
+            return isNull(error);
+        }
+
+        /**
+         * @return true if the operation failed; otherwise false
+         */
+        public boolean hasError() {
+            return nonNull(error);
+        }
+    }
+
+    /**
+     * Run all the given {@link ThrowingRunnable} objects, and return a single {@link RunResult} corresponding to
+     * each input object in order.
+     *
+     * @param runnables the {@link ThrowingRunnable}s to run
+     * @return
+     */
+    public static List<RunResult> runAll(ThrowingRunnable... runnables) {
+        return Arrays.stream(runnables).map(KiwiRunnables::run).collect(toUnmodifiableList());
+    }
+
+    /**
+     * Run the given {@link ThrowingRunnable}.
+     *
+     * @param runnable the {@link ThrowingRunnable} to run
+     * @return the {@link RunResult}
+     */
+    public static RunResult run(ThrowingRunnable runnable) {
+        try {
+            runnable.run();
+            return RunResult.ofSuccess();
+        } catch (Exception e) {
+            return RunResult.ofError(e);
+        }
+    }
 }

@@ -2,16 +2,23 @@ package org.kiwiproject.beta.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.catchException;
+import static org.kiwiproject.collect.KiwiLists.first;
+import static org.kiwiproject.collect.KiwiLists.fourth;
+import static org.kiwiproject.collect.KiwiLists.second;
+import static org.kiwiproject.collect.KiwiLists.third;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.kiwiproject.base.CatchingRunnable;
+import org.kiwiproject.beta.base.KiwiRunnables.RunResult;
 import org.kiwiproject.beta.base.KiwiRunnables.ThrowingRunnable;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @DisplayName("KiwiRunnables")
@@ -220,4 +227,105 @@ class KiwiRunnablesTest {
         }
     }
 
+    @Nested
+    class RunResults {
+
+        @Test
+        void shouldCreateForSuccess() {
+            var result = RunResult.ofSuccess();
+
+            assertThat(result.success()).isTrue();
+            assertThat(result.hasError()).isFalse();
+            assertThat(result.error()).isNull();
+        }
+
+        @Test
+        void shouldCreateForError() {
+            var message = "I/O failed - disk full";
+            var ioError = new IOException(message);
+            var result = RunResult.ofError(ioError);
+
+            assertThat(result.success()).isFalse();
+            assertThat(result.hasError()).isTrue();
+            assertThat(result.error()).isSameAs(ioError);
+        }
+
+        @Test
+        void shouldNotAllowNullExceptionWhenCreatingForError() {
+            assertThatIllegalArgumentException().isThrownBy(() -> RunResult.ofError(null));
+        }
+    }
+
+    @Nested
+    class RunAll {
+
+        @Test
+        void shouldReturnAllResults() {
+            var called1 = new AtomicBoolean();
+            var called2 = new AtomicBoolean();
+            var called3 = new AtomicBoolean();
+            var called4 = new AtomicBoolean();
+
+            var results = KiwiRunnables.runAll(
+                    () -> called1.set(true),
+                    () -> {
+                        called2.set(true);
+                        throw new IOException("I/O error - disk full");
+                    },
+                    () -> called3.set(true),
+                    () -> {
+                        called4.set(true);
+                        throw new IOException("I/O error - access denied");
+                    });
+
+            assertThat(first(results).success()).isTrue();
+
+            assertThat(second(results).hasError()).isTrue();
+            assertThat(second(results).error())
+                    .isExactlyInstanceOf(IOException.class)
+                    .hasMessage("I/O error - disk full");
+
+            assertThat(third(results).success()).isTrue();
+
+            assertThat(fourth(results).hasError()).isTrue();
+            assertThat(fourth(results).error())
+                    .isExactlyInstanceOf(IOException.class)
+                    .hasMessage("I/O error - access denied");
+
+            assertThat(called1).isTrue();
+            assertThat(called2).isTrue();
+            assertThat(called3).isTrue();
+            assertThat(called4).isTrue();
+        }
+    }
+
+    @Nested
+    class Run {
+
+        @Test
+        void shouldReturnSuccessfulResults() {
+            var called = new AtomicBoolean();
+
+            var result = KiwiRunnables.run(() -> called.set(true));
+
+            assertThat(result.success()).isTrue();
+            assertThat(called).isTrue();
+        }
+
+        @Test
+        void shouldReturnErrorResults() {
+            var called = new AtomicBoolean();
+
+            var result = KiwiRunnables.run(() -> {
+                called.set(true);
+                throw new SocketTimeoutException("Timed out after 10 seconds");
+            });
+
+            assertThat(result.hasError()).isTrue();
+            assertThat(result.error())
+                    .isExactlyInstanceOf(SocketTimeoutException.class)
+                    .hasMessage("Timed out after 10 seconds");
+            assertThat(called).isTrue();
+        }
+    }
 }

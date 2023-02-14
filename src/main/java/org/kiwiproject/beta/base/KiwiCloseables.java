@@ -45,7 +45,15 @@ public class KiwiCloseables {
 
         private static final String DEFAULT_CLOSE_METHOD_NAME = "close";
 
+        /**
+         * Contains the object to be closed, or {@code null}.
+         */
+        @Nullable
         private Object object;
+
+        /**
+         * The name of the "close" method.
+         */
         private String closeMethodName;
 
         /**
@@ -170,7 +178,9 @@ public class KiwiCloseables {
 
         /**
          * If an error occurred closing an object, this contains the {@link Exception} that was thrown.
+         * If there was no error, this will be {@code null}.
          */
+        @Nullable
         private Exception error;
 
         /**
@@ -218,7 +228,8 @@ public class KiwiCloseables {
     }
 
     /**
-     * Close all the given objects, and return a single {@link CloseResult} corresponding to each input object.
+     * Close all the given objects, and return a single {@link CloseResult} corresponding to each input object
+     * in order.
      * <p>
      * The objects may be instances of {@link CloseDescriptor} to provide a custom name for the "close" method.
      * Otherwise, each object is assumed to use the default method name "close".
