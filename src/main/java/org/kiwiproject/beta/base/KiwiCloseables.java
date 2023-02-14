@@ -276,15 +276,6 @@ public class KiwiCloseables {
         } catch (Exception e) {
             return e;
         }
-
-        // TODO Delete this??? Using reflection (above) allows us to throw Exception instead of Throwable, which seems better...
-        // try {
-        //     var handle = MethodHandles.lookup().findVirtual(object.getClass(), methodName, methodType(Void.TYPE));
-        //     handle.invoke(object);
-        //     return null;
-        // } catch (Throwable e) {
-        //     return e;
-        // }
     }
 
     private static void logExceptionClosingObject(Level level, Object object, String methodName, Exception exception) {
