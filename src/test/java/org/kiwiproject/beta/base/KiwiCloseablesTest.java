@@ -30,6 +30,7 @@ class KiwiCloseablesTest {
     static class NiceCloseable implements Closeable {
         boolean closed;
 
+        @SuppressWarnings("RedundantThrows")
         @Override
         public void close() throws IOException {
             closed = true;
@@ -77,7 +78,7 @@ class KiwiCloseablesTest {
     static class ThingCanBeClosed {
         boolean closed;
 
-        @SuppressWarnings("unused")
+        @SuppressWarnings({"unused", "RedundantThrows"})
         public void close() throws IOException {
             closed = true;
         }
@@ -129,6 +130,7 @@ class KiwiCloseablesTest {
             assertThatCode(() -> KiwiCloseables.closeAllQuietly(null, null)).doesNotThrowAnyException();
         }
 
+        @SuppressWarnings("resource")
         @Test
         void shouldCloseCloseables() {
             var c1 = new BadCloseable();
@@ -164,6 +166,7 @@ class KiwiCloseablesTest {
             assertThat(c1.closed).isTrue();
         }
 
+        @SuppressWarnings("resource")
         @Test
         void shouldCloseAnything() {
             var o1 = new BadCloseable();
@@ -262,6 +265,7 @@ class KiwiCloseablesTest {
             assertThat(closeable.closed).isTrue();
         }
 
+        @SuppressWarnings("resource")
         @Test
         void shouldCloseCloseablesThatThrowIOException() {
             var closeable = new BadCloseable();

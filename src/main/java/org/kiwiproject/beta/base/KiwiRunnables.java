@@ -55,7 +55,7 @@ public class KiwiRunnables {
                 try {
                     outer.run();
                 } catch (Exception e) {
-                    throw new RuntimeException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
+                    throw new WrappedException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
                 }
             };
         }
@@ -67,17 +67,12 @@ public class KiwiRunnables {
          */
         default CatchingRunnable toCatchingRunnable() {
             var outer = this;
-            return new CatchingRunnable() {
-
-                @Override
-                public void runSafely() {
-                    try {
-                        outer.run();
-                    } catch (Exception e) {
-                        throw new RuntimeException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
-                    }
+            return () -> {
+                try {
+                    outer.run();
+                } catch (Exception e) {
+                    throw new WrappedException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
                 }
-
             };
         }
 
@@ -88,6 +83,12 @@ public class KiwiRunnables {
          */
         default CatchingRunnable2 toCatchingRunnable2() {
             return CatchingRunnable2.of(toRunnable());
+        }
+    }
+
+    public static class WrappedException extends RuntimeException {
+        public WrappedException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 
@@ -103,11 +104,11 @@ public class KiwiRunnables {
     /**
      * Run the {@link ThrowingRunnable} instance, ignoring exceptions.
      *
-     * @param runnnable the {@link ThrowingRunnable} to run
+     * @param runnable the {@link ThrowingRunnable} to run
      */
-    public static void runQuietly(ThrowingRunnable runnnable) {
+    public static void runQuietly(ThrowingRunnable runnable) {
         try {
-            runnnable.run();
+            runnable.run();
         } catch (Exception e) {
             LOG.warn("Suppressed exception:", e);
         }

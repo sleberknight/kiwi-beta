@@ -17,11 +17,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @DisplayName("KiwiRunnables")
 class KiwiRunnablesTest {
 
+    @DisplayName("ThrowingRunnable")
     @Nested
     class ThrowingRunnableTests {
 
         @Test
-        void shouldCreateFromNiceRunnable() throws Exception {
+        void shouldCreateFromRunnable() throws Exception {
             var called = new AtomicBoolean();
             Runnable r = () -> called.set(true);
 
@@ -32,7 +33,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldCreateFromThrowingRunnable() {
+        void shouldCreateFromRunnableThatThrowsException() {
             Runnable r = () -> {
                 throw new RuntimeException("oops");
             };
@@ -45,7 +46,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldCreateFromNiceCatchingRunnable() throws Exception {
+        void shouldCreateFromCatchingRunnable() throws Exception {
             var called = new AtomicBoolean();
             CatchingRunnable cr = () -> called.set(true);
 
@@ -56,7 +57,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldCreateFromThrowingCatchingRunnable() throws Exception {
+        void shouldCreateFromCatchingRunnableThatThrowsException() {
             var called = new AtomicBoolean();
             CatchingRunnable cr = () -> {
                 called.set(true);
@@ -64,7 +65,6 @@ class KiwiRunnablesTest {
             };
 
             var tr = ThrowingRunnable.of(cr);
-            tr.run();
 
             assertThatCode(tr::run).doesNotThrowAnyException();
 
@@ -72,7 +72,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldConvertToRunnableThatIsNice() {
+        void shouldConvertToRunnable() {
             var called = new AtomicBoolean();
             ThrowingRunnable tr = () -> called.set(true);
 
@@ -83,7 +83,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldConvertToRunnableThatThrows() {
+        void shouldConvertToRunnable_AndWrapExceptions() {
             var tr = new ThrowingRunnable() {
                 @Override
                 public void run() throws Exception {
@@ -95,7 +95,7 @@ class KiwiRunnablesTest {
             var thrown = catchException(r::run);
 
             assertThat(thrown)
-                    .isExactlyInstanceOf(RuntimeException.class)
+                    .isExactlyInstanceOf(KiwiRunnables.WrappedException.class)
                     .hasCauseExactlyInstanceOf(IOException.class)
                     .hasMessage("Re-throwing Exception thrown by wrapped ThrowingRunnable");
 
@@ -103,7 +103,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldConvertToCatchingRunnableThatIsNice() {
+        void shouldConvertToCatchingRunnable() {
             var called = new AtomicBoolean();
             ThrowingRunnable tr = () -> called.set(true);
 
@@ -114,7 +114,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldConvertToCatchingRunnableThatThrows() {
+        void shouldConvertToCatchingRunnable_AndWrapExceptions() {
             var tr = new ThrowingRunnable() {
                 @Override
                 public void run() throws Exception {
@@ -128,7 +128,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldConvertToCatchingRunnable2ThatIsNice() {
+        void shouldConvertToCatchingRunnable2() {
             var called = new AtomicBoolean();
             ThrowingRunnable tr = () -> called.set(true);
 
@@ -139,7 +139,7 @@ class KiwiRunnablesTest {
         }
 
         @Test
-        void shouldConvertToCatchingRunnable2ThatThrows() {
+        void shouldConvertToCatchingRunnable2_AndWrapExceptions() {
             var tr = new ThrowingRunnable() {
                 @Override
                 public void run() throws Exception {
