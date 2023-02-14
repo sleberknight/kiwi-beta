@@ -20,6 +20,8 @@ import org.kiwiproject.beta.slf4j.KiwiSlf4j;
 import org.slf4j.event.Level;
 
 import java.io.Closeable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -277,11 +279,17 @@ public class KiwiCloseables {
     private static Exception tryCloseObject(Object object, String methodName) {
         try {
             var method = object.getClass().getDeclaredMethod(methodName);
-            method.setAccessible(true);
+            setAccessibleIfNotPublic(method);
             method.invoke(object);
             return null;
         } catch (Exception e) {
             return e;
+        }
+    }
+
+    private static void setAccessibleIfNotPublic(Method method) {
+        if (!Modifier.isPublic(method.getModifiers())) {
+            method.setAccessible(true);
         }
     }
 
