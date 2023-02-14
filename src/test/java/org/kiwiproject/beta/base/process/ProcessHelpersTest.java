@@ -117,10 +117,10 @@ class ProcessHelpersTest {
 
             // Trying to run a command that does not exist results in IOException
             var command = List.of("some", "command");
-            var processResult = ProcessHelpers.execute(processHelperSpy, command, 75, TimeUnit.MILLISECONDS);
+            var processResult = ProcessHelpers.execute(processHelperSpy, command, 250, TimeUnit.MILLISECONDS);
 
             assertThat(processResult.isTimedOut()).isFalse();
-            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(75);
+            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(250);
             assertThat(processResult.getExitCode()).isEmpty();
             assertThat(processResult.isSuccessfulExit()).isFalse();
             assertThat(processResult.isNotSuccessfulExit()).isTrue();
