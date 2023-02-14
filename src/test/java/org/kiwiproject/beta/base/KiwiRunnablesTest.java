@@ -97,7 +97,7 @@ class KiwiRunnablesTest {
             assertThat(thrown)
                     .isExactlyInstanceOf(KiwiRunnables.WrappedException.class)
                     .hasCauseExactlyInstanceOf(IOException.class)
-                    .hasMessage("Re-throwing Exception thrown by wrapped ThrowingRunnable");
+                    .hasMessage("Contains Exception thrown by a wrapped ThrowingRunnable");
 
             assertThat(thrown.getCause()).hasMessage("I/O oops");
         }

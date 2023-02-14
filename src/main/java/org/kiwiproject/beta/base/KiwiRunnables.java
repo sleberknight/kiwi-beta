@@ -55,7 +55,7 @@ public class KiwiRunnables {
                 try {
                     outer.run();
                 } catch (Exception e) {
-                    throw new WrappedException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
+                    throw new WrappedException(e);
                 }
             };
         }
@@ -71,7 +71,7 @@ public class KiwiRunnables {
                 try {
                     outer.run();
                 } catch (Exception e) {
-                    throw new WrappedException("Re-throwing Exception thrown by wrapped ThrowingRunnable", e);
+                    throw new WrappedException(e);
                 }
             };
         }
@@ -86,9 +86,15 @@ public class KiwiRunnables {
         }
     }
 
+    /**
+     * A {@link RuntimeException} that contains a checked exception thrown by a {@link ThrowingRunnable}.
+     * <p>
+     * This exception type is intended to be used when converting {@link ThrowingRunnable} to a {@link Runnable}, which
+     * cannot throw checked exceptions.
+     */
     public static class WrappedException extends RuntimeException {
-        public WrappedException(String message, Throwable cause) {
-            super(message, cause);
+        public WrappedException(Throwable cause) {
+            super("Contains Exception thrown by a wrapped ThrowingRunnable", cause);
         }
     }
 
