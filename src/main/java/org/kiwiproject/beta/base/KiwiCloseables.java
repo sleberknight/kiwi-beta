@@ -99,6 +99,9 @@ public class KiwiCloseables {
      * Before using this method, consider whether it is safe to ignore exceptions thrown while closing an I/O resource.
      * It might be safe when using "input" objects such as when reading a file or an input stream, but it generally
      * is not safe when writing a file or to an output stream. Consider using {@link #close(CloseDescriptor)}.
+     * <p>
+     * If the {@link CloseDescriptor} refers to a non-public method, this method will attempt to invoke it. But this
+     * may result in an {@link IllegalAccessException}.
      *
      * @param descriptor the description of an object andf its "close" method
      * @see #close(CloseDescriptor)
@@ -236,6 +239,10 @@ public class KiwiCloseables {
 
     /**
      * Close an object described by the {@link CloseDescriptor}.
+     * <p>
+     * If the {@link CloseDescriptor} refers to a non-public method, this method will attempt to invoke it. But this
+     * may result in an {@link IllegalAccessException}.
+
      *
      * @param descriptor the description of an object andf its "close" method
      * @return the {@link CloseResult}
