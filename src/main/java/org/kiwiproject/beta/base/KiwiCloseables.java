@@ -255,7 +255,6 @@ public class KiwiCloseables {
      * <p>
      * If the {@link CloseDescriptor} refers to a non-public method, this method will attempt to invoke it. But this
      * may result in an {@link IllegalAccessException}.
-
      *
      * @param descriptor the description of an object andf its "close" method
      * @return the {@link CloseResult}
