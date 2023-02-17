@@ -43,6 +43,7 @@ class KiwiServletRequestsTest {
             var certificates = KiwiServletRequests.getCertificates(request);
 
             assertThat(certificates)
+                    .isNotNull()
                     .extracting(cert -> cert.getSubjectX500Principal().getName())
                     .containsExactly(name);
         }
@@ -75,6 +76,29 @@ class KiwiServletRequestsTest {
         void shouldReturnNull_WhenRequestDoesNotContainACertificate() {
             var request = KiwiServletMocks.mockHttpServletRequestWithNoCertificate();
             var certificates = KiwiServletRequests.getCertificatesOrEmpty(request);
+            assertThat(certificates).isEmpty();
+        }
+    }
+
+    @Nested
+    class GetCertificatesAsList {
+
+        @Test
+        void shouldReturnTheCerts_WhenRequestContainsACertificate() {
+            var name = "CN=Alice,OU=Marketing,O=ACME Inc,C=US";
+            var request = KiwiServletMocks.mockHttpServletRequestWithCertificate(name);
+            var certificates = KiwiServletRequests.getCertificatesAsList(request);
+
+            assertThat(certificates)
+                    .isNotNull()
+                    .extracting(cert -> cert.getSubjectX500Principal().getName())
+                    .containsExactly(name);
+        }
+
+        @Test
+        void shouldReturnEmptyList_WhenRequestDoesNotContainACertificate() {
+            var request = KiwiServletMocks.mockHttpServletRequestWithNoCertificate();
+            var certificates = KiwiServletRequests.getCertificatesAsList(request);
             assertThat(certificates).isEmpty();
         }
     }

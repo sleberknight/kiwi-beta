@@ -6,11 +6,13 @@ import static java.util.Objects.nonNull;
 
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kiwiproject.collect.KiwiArrays;
 
-import javax.annotation.Nullable;
 import javax.servlet.ServletRequest;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,8 +28,8 @@ public class KiwiServletRequests {
         return nonNull(request.getAttribute(X509_CERTIFICATE_ATTRIBUTE));
     }
 
-    public static @Nullable
-    X509Certificate[] getCertificates(ServletRequest request) {
+    @Nullable
+    public static X509Certificate[] getCertificates(ServletRequest request) {
         return (X509Certificate[]) request.getAttribute(X509_CERTIFICATE_ATTRIBUTE);
     }
 
@@ -36,11 +38,16 @@ public class KiwiServletRequests {
         return Optional.ofNullable(certificates);
     }
 
-    public static boolean hasCertificateIn(X509Certificate[] certificateChain) {
+    public static List<X509Certificate> getCertificatesAsList(ServletRequest request) {
+        var certificates = getCertificates(request);
+        return isNull(certificates) ? List.of() : List.of(certificates);
+    }
+
+    public static boolean hasCertificateIn(@Nullable X509Certificate[] certificateChain) {
         return KiwiArrays.isNotNullOrEmpty(certificateChain) && nonNull(certificateChain[0]);
     }
 
-    public static boolean doesNotHaveCertificateIn(X509Certificate[] certificateChain) {
+    public static boolean doesNotHaveCertificateIn(@Nullable X509Certificate[] certificateChain) {
         return KiwiArrays.isNullOrEmpty(certificateChain) || isNull(certificateChain[0]);
     }
 
@@ -50,7 +57,7 @@ public class KiwiServletRequests {
         return certificateChain[0];
     }
 
-    public static Optional<X509Certificate> firstCertificateOrEmpty(X509Certificate[] certificateChain) {
+    public static Optional<X509Certificate> firstCertificateOrEmpty(@Nullable X509Certificate[] certificateChain) {
         if (KiwiArrays.isNullOrEmpty(certificateChain)) {
             return Optional.empty();
         }
