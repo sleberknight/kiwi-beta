@@ -3,6 +3,7 @@ package org.kiwiproject.beta.dropwizard;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.annotations.Beta;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,6 +46,7 @@ import io.dropwizard.logging.layout.LayoutFactory;
  * @see FileAppenderFactory
  * @see RollingFileAppender
  */
+@Beta
 @Getter
 @Setter
 @JsonTypeName("rolling")
