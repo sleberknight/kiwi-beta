@@ -2,7 +2,6 @@ package org.kiwiproject.beta.test.logback;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
@@ -32,15 +31,8 @@ public class InMemoryAppender extends AppenderBase<ILoggingEvent> {
     }
 
     /**
-     * Assert this appender has the expected number of logging events, and if the assertion succeeds, return a
-     * list containing those events.
+     * {@inheritDoc}
      */
-    public List<ILoggingEvent> assertNumberOfLoggingEventsAndGet(int expectedEventCount) {
-        var events = getOrderedEvents();
-        assertThat(events).hasSize(expectedEventCount);
-        return events;
-    }
-
     @Override
     protected synchronized void append(ILoggingEvent eventObject) {
         eventMap.put(messageOrder.incrementAndGet(), eventObject);
@@ -64,17 +56,32 @@ public class InMemoryAppender extends AppenderBase<ILoggingEvent> {
         return Map.copyOf(eventMap);
     }
 
+    /**
+     * Return the logged {@link ILoggingEvent} instances.
+     *
+     * @return a list containing the logged events
+     */
     public List<ILoggingEvent> getOrderedEvents() {
         return getOrderedEventStream().collect(toList());
     }
 
+    /**
+     * Return the logged messages.
+     *
+     * @return a list containing the logged event messages
+     */
     public List<String> getOrderedEventMessages() {
         return getOrderedEventStream()
                 .map(ILoggingEvent::getFormattedMessage)
                 .collect(toList());
     }
 
-    private Stream<ILoggingEvent> getOrderedEventStream() {
+    /**
+     * Return a stream containing the logged events.
+     *
+     * @return a stream of the logged events
+     */
+    public Stream<ILoggingEvent> getOrderedEventStream() {
         return eventMap.values()
                 .stream()
                 .sorted(comparing(ILoggingEvent::getTimeStamp));
