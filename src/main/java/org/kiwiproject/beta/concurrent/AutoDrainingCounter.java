@@ -5,7 +5,8 @@ import static java.util.Objects.nonNull;
 import com.google.common.annotations.Beta;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Nullable;
+import org.checkerframework.checker.nullness.qual.Nullable;
+
 import java.io.Closeable;
 import java.time.Duration;
 import java.util.concurrent.Executors;

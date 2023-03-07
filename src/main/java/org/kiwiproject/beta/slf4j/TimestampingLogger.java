@@ -7,7 +7,6 @@ import org.kiwiproject.base.KiwiStrings;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
-import javax.annotation.concurrent.NotThreadSafe;
 import java.time.Duration;
 
 /**
@@ -20,7 +19,6 @@ import java.time.Duration;
  * <p>
  * <em>Currently, this is intended only to be used within a single thread.</em>
  */
-@NotThreadSafe
 @Beta
 public class TimestampingLogger {
 

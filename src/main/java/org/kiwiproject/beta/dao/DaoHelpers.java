@@ -11,6 +11,8 @@ import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kiwiproject.collect.KiwiArrays;
 import org.kiwiproject.collect.KiwiLists;
 import org.kiwiproject.spring.data.KiwiSort;
@@ -18,7 +20,6 @@ import org.kiwiproject.spring.data.KiwiSort.Direction;
 import org.kiwiproject.spring.data.PagingRequest;
 import org.springframework.data.domain.Sort;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -90,7 +91,7 @@ public class DaoHelpers {
                 secondarySortDirection);
     }
 
-    private static KiwiSort.Direction toKiwiSortDirectionOrNull(@Nullable Sort.Direction sortDirection) {
+    private static KiwiSort.Direction toKiwiSortDirectionOrNull(Sort.@Nullable Direction sortDirection) {
         return isNull(sortDirection) ? null : toKiwiSortDirection(sortDirection);
     }
 
@@ -124,7 +125,7 @@ public class DaoHelpers {
     public static void addSort(StringBuilder query,
                                AllowedFields allowedSortFields,
                                String sortField,
-                               @Nullable KiwiSort.Direction sortDirection) {
+                               @Nullable Direction sortDirection) {
 
         addSorts(query, allowedSortFields, sortField, sortDirection, null, null);
     }
@@ -167,9 +168,9 @@ public class DaoHelpers {
             StringBuilder query,
             AllowedFields allowedSortFields,
             @Nullable String primarySortField,
-            @Nullable KiwiSort.Direction primarySortDirection,
+            @Nullable Direction primarySortDirection,
             @Nullable String secondarySortField,
-            @Nullable KiwiSort.Direction secondarySortDirection) {
+            @Nullable Direction secondarySortDirection) {
 
         checkQueryNotNull(query);
         checkAllowedSortFieldsNotNull(allowedSortFields);
@@ -203,7 +204,7 @@ public class DaoHelpers {
 
     private static void logWarningIfOnlySecondarySort(String primarySortField,
                                                       String secondarySortField,
-                                                      @Nullable KiwiSort.Direction secondarySortDirection) {
+                                                      @Nullable Direction secondarySortDirection) {
 
         if (onlyContainsSecondarySort(primarySortField, secondarySortField)) {
             LOG.warn("A secondary sort ({} {}) was specified without a primary sort. Ignoring.",
@@ -301,7 +302,7 @@ public class DaoHelpers {
                                 AllowedFields allowedSortFields,
                                 Connector connector,
                                 String sortField,
-                                @Nullable KiwiSort.Direction sortDirection) {
+                                KiwiSort.@Nullable Direction sortDirection) {
 
         checkQueryNotNull(query);
         checkAllowedSortFieldsNotNull(allowedSortFields);
