@@ -100,44 +100,64 @@
 
         <!-- required dependencies -->
 
+        <dependency>
+            <groupId>org.kiwiproject</groupId>
+            <artifactId>kiwi</artifactId>
+            <version>${kiwi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- provided dependencies -->
+
         <!--
-            Requires compile scope since the InMemoryAppender currently uses AssertJ
+            Requires compile (provided) scope since the InMemoryAppender currently uses AssertJ
             to provide some test assertion helper methods.
          -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
             <version>${camel.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-lifecycle</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-logging</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-util</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -149,6 +169,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -166,48 +187,43 @@
         </dependency>
 
         <dependency>
-            <groupId>org.kiwiproject</groupId>
-            <artifactId>kiwi</artifactId>
-            <version>${kiwi.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-common</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.kiwiproject</groupId>
             <artifactId>metrics-healthchecks-severity</artifactId>
             <version>${metrics-healthchecks-severity.version}</version>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Requires compile scope since used in the InMemoryAppender -->
+        <!-- Requires compile (provided) scope since used in the InMemoryAppender -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <scope>provided</scope>
         </dependency>
 
-        <!-- Requires compile scope since it is used in KiwiServletMocks -->
+        <!-- Requires compile (provided) scope since it is used in KiwiServletMocks -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- optional dependencies -->
