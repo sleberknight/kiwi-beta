@@ -37,6 +37,7 @@
         <!-- Versions for required/provided dependencies -->
 
         <camel.version>3.20.2</camel.version>
+        <checker-qual.version>3.32.0</checker-qual.version>
         <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
         <kiwi.version>2.4.0</kiwi.version>
@@ -58,6 +59,12 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+                <version>${checker-qual.version}</version>
+            </dependency>
 
             <!--
                 NOTE:
@@ -104,6 +111,11 @@
             <groupId>org.kiwiproject</groupId>
             <artifactId>kiwi</artifactId>
             <version>${kiwi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
         </dependency>
 
         <dependency>
