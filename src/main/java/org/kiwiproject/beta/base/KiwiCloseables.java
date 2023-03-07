@@ -7,6 +7,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
+import static org.kiwiproject.beta.reflect.KiwiReflection2.isPublic;
 
 import com.google.common.annotations.Beta;
 import lombok.AccessLevel;
@@ -21,7 +22,6 @@ import org.slf4j.event.Level;
 
 import java.io.Closeable;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -298,7 +298,7 @@ public class KiwiCloseables {
     }
 
     private static void setAccessibleIfNotPublic(Method method) {
-        if (!Modifier.isPublic(method.getModifiers())) {
+        if (!isPublic(method)) {
             method.setAccessible(true);
         }
     }
