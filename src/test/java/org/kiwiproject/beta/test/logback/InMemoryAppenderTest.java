@@ -2,6 +2,7 @@ package org.kiwiproject.beta.test.logback;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.kiwiproject.collect.KiwiLists.first;
@@ -134,11 +135,11 @@ class InMemoryAppenderTest {
     }
 
     @Nested
-    class AssertNumberOfLoggingEventsAndGet {
+    class EventAssertions {
 
         @Test
         void shouldAssertWhenEmpty() {
-            var events = appender.assertNumberOfLoggingEventsAndGet(0);
+            var events = InMemoryAppenderAssertions.assertThat(appender).hasNumberOfLoggingEventsAndGet(0);
             assertThat(events).isEmpty();
         }
 
@@ -149,12 +150,45 @@ class InMemoryAppenderTest {
 
             var eventsRef = new AtomicReference<List<ILoggingEvent>>();
             assertThatCode(() -> {
-                var loggingEvents = appender.assertNumberOfLoggingEventsAndGet(5);
+                var loggingEvents = InMemoryAppenderAssertions.assertThat(appender).hasNumberOfLoggingEventsAndGet(5);
                 eventsRef.set(loggingEvents);
             }).doesNotThrowAnyException();
 
             var events = eventsRef.get();
             assertThat(events).extracting(ILoggingEvent::getFormattedMessage).containsExactly(messages);
+        }
+
+        @Test
+        void shouldAssertNumberOfLoggingEventsOnly() {
+            var messages = IntStream.range(0, 5).mapToObj(i -> "Message " + i).toArray(String[]::new);
+            Arrays.stream(messages).forEach(logger::debug);
+
+            assertThatCode(() -> InMemoryAppenderAssertions.assertThat(appender).hasNumberOfLoggingEventsAndGet(5))
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        void shouldGetOrderedLoggingEventsOnly() {
+            var messages = IntStream.range(0, 5).mapToObj(i -> "Message " + i).toArray(String[]::new);
+            Arrays.stream(messages).forEach(logger::debug);
+
+            List<ILoggingEvent> events = InMemoryAppenderAssertions.assertThat(appender).andGetOrderedEvents();
+            assertThat(events).extracting(ILoggingEvent::getFormattedMessage).containsExactly(messages);
+        }
+
+        @Test
+        void shouldCheckContainsMessageWhenItExists() {
+            var messages = IntStream.range(0, 5).mapToObj(i -> "Message " + i).toArray(String[]::new);
+            Arrays.stream(messages).forEach(logger::debug);
+
+            assertThatCode(() -> InMemoryAppenderAssertions.assertThat(appender).containsMessage("Message 0").containsMessage("Message 4"))
+                    .doesNotThrowAnyException();
+        }
+
+        @Test
+        void shouldCheckContainsMessageWhenItDoesNotExist() {
+            assertThatExceptionOfType(AssertionError.class)
+                    .isThrownBy(() -> InMemoryAppenderAssertions.assertThat(appender).containsMessage("Message 0"));
         }
     }
 }
