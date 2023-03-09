@@ -40,7 +40,7 @@
         <checker-qual.version>3.32.0</checker-qual.version>
         <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
-        <kiwi.version>2.4.0</kiwi.version>
+        <kiwi.version>2.5.0</kiwi.version>
         <metrics-healthchecks-severity.version>1.0.11</metrics-healthchecks-severity.version>
 
         <!-- Versions for optional dependencies -->
