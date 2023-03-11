@@ -1,5 +1,6 @@
 package org.kiwiproject.beta.jdbc;
 
+import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.util.stream.IntStream;
 /**
  * Utilities relating to JDBC metadata.
  */
+@Beta
 @UtilityClass
 public class KiwiJdbcMetaData {
 

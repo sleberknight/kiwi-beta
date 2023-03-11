@@ -1,5 +1,6 @@
 package org.kiwiproject.beta.jdbc;
 
+import com.google.common.annotations.Beta;
 import org.kiwiproject.base.KiwiPreconditions;
 
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.sql.SQLException;
  * be moved to kiwi, then maybe deprecated and removed from
  * kiwi-test, though it would not hurt anything to leave it.
  */
+@Beta
 public class RuntimeSQLException extends RuntimeException {
 
     /**
