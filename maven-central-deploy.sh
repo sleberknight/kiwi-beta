@@ -64,8 +64,8 @@ fi
 
 # confirm release unless configured to skip confirmation
 if [[ "$confirm_release" -eq 1 ]]; then
-  read -r -p 'Really deploy to maven central repository  (yes/no)? '
-  confirmation="$REPLY"
+  read -r -p 'Really deploy to maven central repository (yes/no)? '
+  confirmation="${REPLY}"
 else
   confirmation='yes'
 fi
