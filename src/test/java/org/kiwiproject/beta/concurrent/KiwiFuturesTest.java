@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.kiwiproject.base.DefaultEnvironment;
+import org.kiwiproject.beta.concurrent.KiwiFutures.FutureState;
 
 import java.io.IOException;
 import java.util.concurrent.CancellationException;
@@ -15,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 
 class KiwiFuturesTest {
 
@@ -60,9 +62,11 @@ class KiwiFuturesTest {
                 return 42 * 42;
             });
 
-            assertThatIllegalStateException()
-                    .isThrownBy(() -> KiwiFutures.resultNow(future))
-                    .withMessage("Task has not completed");
+            consumeThenCancel(future, theFuture -> {
+                assertThatIllegalStateException()
+                        .isThrownBy(() -> KiwiFutures.resultNow(theFuture))
+                        .withMessage("Task has not completed");
+            });
         }
 
         @Test
@@ -130,9 +134,11 @@ class KiwiFuturesTest {
                 return 24 * 42;
             });
 
-            assertThatIllegalStateException()
-                    .isThrownBy(() -> KiwiFutures.exceptionNow(future))
-                    .withMessage("Task has not completed");
+            consumeThenCancel(future, theFuture -> {
+                assertThatIllegalStateException()
+                        .isThrownBy(() -> KiwiFutures.exceptionNow(theFuture))
+                        .withMessage("Task has not completed");
+            });
         }
 
         @Test
@@ -164,6 +170,70 @@ class KiwiFuturesTest {
     }
 
     @Nested
+    class State {
+
+        @Test
+        void shouldThrowIllegalArgument_WhenGivenNullFuture() {
+            assertThatIllegalArgumentException().isThrownBy(() -> KiwiFutures.state(null));
+        }
+
+        @Test
+        void shouldReturn_RUNNING_WhenIsNotDone() {
+            var future = CompletableFuture.supplyAsync(() -> {
+                new DefaultEnvironment().sleepQuietly(10, TimeUnit.SECONDS);
+                return 24 * 84;
+            });
+
+            consumeThenCancel(future, theFuture -> {
+                assertThat(KiwiFutures.state(future)).isEqualTo(FutureState.RUNNING);
+            });
+        }
+
+        @Test
+        void shouldReturn_CANCELLED_WhenFutureWasCancelled() {
+            var future = CompletableFuture.supplyAsync(() -> {
+                new DefaultEnvironment().sleepQuietly(10, TimeUnit.SECONDS);
+                return 42 * 42;
+            });
+
+            var wasCancelled = future.cancel(true);
+            assertThat(wasCancelled).isTrue();
+
+            assertThat(KiwiFutures.state(future)).isEqualTo(FutureState.CANCELLED);
+        }
+
+        @Test
+        void shouldReturn_SUCCESS_WhenCompletesWithResult() {
+            var value = 84;
+            var future = CompletableFuture.completedFuture(value);
+
+            assertThat(KiwiFutures.state(future)).isEqualTo(FutureState.SUCCESS);
+        }
+
+        @Test
+        void shouldThrowIllegalState_WhenInterruptedExceptionOccurs() throws Exception {
+            KiwiFutures.interruptedExceptionHandler = e -> {
+                return new IllegalStateException("It was quite rude to interrupt me like that", e);
+            };
+
+            Future<Long> future = new AlwaysInterruptingFuture();
+
+            assertThatIllegalStateException()
+                    .isThrownBy(() -> KiwiFutures.state(future))
+                    .withMessage("It was quite rude to interrupt me like that")
+                    .withCauseExactlyInstanceOf(InterruptedException.class);
+        }
+
+        @Test
+        void shouldReturn_FAILED_WhenCompletesExceptionally() {
+            var exception = new IOException("I/O error - device 456");
+            var future = CompletableFuture.failedFuture(exception);
+
+            assertThat(KiwiFutures.state(future)).isEqualTo(FutureState.FAILED);
+        }
+    }
+
+    @Nested
     class IsNotDone {
 
         @Test
@@ -184,6 +254,17 @@ class KiwiFuturesTest {
             var future = CompletableFuture.completedFuture("foo");
 
             assertThat(KiwiFutures.isNotDone(future)).isFalse();
+        }
+    }
+
+    private static <V> void consumeThenCancel(Future<V> future, Consumer<Future<V>> consumer) {
+        try {
+            consumer.accept(future);
+        } finally {
+            var wasCancelled = future.cancel(true);
+            assertThat(wasCancelled)
+                    .describedAs("Expected the Future to be cancelled but wasn't (was it already cancelled or completed?)")
+                    .isTrue();
         }
     }
 
