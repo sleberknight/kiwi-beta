@@ -65,6 +65,7 @@ public class KiwiFutures {
          * @see KiwiFutures#resultNow(Future)
          */
         SUCCESS,
+
         /**
          * The task completed with an exception.
          *
