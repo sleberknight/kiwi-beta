@@ -4,7 +4,6 @@ import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
-
 import lombok.experimental.UtilityClass;
 
 import java.util.concurrent.CancellationException;
@@ -13,7 +12,7 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 
 /**
- * Utilties related to {@link Future}.
+ * Utilities related to {@link Future}.
  */
 @UtilityClass
 @Beta
