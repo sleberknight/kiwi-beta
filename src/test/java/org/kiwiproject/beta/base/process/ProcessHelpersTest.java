@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -107,7 +108,7 @@ class ProcessHelpersTest {
         void shouldHandleProcessExceptionsGracefully() {
             var processHelperSpy = spy(new ProcessHelper());
 
-            // Must use the doThrow/when form here because the when/thenThrow form throws
+            // Must use the doThrow/when form here because when/thenThrow form throws
             // the following exception from ProcessBuilder#start:
             // java.lang.ArrayIndexOutOfBoundsException: Index 0 out of bounds for length 0
             var message = "Cannot run program \"some\"; error=2, No such file or directory";

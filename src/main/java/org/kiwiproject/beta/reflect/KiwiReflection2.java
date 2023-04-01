@@ -1,7 +1,6 @@
 package org.kiwiproject.beta.reflect;
 
 import com.google.common.annotations.Beta;
-
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Member;
@@ -143,7 +142,7 @@ public class KiwiReflection2 {
     }
 
     /**
-     * Check if the member has no explicit modifer, i.e. is accessible only by other members of the same package.
+     * Check if the member has no explicit modifier, i.e. is accessible only by other members of the same package.
      *
      * @param member the member to check
      * @return true if the member has no explicit modifier; otherwise false
@@ -153,7 +152,7 @@ public class KiwiReflection2 {
     }
 
     /**
-     * Check if the class has no explicit modifer, i.e. is accessible only by other classes and members in the same package.
+     * Check if the class has no explicit modifier, i.e. is accessible only by other classes and members in the same package.
      *
      * @param clazz the class to check
      * @return true if the class has no explicit modifier; otherwise false

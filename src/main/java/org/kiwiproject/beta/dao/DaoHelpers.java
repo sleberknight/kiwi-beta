@@ -11,7 +11,6 @@ import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kiwiproject.collect.KiwiArrays;
 import org.kiwiproject.collect.KiwiLists;
@@ -30,7 +29,7 @@ import java.util.Optional;
  * Some simple utilities useful to data access code that is building queries,
  * for example structured query languages such as SQL or HQL.
  * <p>
- * This is useful in situations where you have a relatively static query but
+ * This is useful in situations where you have a relatively static query, but
  * you need to add dynamically defined sorting/ordering.
  */
 @Beta
@@ -177,7 +176,7 @@ public class DaoHelpers {
 
         logWarningIfOnlySecondarySort(primarySortField, secondarySortField, secondarySortDirection);
 
-        // Verify all sorts are valid before proceeeding
+        // Verify all sorts are valid before proceeding
         if (isNotBlank(primarySortField)) {
             allowedSortFields.assertAllowed(primarySortField);
         }

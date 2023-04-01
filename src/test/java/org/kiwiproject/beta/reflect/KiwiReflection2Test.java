@@ -1,11 +1,12 @@
 package org.kiwiproject.beta.reflect;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.kiwiproject.beta.reflect.KiwiReflection2.JavaAccessModifier;
-import org.junit.jupiter.params.ParameterizedTest;
 
 @DisplayName("KiwiReflection2")
 class KiwiReflection2Test {
@@ -146,6 +147,7 @@ class KiwiReflection2Test {
         }
     }
 
+    @SuppressWarnings({"EmptyMethod", "unused"})
     public static class MethodAccessTestClass {
         public void publicMethod() {
         }
@@ -153,7 +155,6 @@ class KiwiReflection2Test {
         protected void protectedMethod() {
         }
 
-        @SuppressWarnings("unused")
         private void privateMethod() {
         }
 
@@ -161,9 +162,11 @@ class KiwiReflection2Test {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class PublicClass {
     }
 
+    @SuppressWarnings("unused")
     protected static class ProtectedClass {
     }
 
@@ -171,33 +174,39 @@ class KiwiReflection2Test {
     private static class PrivateClass {
     }
 
+    @SuppressWarnings("unused")
     static class PackagePrivateClass {
     }
 
+    @SuppressWarnings("unused")
     public static class PublicConstructorAccessTestClass {
         public PublicConstructorAccessTestClass() {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class ProtectedConstructorAccessTestClass {
         protected ProtectedConstructorAccessTestClass() {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class PrivateConstructorAccessTestClass {
         private PrivateConstructorAccessTestClass() {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class PackagePrivateConstructorAccessTestClass {
         PackagePrivateConstructorAccessTestClass() {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class FieldAccessTestClass {
         public String publicField;
         protected String protectedField;
-        @SuppressWarnings("unused") private String privateField;
+        private String privateField;
         String packagePrivateField;
     }
 }

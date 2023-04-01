@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 @DisplayName("Timing")
 class TimingTest {
 
-    private static KiwiEnvironment ENV = new DefaultEnvironment();
+    private static final KiwiEnvironment ENV = new DefaultEnvironment();
 
     private StopWatch stopWatch;
 

@@ -2,7 +2,8 @@ package org.kiwiproject.beta.base.process;
 
 import com.google.common.annotations.Beta;
 import com.google.common.primitives.Ints;
-
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.kiwiproject.base.process.ProcessHelper;
 import org.kiwiproject.io.KiwiIO;
 
@@ -12,13 +13,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * Utilities to execute a command using a {@link ProcessHelper}.
- *
- * These static methods could could be considered for addition to kiwi's {@link ProcessHelper}.
+ * <p>
+ * These static methods could be considered for addition to kiwi's {@link ProcessHelper}.
  * They would be instance methods inside ProcessHelper. Static versions of the methods could also be
  * added to kiwi's Processes class (which contains only static utilities), and then the instance
  * methods in ProcessHelper would delegate, thereby providing two ways to use this. Using ProcessHelper

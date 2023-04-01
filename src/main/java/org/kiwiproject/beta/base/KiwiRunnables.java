@@ -186,7 +186,7 @@ public class KiwiRunnables {
      * each input object in order.
      *
      * @param runnables the {@link ThrowingRunnable}s to run
-     * @return
+     * @return a List containing a {@link RunResult} corresponding to each {@link ThrowingRunnable} argument, in order
      */
     public static List<RunResult> runAll(ThrowingRunnable... runnables) {
         return Arrays.stream(runnables).map(KiwiRunnables::run).collect(toUnmodifiableList());
