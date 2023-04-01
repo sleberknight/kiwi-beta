@@ -3,8 +3,15 @@ package org.kiwiproject.beta.dropwizard;
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.AsyncAppenderBase;
+import ch.qos.logback.core.rolling.RollingFileAppender;
 import com.google.common.collect.Iterators;
-
+import io.dropwizard.logging.DropwizardLayout;
+import io.dropwizard.logging.async.AsyncLoggingEventAppenderFactory;
+import io.dropwizard.logging.filter.ThresholdLevelFilterFactory;
+import io.dropwizard.logging.layout.DropwizardLayoutFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,15 +19,6 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Path;
 import java.util.TimeZone;
-
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.AsyncAppenderBase;
-import ch.qos.logback.core.rolling.RollingFileAppender;
-import io.dropwizard.logging.DropwizardLayout;
-import io.dropwizard.logging.async.AsyncLoggingEventAppenderFactory;
-import io.dropwizard.logging.filter.ThresholdLevelFilterFactory;
-import io.dropwizard.logging.layout.DropwizardLayoutFactory;
 
 @DisplayName("DefaultingFileAppenderFactory")
 class DefaultingFileAppenderFactoryTest {
@@ -37,7 +35,7 @@ class DefaultingFileAppenderFactoryTest {
     @Test
     void shouldProvideDefaultValues() {
         var factory = new DefaultingFileAppenderFactory<ILoggingEvent>();
-        AsyncAppenderBase<ILoggingEvent> appender = buildAppender(factory, null);
+        appender = buildAppender(factory, null);
 
         assertThat(factory.getCurrentLogFilename()).endsWith("/service.log");
         assertThat(factory.getArchivedLogFilenamePattern()).endsWith("/service-%d.log.gz");
@@ -49,7 +47,7 @@ class DefaultingFileAppenderFactoryTest {
     @Test
     void shouldProvideDefaultValues_UsingCustomApplicationName() {
         var factory = new DefaultingFileAppenderFactory<ILoggingEvent>();
-        var appender = buildAppender(factory, "order-service");
+        appender = buildAppender(factory, "order-service");
 
         assertThat(factory.getCurrentLogFilename()).endsWith("/order-service.log");
         assertThat(factory.getArchivedLogFilenamePattern()).endsWith("/order-service-%d.log.gz");
@@ -62,7 +60,7 @@ class DefaultingFileAppenderFactoryTest {
     void shouldUseDropwizardLayoutIfConfigured() {
         var factory = new DefaultingFileAppenderFactory<ILoggingEvent>();
         factory.setUseDefaultDropwizardLogFormat(true);
-        var appender = buildAppender(factory, "shipping-service");
+        appender = buildAppender(factory, "shipping-service");
 
         assertThat(factory.getCurrentLogFilename()).endsWith("/shipping-service.log");
         assertThat(factory.getArchivedLogFilenamePattern()).endsWith("/shipping-service-%d.log.gz");
@@ -84,7 +82,7 @@ class DefaultingFileAppenderFactoryTest {
         factory.setArchivedLogFilenamePattern(archivedLogFilenamePattern);
         factory.setLogFormat(logFormat);
 
-        var appender = buildAppender(factory, "invoice-service");
+        appender = buildAppender(factory, "invoice-service");
 
         assertThat(factory.getCurrentLogFilename()).isEqualTo(currentLogFilename);
         assertThat(factory.getArchivedLogFilenamePattern()).isEqualTo(archivedLogFilenamePattern);

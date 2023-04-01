@@ -2,12 +2,11 @@ package org.kiwiproject.beta.test.logback;
 
 import static java.util.stream.Collectors.toList;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.google.common.annotations.Beta;
 import org.assertj.core.api.Assertions;
 
 import java.util.List;
-
-import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
  * AssertJ assertions for {@link InMemoryAppender}.
@@ -35,11 +34,10 @@ public class InMemoryAppenderAssertions {
      * Assert this appender has the expected number of logging events, and if the assertion succeeds, return a
      * list containing those events.
      *
-     * @return a List containining the logging events
+     * @return a List containing the logging events
      */
     public List<ILoggingEvent> hasNumberOfLoggingEventsAndGet(int expectedEventCount) {
-        hasNumberOfLoggingEvents(expectedEventCount);
-        return andGetOrderedEvents();
+        return hasNumberOfLoggingEvents(expectedEventCount).andGetOrderedEvents();
     }
 
     /**
@@ -70,7 +68,7 @@ public class InMemoryAppenderAssertions {
      * A terminal method if you want to get the actual logging events after performing assertions, for example
      * to perform additional inspections. Does not perform any assertions.
      *
-     * @return a List containining the logging events
+     * @return a List containing the logging events
      */
     public List<ILoggingEvent> andGetOrderedEvents() {
         return appender.getOrderedEvents();

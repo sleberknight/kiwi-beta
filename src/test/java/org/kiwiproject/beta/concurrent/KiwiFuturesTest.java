@@ -3,6 +3,8 @@ package org.kiwiproject.beta.concurrent;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,10 +14,8 @@ import org.kiwiproject.beta.concurrent.KiwiFutures.FutureState;
 import java.io.IOException;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 class KiwiFuturesTest {
@@ -42,10 +42,8 @@ class KiwiFuturesTest {
         }
 
         @Test
-        void shouldThrowIllegalState_WhenInterruptedExceptionOccurs() throws Exception {
-            KiwiFutures.interruptedExceptionHandler = e -> {
-                return new IllegalStateException("I was rudely interrupted", e);
-            };
+        void shouldThrowIllegalState_WhenInterruptedExceptionOccurs() {
+            KiwiFutures.interruptedExceptionHandler = e -> new IllegalStateException("I was rudely interrupted", e);
 
             Future<Long> future = new AlwaysInterruptingFuture();
 
@@ -62,11 +60,9 @@ class KiwiFuturesTest {
                 return 42 * 42;
             });
 
-            consumeThenCancel(future, theFuture -> {
-                assertThatIllegalStateException()
-                        .isThrownBy(() -> KiwiFutures.resultNow(theFuture))
-                        .withMessage("Task has not completed");
-            });
+            consumeThenCancel(future, theFuture -> assertThatIllegalStateException()
+                    .isThrownBy(() -> KiwiFutures.resultNow(theFuture))
+                    .withMessage("Task has not completed"));
         }
 
         @Test
@@ -100,6 +96,7 @@ class KiwiFuturesTest {
     @Nested
     class ExceptionNow {
 
+        @SuppressWarnings("ThrowableNotThrown")
         @Test
         void shouldThrowIllegalArgument_WhenGivenNullFuture() {
             assertThatIllegalArgumentException().isThrownBy(() -> KiwiFutures.exceptionNow(null));
@@ -113,11 +110,10 @@ class KiwiFuturesTest {
             assertThat(KiwiFutures.exceptionNow(future)).isSameAs(exception);
         }
 
+        @SuppressWarnings("ThrowableNotThrown")
         @Test
-        void shouldThrowIllegalState_WhenInterruptedExceptionOccurs() throws Exception {
-            KiwiFutures.interruptedExceptionHandler = e -> {
-                return new IllegalStateException("Someone interrupted me!", e);
-            };
+        void shouldThrowIllegalState_WhenInterruptedExceptionOccurs() {
+            KiwiFutures.interruptedExceptionHandler = e -> new IllegalStateException("Someone interrupted me!", e);
 
             Future<Long> future = new AlwaysInterruptingFuture();
 
@@ -127,6 +123,7 @@ class KiwiFuturesTest {
                     .withCauseExactlyInstanceOf(InterruptedException.class);
         }
 
+        @SuppressWarnings("ThrowableNotThrown")
         @Test
         void shouldThrowIllegalState_WhenFutureIsNotDone() {
             var future = CompletableFuture.supplyAsync(() -> {
@@ -134,13 +131,12 @@ class KiwiFuturesTest {
                 return 24 * 42;
             });
 
-            consumeThenCancel(future, theFuture -> {
-                assertThatIllegalStateException()
-                        .isThrownBy(() -> KiwiFutures.exceptionNow(theFuture))
-                        .withMessage("Task has not completed");
-            });
+            consumeThenCancel(future, theFuture -> assertThatIllegalStateException()
+                    .isThrownBy(() -> KiwiFutures.exceptionNow(theFuture))
+                    .withMessage("Task has not completed"));
         }
 
+        @SuppressWarnings("ThrowableNotThrown")
         @Test
         void shouldThrowIllegalState_WhenFutureIsCancelled() {
             var future = CompletableFuture.supplyAsync(() -> {
@@ -157,6 +153,7 @@ class KiwiFuturesTest {
                     .withNoCause();
         }
 
+        @SuppressWarnings("ThrowableNotThrown")
         @Test
         void shouldThrowIllegalState_WhenFutureContainsResult() {
             var value = 84L;
@@ -184,9 +181,7 @@ class KiwiFuturesTest {
                 return 24 * 84;
             });
 
-            consumeThenCancel(future, theFuture -> {
-                assertThat(KiwiFutures.state(future)).isEqualTo(FutureState.RUNNING);
-            });
+            consumeThenCancel(future, theFuture -> assertThat(KiwiFutures.state(future)).isEqualTo(FutureState.RUNNING));
         }
 
         @Test
@@ -211,10 +206,8 @@ class KiwiFuturesTest {
         }
 
         @Test
-        void shouldThrowIllegalState_WhenInterruptedExceptionOccurs() throws Exception {
-            KiwiFutures.interruptedExceptionHandler = e -> {
-                return new IllegalStateException("It was quite rude to interrupt me like that", e);
-            };
+        void shouldThrowIllegalState_WhenInterruptedExceptionOccurs() {
+            KiwiFutures.interruptedExceptionHandler = e -> new IllegalStateException("It was quite rude to interrupt me like that", e);
 
             Future<Long> future = new AlwaysInterruptingFuture();
 
@@ -290,14 +283,14 @@ class KiwiFuturesTest {
         }
 
         @Override
-        public Long get() throws InterruptedException, ExecutionException {
-            throw new InterruptedException("simuated interruption");
+        public Long get() throws InterruptedException {
+            throw new InterruptedException("simulated interruption");
         }
 
         @Override
-        public Long get(long timeout, TimeUnit unit)
-                throws InterruptedException, ExecutionException, TimeoutException {
-                    throw new InterruptedException("simuated interruption (with timeout)");
+        public Long get(long timeout, @NonNull TimeUnit unit)
+                throws InterruptedException {
+            throw new InterruptedException("simulated interruption (with timeout)");
         }
     }
 }

@@ -51,16 +51,14 @@ class CatchingRunnable2Test {
     }
 
     @Test
-    void shouldCreateUsingFactory_WithRunnableandExceptionConsumer() {
+    void shouldCreateUsingFactory_WithRunnableAndExceptionConsumer() {
         Runnable runnable = () -> {
             callCount.incrementAndGet();
             throw new RuntimeException("oop");
         };
 
         var handleExceptionCount = new AtomicInteger();
-        var safeRunnable = CatchingRunnable2.of(runnable, ex -> {
-            handleExceptionCount.incrementAndGet();
-        });
+        var safeRunnable = CatchingRunnable2.of(runnable, ex -> handleExceptionCount.incrementAndGet());
 
         safeRunnable.run();
 
@@ -200,7 +198,7 @@ class CatchingRunnable2Test {
 
     private static class SneakyThrowableThrowingRunnable implements CatchingRunnable2 {
 
-        AtomicInteger callCount = new AtomicInteger();
+        final AtomicInteger callCount = new AtomicInteger();
 
         @SneakyThrows
         @Override

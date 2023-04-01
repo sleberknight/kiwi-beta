@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Static utilities related to {@link Closeable} and other objects that can be "closed", whether or not they
- * implement {@link Closeable}.
+ * Static utilities related to {@link Closeable} and other objects that can be "closed", whether they
+ * implement {@link Closeable} or not.
  */
 @UtilityClass
 @Slf4j
@@ -82,7 +82,7 @@ public class KiwiCloseables {
     }
 
     /**
-     * Close all the given objects, supressing any exceptions. Suppressed exceptions are logged at WARN level.
+     * Close all the given objects, suppressing any exceptions. Suppressed exceptions are logged at WARN level.
      * <p>
      * Before using this method, consider whether it is safe to ignore exceptions thrown while closing an I/O resource.
      * It might be safe when using "input" objects such as when reading a file or an input stream, but it generally
@@ -113,7 +113,7 @@ public class KiwiCloseables {
      * If the {@link CloseDescriptor} refers to a non-public method, this method will attempt to invoke it. But this
      * may result in an {@link IllegalAccessException}.
      *
-     * @param descriptor the description of an object andf its "close" method
+     * @param descriptor the description of an object and its "close" method
      * @see #close(CloseDescriptor)
      */
     public static void closeQuietly(CloseDescriptor descriptor) {
@@ -205,7 +205,7 @@ public class KiwiCloseables {
          * Create a new "close failed" instance.
          *
          * @param exception the error that occurred closing an object
-         * @return a new instance represneting a failed close attempt, including the {@link Exception}
+         * @return a new instance representing a failed close attempt, including the {@link Exception}
          */
         public static CloseResult ofError(Exception exception) {
             checkArgumentNotNull(exception);
@@ -256,7 +256,7 @@ public class KiwiCloseables {
      * If the {@link CloseDescriptor} refers to a non-public method, this method will attempt to invoke it. But this
      * may result in an {@link IllegalAccessException}.
      *
-     * @param descriptor the description of an object andf its "close" method
+     * @param descriptor the description of an object and its "close" method
      * @return the {@link CloseResult}
      */
     public static CloseResult close(CloseDescriptor descriptor) {

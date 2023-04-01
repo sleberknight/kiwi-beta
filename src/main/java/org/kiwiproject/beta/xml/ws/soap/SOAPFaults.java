@@ -9,22 +9,19 @@ import static org.kiwiproject.collect.KiwiMaps.newLinkedHashMap;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Streams;
-
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.DetailEntry;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Utilities related to {@link SOAPFault} and {@link SOAPFaultException}.
@@ -140,6 +137,7 @@ public class SOAPFaults {
         }
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @VisibleForTesting
     static List<String> getReasonTexts(SOAPFault fault, String errorText) {
         try {
@@ -156,6 +154,7 @@ public class SOAPFaults {
         }
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @VisibleForTesting
     static List<String> getFaultSubcodes(SOAPFault fault) {
         try {
@@ -169,6 +168,7 @@ public class SOAPFaults {
         }
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @VisibleForTesting
     static List<String> getDetailsAsStrings(SOAPFault fault, String errorText) {
         try {

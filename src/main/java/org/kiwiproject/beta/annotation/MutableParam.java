@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annnotation to make it clear that a method/constructor parameter might be mutated, e.g. auditing
+ * Annotation to make it clear that a method/constructor parameter might be mutated, e.g. auditing
  * properties such as createdAt, createdBy, etc. that are automatically set on a persistent entity.
  * <p>
  * While we consider mutating arguments in any way to be generally poor practice that can lead to

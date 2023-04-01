@@ -71,10 +71,10 @@ public class KiwiStrings2 {
 
     /**
      * Replace null characters (Unicode U+0000) in {@code str} with the given replacement string. If the input
-     * string is null, thne the default value is returned.
+     * string is null, the default value is returned.
      *
-     * @param str the string to replace within
-     * @param replacement the replacement string
+     * @param str          the string to replace within
+     * @param replacement  the replacement string
      * @param defaultValue the value to return if {@code str} is null
      * @return a string with null characters replaced, or the original string if no null characters exist in it
      */

@@ -6,25 +6,23 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.kiwiproject.test.junit.jupiter.ClearBoxTest;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.ws.soap.SOAPFaultException;
-
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Iterator;
+import java.util.List;
 
 @DisplayName("SOAPFaults")
 @Slf4j
@@ -82,7 +80,7 @@ class SOAPFaultsTest {
         var fault = mock(SOAPFault.class);
         when(fault.getFaultActor()).thenThrow(new RuntimeException("well, this is unexpected"));
 
-        assertThatCode(() -> SOAPFaults.logSoapFault("test", fault, LOG)).doesNotThrowAnyException();;
+        assertThatCode(() -> SOAPFaults.logSoapFault("test", fault, LOG)).doesNotThrowAnyException();
     }
 
     @ClearBoxTest

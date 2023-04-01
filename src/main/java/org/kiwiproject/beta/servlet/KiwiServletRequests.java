@@ -6,7 +6,6 @@ import static java.util.Objects.nonNull;
 
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.kiwiproject.collect.KiwiArrays;
 
@@ -62,6 +61,6 @@ public class KiwiServletRequests {
             return Optional.empty();
         }
 
-        return Optional.of(certificateChain[0]);
+        return Optional.ofNullable(certificateChain[0]);
     }
 }
