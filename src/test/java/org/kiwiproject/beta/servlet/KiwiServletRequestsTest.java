@@ -175,6 +175,12 @@ class KiwiServletRequestsTest {
         void shouldReturnEmpty_WhenGivenNullOrEmptyCertArray(X509Certificate[] certs) {
             assertThat(KiwiServletRequests.firstCertificateOrEmpty(certs)).isEmpty();
         }
+
+        @Test
+        void shouldReturnEmpty_WhenCertArrayContainsNullCert() {
+            var certs = new X509Certificate[]{null};
+            assertThat(KiwiServletRequests.firstCertificateOrEmpty(certs)).isEmpty();
+        }
     }
 
 }
