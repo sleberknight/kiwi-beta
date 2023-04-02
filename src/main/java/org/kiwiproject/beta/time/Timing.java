@@ -1,13 +1,11 @@
 package org.kiwiproject.beta.time;
 
 import com.google.common.annotations.Beta;
-
+import lombok.Value;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.function.Supplier;
-
-import lombok.Value;
-import lombok.experimental.UtilityClass;
 
 /**
  * Timing utilities that provide a convenient way to measure elapsed time of operations.
@@ -20,6 +18,9 @@ public class Timing {
      * Represents an operation that is timed.
      */
     public interface Timed {
+        /**
+         * @return the number of milliseconds that have elapsed since the operation started
+         */
         long getElapsedMillis();
     }
 
