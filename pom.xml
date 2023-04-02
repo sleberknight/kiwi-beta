@@ -293,8 +293,6 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
                 <configuration>
-                    <!-- TODO Kotlin docs set nowarn=true...investigate why before doing this -->
-                    <!--<nowarn>true</nowarn>-->  <!-- Disable warnings -->
                     <args>
                         <arg>-Xjsr305=strict</arg> <!-- Enable strict mode for JSR-305 annotations -->
                     </args>
