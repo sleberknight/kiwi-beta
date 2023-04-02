@@ -4,7 +4,6 @@ import static java.util.Objects.nonNull;
 
 import com.google.common.annotations.Beta;
 import lombok.extern.slf4j.Slf4j;
-
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.io.Closeable;
@@ -61,7 +60,6 @@ public class AutoDrainingCounter implements Closeable {
         return counter;
     }
 
-    // TODO:  better way than to use synchronized on start() or is that the "best" way?
     public synchronized void start() {
         if (counting.get()) {
             throw new IllegalStateException("counter already started");
