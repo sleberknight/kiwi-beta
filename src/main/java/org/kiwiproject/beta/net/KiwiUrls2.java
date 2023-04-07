@@ -24,7 +24,7 @@ public class KiwiUrls2 {
     /**
      * Given a collection of URLs, return a set containing URLs with only the host[:port].
      * <p>
-     * TODO Would this be better named as 'uniqueAuthorityOnlyUrls' or similar?
+     * TODO Would this be better named as "uniqueAuthorityOnlyUrls" or similar?
      */
     public static Set<URL> uniqueHostOnlyUrls(Collection<URL> urls) {
         checkArgumentNotNull(urls, "urls must not be null");
