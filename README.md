@@ -6,7 +6,7 @@
 [![Lift](https://lift.sonatype.com/api/badge/github.com/sleberknight/kiwi-beta)](https://lift.sonatype.com/)
 [![javadoc](https://javadoc.io/badge2/org.kiwiproject/kiwi-beta/javadoc.svg)](https://javadoc.io/doc/org.kiwiproject/kiwi-beta)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Maven Central](https://img.shields.io/maven-central/v/org.kiwiproject/kiwi-beta)](https://central.sonatype.com/artifact/org.kiwiproject/kiwi-beta/0.1.0)
+[![Maven Central](https://img.shields.io/maven-central/v/org.kiwiproject/kiwi-beta)](https://central.sonatype.com/artifact/org.kiwiproject/kiwi-beta/)
 
 A playground for experimental code that might or might not ever make it into [kiwi](https://github.com/kiwiproject/kiwi)
 or [kiwi-test](https://github.com/kiwiproject/kiwi-test).
