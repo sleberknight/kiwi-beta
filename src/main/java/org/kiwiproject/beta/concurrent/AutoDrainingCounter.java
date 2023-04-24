@@ -3,6 +3,7 @@ package org.kiwiproject.beta.concurrent;
 import static java.util.Objects.nonNull;
 
 import com.google.common.annotations.Beta;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -60,7 +61,8 @@ public class AutoDrainingCounter implements Closeable {
         return counter;
     }
 
-    public synchronized void start() {
+    @Synchronized
+    public void start() {
         if (counting.get()) {
             throw new IllegalStateException("counter already started");
         }
@@ -84,7 +86,12 @@ public class AutoDrainingCounter implements Closeable {
         return counting.get();
     }
 
+    @Synchronized
     public void stop() {
+        if (!isAlive()) {
+            LOG.warn("Counter is not alive; ignoring request to stop");
+            return;
+        }
         counting.set(false);
         scheduledExecutor.shutdownNow();
     }

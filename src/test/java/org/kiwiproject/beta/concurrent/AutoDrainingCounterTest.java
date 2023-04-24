@@ -119,6 +119,22 @@ class AutoDrainingCounterTest {
     }
 
     @Test
+    void shouldIgnoreStop_WhenNeverStarted() {
+        counter = new AutoDrainingCounter(DRAIN_PERIOD);
+        counter.stop();
+        assertThat(counter.isAlive()).isFalse();
+    }
+
+    @Test
+    void shouldIgnoreStop_WhenAlreadyStopped() {
+        counter = AutoDrainingCounter.createAndStart(DRAIN_PERIOD);
+        counter.stop();
+        assertThat(counter.isAlive()).isFalse();
+        counter.stop();
+        assertThat(counter.isAlive()).isFalse();
+    }
+
+    @Test
     void shouldClose() {
         counter = AutoDrainingCounter.createAndStart(DRAIN_PERIOD);
         counter.close();
