@@ -31,8 +31,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.IntStream;
 
 @DisplayName("TimestampingLogger")
@@ -239,10 +239,16 @@ class TimestampingLoggerTest {
          */
         static LoggedMessages from(List<String> eventMessages) {
             checkEvenItemCount(eventMessages);
-            Map<Boolean, List<String>> result = eventMessages.stream()
-                    .collect(partitioningBy(str -> eventMessages.indexOf(str) % 2 == 0));
-            var logMessages = result.get(true);
-            var elapsedTimeMessages = result.get(false);
+            var logMessages = new ArrayList<String>();
+            var elapsedTimeMessages = new ArrayList<String>();
+            for (int i = 0; i < eventMessages.size(); i++) {
+                var message = eventMessages.get(i);
+                if (i % 2 == 0) {
+                    logMessages.add(message);
+                } else {
+                    elapsedTimeMessages.add(message);
+                }
+            }
             return new LoggedMessages(logMessages, elapsedTimeMessages);
         }
     }
