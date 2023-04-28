@@ -1,11 +1,14 @@
 package org.kiwiproject.beta.slf4j;
 
+import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Index.atIndex;
+import static org.kiwiproject.base.KiwiPreconditions.checkEvenItemCount;
 import static org.kiwiproject.collect.KiwiLists.fifth;
 import static org.kiwiproject.collect.KiwiLists.first;
 import static org.kiwiproject.collect.KiwiLists.fourth;
+import static org.kiwiproject.collect.KiwiLists.last;
 import static org.kiwiproject.collect.KiwiLists.second;
 import static org.kiwiproject.collect.KiwiLists.subListExcludingFirst;
 import static org.kiwiproject.collect.KiwiLists.third;
@@ -13,6 +16,7 @@ import static org.kiwiproject.collect.KiwiLists.third;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,12 +25,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.kiwiproject.beta.test.logback.InMemoryAppender;
+import org.kiwiproject.collect.KiwiLists;
 import org.kiwiproject.time.KiwiDurationFormatters;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 @DisplayName("TimestampingLogger")
@@ -222,11 +228,27 @@ class TimestampingLoggerTest {
                         .endsWith(" millis]"));
     }
 
+    @AllArgsConstructor
+    static class LoggedMessages {
+        final List<String> logMessages;
+        final List<String> elapsedTimeMessages;
+
+        /**
+         * Split all event messages into two lists: one containing the log messages, the other containing elapsed time
+         * messages. The input list must have an even number of elements.
+         */
+        static LoggedMessages from(List<String> eventMessages) {
+            checkEvenItemCount(eventMessages);
+            Map<Boolean, List<String>> result = eventMessages.stream()
+                    .collect(partitioningBy(str -> eventMessages.indexOf(str) % 2 == 0));
+            var logMessages = result.get(true);
+            var elapsedTimeMessages = result.get(false);
+            return new LoggedMessages(logMessages, elapsedTimeMessages);
+        }
+    }
+
     @Nested
     class Customization {
-
-        // TODO Do real assertions on the messages
-        // TODO DRY-up sending and getting the messages, and remove the System.out statements
 
         @Nested
         class WhenLoggingElapsedTimeSeparately {
@@ -237,12 +259,21 @@ class TimestampingLoggerTest {
                         .logger(logbackLogger)
                         .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
                         .build();
-                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+
+                logElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
+                var loggedMessages = LoggedMessages.from(eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(loggedMessages.logMessages).containsExactlyElementsOf(messages);
+
+                var elapsedTimeMessages = loggedMessages.elapsedTimeMessages;
+                assertThat(elapsedTimeMessages).hasSize(5);
+                assertThat(first(elapsedTimeMessages)).isEqualTo("[elapsed time since previous: N/A (no previous timestamp)]");
+                var restOfElapsedTimeMessages = KiwiLists.subListExcludingFirst(elapsedTimeMessages);
+                assertThat(restOfElapsedTimeMessages)
+                        .hasSize(4)
+                        .allSatisfy(str -> assertThat(str).startsWith("[ELAPSED: ").endsWith("ms]"));
             }
 
             @Test
@@ -253,12 +284,16 @@ class TimestampingLoggerTest {
                         .initialMessage("[MARK]")
                         .build();
 
-                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+                logElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
+                var loggedMessages = LoggedMessages.from(eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(loggedMessages.logMessages).containsExactlyElementsOf(messages);
+
+                var elapsedTimeMessages = loggedMessages.elapsedTimeMessages;
+                assertThat(elapsedTimeMessages).hasSize(5);
+                assertThat(first(elapsedTimeMessages)).isEqualTo("[MARK]");
             }
 
             @Test
@@ -269,12 +304,14 @@ class TimestampingLoggerTest {
                         .skipInitialMessage(true)
                         .build();
 
-                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+                logElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(eventMessages).hasSize(9);
+                assertThat(first(eventMessages)).isEqualTo("At time 0");
+                assertThat(second(eventMessages)).isEqualTo("At time 1");
+                assertThat(third(eventMessages)).startsWith("[ELAPSED: ");
             }
 
             @Test
@@ -285,12 +322,17 @@ class TimestampingLoggerTest {
                         .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
                         .build();
 
-                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+                logElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
+                var loggedMessages = LoggedMessages.from(eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(loggedMessages.logMessages).containsExactlyElementsOf(messages);
+
+                var elapsedTimeMessages = loggedMessages.elapsedTimeMessages;
+                assertThat(elapsedTimeMessages)
+                        .hasSize(5)
+                        .allSatisfy(str -> assertThat(str).startsWith("[ELAPSED: ").endsWith("ms]"));
             }
 
             @Test
@@ -310,12 +352,26 @@ class TimestampingLoggerTest {
                         })
                         .build();
 
-                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+                logElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
+                var loggedMessages = LoggedMessages.from(eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(loggedMessages.logMessages).containsExactlyElementsOf(messages);
+
+                var elapsedTimeMessages = loggedMessages.elapsedTimeMessages;
+                assertThat(elapsedTimeMessages).hasSize(5);
+                assertThat(first(elapsedTimeMessages)).isEqualTo("[MARK: T0]");
+                var restOfElapsedTimeMessages = KiwiLists.subListExcludingFirst(elapsedTimeMessages);
+                assertThat(first(restOfElapsedTimeMessages)).startsWith("[MARK: T1");
+                assertThat(last(restOfElapsedTimeMessages)).startsWith("[MARK: T4");
+                assertThat(restOfElapsedTimeMessages)
+                        .hasSize(4)
+                        .allSatisfy(str -> assertThat(str).startsWith("[MARK: T").endsWith("s)]"));
+            }
+
+            private void logElapsedForAllMessagesUsing(TimestampingLogger customLogger) {
+                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
             }
         }
 
@@ -328,12 +384,17 @@ class TimestampingLoggerTest {
                         .logger(logbackLogger)
                         .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
                         .build();
-                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+
+                logAppendingElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(eventMessages).hasSize(5);
+                assertThat(first(eventMessages)).isEqualTo("At time 0 [elapsed time since previous: N/A (no previous timestamp)]");
+                List<String> restOfMessages = KiwiLists.subListExcludingFirst(eventMessages);
+                assertThat(restOfMessages)
+                        .hasSize(4)
+                        .allSatisfy(str -> assertThat(str).startsWith("At time").contains(" [ELAPSED: ").endsWith("ms]"));
             }
 
             @Test
@@ -344,12 +405,12 @@ class TimestampingLoggerTest {
                         .initialMessage("[MARK]")
                         .build();
 
-                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+                logAppendingElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(eventMessages).hasSize(5);
+                assertThat(first(eventMessages)).isEqualTo("At time 0 [MARK]");
             }
 
             @Test
@@ -360,12 +421,12 @@ class TimestampingLoggerTest {
                         .skipInitialMessage(true)
                         .build();
 
-                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+                logAppendingElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(eventMessages).hasSize(5);
+                assertThat(first(eventMessages)).isEqualTo("At time 0");
             }
 
             @Test
@@ -376,12 +437,13 @@ class TimestampingLoggerTest {
                         .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
                         .build();
 
-                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+                logAppendingElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(eventMessages)
+                        .hasSize(5)
+                        .allSatisfy(str -> assertThat(str).startsWith("At time ").contains("[ELAPSED: ").endsWith("ms]"));
             }
 
             @Test
@@ -401,12 +463,22 @@ class TimestampingLoggerTest {
                         })
                         .build();
 
-                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+                logAppendingElapsedForAllMessagesUsing(customLogger);
 
                 List<String> eventMessages = appender.getOrderedEventMessages();
-                System.out.println("MESSAGES: " + eventMessages);
 
-                assertThat(eventMessages).isNotEmpty();
+                assertThat(eventMessages).hasSize(5);
+                assertThat(first(eventMessages)).isEqualTo("At time 0 [MARK: T0]");
+                var restOfMessages = KiwiLists.subListExcludingFirst(eventMessages);
+                assertThat(first(restOfMessages)).startsWith("At time 1 [MARK: T1");
+                assertThat(last(restOfMessages)).startsWith("At time 4 [MARK: T4");
+                assertThat(restOfMessages)
+                        .hasSize(4)
+                        .allSatisfy(str -> assertThat(str).startsWith("At time ").contains("[MARK: T").endsWith("s)]"));
+            }
+
+            private void logAppendingElapsedForAllMessagesUsing(TimestampingLogger customLogger) {
+                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
             }
         }
     }
