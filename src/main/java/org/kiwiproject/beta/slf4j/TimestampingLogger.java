@@ -1,13 +1,20 @@
 package org.kiwiproject.beta.slf4j;
 
+import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.requireNotNull;
 
 import com.google.common.annotations.Beta;
+import lombok.Builder;
+
+import org.kiwiproject.base.KiwiPreconditions;
 import org.kiwiproject.base.KiwiStrings;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
 
 import java.time.Duration;
+import java.util.function.BiFunction;
 
 /**
  * A simple way to log timing information about a repeated operation.
@@ -17,6 +24,10 @@ import java.time.Duration;
  * linked to the user, and insert the order to a database. Or, some kind of data migration that loops over records in
  * a source database table and writes to a new target database table.
  * <p>
+ * Use the single argument constructor to create an instance with default values. Otherwise, use the {@link #builder()}
+ * to customize the behavior.
+ * TODO Describe available options
+ * <p>
  * <em>Currently, this is intended only to be used within a single thread.</em>
  */
 @Beta
@@ -25,12 +36,59 @@ public class TimestampingLogger {
     @SuppressWarnings("NonConstantLogger")
     private final Logger logger;
     private long previousTimestamp;
+    private int logCount;
+    private final String elapsedTimeTemplate;
+    private final BiFunction<Long, Integer, Object[]> argumentTransformer;
+    private final String initialMessage;
 
     /**
-     * Create a new instance using the given {@link Logger}.
+     * Create a new instance with default values using the given {@link Logger}.
      */
     public TimestampingLogger(Logger logger) {
+        this(logger, 0, null, null, false, null);
+    }
+
+    /**
+     * Create a new instance.
+     *
+     * @param logger the {@link Logger} to use when logging
+     * @param initialTimestamp  allows setting an initial value against which elapsed time should be measured
+     * @param elapsedTimeTemplate the message template to use when logging elapsed time
+     * @param argumentTransformer a function that transforms the elapsed nanoseconds and log count into template arguments
+     * @param skipInitialMessage whether to skip logging the first time the elapsed time is logged
+     * @param initialMessage the message to log the first time the elapsed time is logged if no initial timestamp exists
+     */
+    @Builder
+    TimestampingLogger(Logger logger,
+                       long initialTimestamp,
+                       String elapsedTimeTemplate,
+                       BiFunction<Long, Integer, Object[]> argumentTransformer,
+                       boolean skipInitialMessage,
+                       String initialMessage) {
+
         this.logger = requireNotNull(logger);
+        this.previousTimestamp = KiwiPreconditions.requirePositiveOrZero(initialTimestamp);
+        this.logCount = 0;
+
+        this.elapsedTimeTemplate = isBlank(elapsedTimeTemplate) ?
+                "[elapsed time since previous: {} nanoseconds / {} millis]" : elapsedTimeTemplate;
+
+        if (isNull(argumentTransformer)) {
+            this.argumentTransformer = (nanos, count) -> new Object[] { nanos, nanosToMillis(nanos)};
+        } else {
+            this.argumentTransformer = argumentTransformer;
+        }
+
+        if (skipInitialMessage) {
+            this.initialMessage = null;
+        } else {
+            this.initialMessage = isBlank(initialMessage) ?
+                    "[elapsed time since previous: N/A (no previous timestamp)]" : initialMessage;
+        }
+    }
+
+    private static long nanosToMillis(long diffInNanos) {
+        return Duration.ofNanos(diffInNanos).toMillis();
     }
 
     /**
@@ -67,23 +125,19 @@ public class TimestampingLogger {
         if (KiwiSlf4j.isEnabled(logger, level)) {
             var now = System.nanoTime();
             KiwiSlf4j.log(logger, level, message, args);
-            logElapsedSincePreviousTimestamp(logger, level, now, previousTimestamp);
+            logElapsedSincePreviousTimestamp(level, now);
             previousTimestamp = now;
+            ++logCount;
         }
     }
 
-    private static void logElapsedSincePreviousTimestamp(Logger logger,
-                                                         Level level,
-                                                         long now,
-                                                         long previousTimestamp) {
+    private void logElapsedSincePreviousTimestamp(Level level, long now) {
         if (previousTimestamp > 0) {
             var diffInNanos = now - previousTimestamp;
-            KiwiSlf4j.log(logger, level,
-                    "[elapsed time since previous: {} nanoseconds / {} millis]",
-                    diffInNanos, Duration.ofNanos(diffInNanos).toMillis());
-        } else {
-            KiwiSlf4j.log(logger, level,
-                    "[elapsed time since previous: N/A (no previous timestamp)]");
+            var args = argumentTransformer.apply(diffInNanos, logCount);
+            KiwiSlf4j.log(logger, level, elapsedTimeTemplate, args);
+        } else if (isNotBlank(initialMessage)) {
+            KiwiSlf4j.log(logger, level, initialMessage);
         }
     }
 
@@ -121,25 +175,24 @@ public class TimestampingLogger {
         if (KiwiSlf4j.isEnabled(logger, level)) {
             var now = System.nanoTime();
             var formattedMessage = KiwiStrings.f(message, args);
-            logAppendingElapsedSincePreviousTimestamp(logger, level, formattedMessage, now, previousTimestamp);
+            logAppendingElapsedSincePreviousTimestamp(level, formattedMessage, now);
             previousTimestamp = now;
+            ++logCount;
         }
     }
 
-    private static void logAppendingElapsedSincePreviousTimestamp(Logger logger,
-                                                                  Level level,
-                                                                  String formattedMessage,
-                                                                  long now,
-                                                                  long previousTimestamp) {
+    private void logAppendingElapsedSincePreviousTimestamp(Level level,
+                                                            String formattedMessage,
+                                                            long now) {
         if (previousTimestamp > 0) {
             var diffInNanos = now - previousTimestamp;
-            KiwiSlf4j.log(logger, level,
-                    "{} [elapsed time since previous: {} nanoseconds / {} millis]",
-                    formattedMessage, diffInNanos, Duration.ofNanos(diffInNanos).toMillis());
+            var args = argumentTransformer.apply(diffInNanos, logCount);
+            var elapsedTimeMessage = KiwiStrings.f(elapsedTimeTemplate, args);
+            KiwiSlf4j.log(logger, level, formattedMessage + " " + elapsedTimeMessage);
+        } else if (isBlank(initialMessage)) {
+            KiwiSlf4j.log(logger, level, formattedMessage);
         } else {
-            KiwiSlf4j.log(logger, level,
-                    "{} [elapsed time since previous: N/A (no previous timestamp)]",
-                    formattedMessage);
+            KiwiSlf4j.log(logger, level, formattedMessage + " " + initialMessage);
         }
     }
 }

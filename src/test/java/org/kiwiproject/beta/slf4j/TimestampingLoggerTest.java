@@ -18,11 +18,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.kiwiproject.beta.test.logback.InMemoryAppender;
+import org.kiwiproject.time.KiwiDurationFormatters;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -217,5 +220,194 @@ class TimestampingLoggerTest {
                         .startsWith("At time " + i + " [elapsed time since previous: ")
                         .contains(" nanoseconds / ")
                         .endsWith(" millis]"));
+    }
+
+    @Nested
+    class Customization {
+
+        // TODO Do real assertions on the messages
+        // TODO DRY-up sending and getting the messages, and remove the System.out statements
+
+        @Nested
+        class WhenLoggingElapsedTimeSeparately {
+
+            @Test
+            void shouldAllowCustomTemplate() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
+                        .build();
+                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+
+            @Test
+            void shouldAllowCustomInitialMessage() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
+                        .initialMessage("[MARK]")
+                        .build();
+
+                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+
+            @Test
+            void shouldAllowSkippingInitialMessage() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
+                        .skipInitialMessage(true)
+                        .build();
+
+                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+
+            @Test
+            void shouldAllowSettingAnInitialTimestamp() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .initialTimestamp(System.nanoTime())
+                        .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
+                        .build();
+
+                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+
+            @Test
+            void shouldAllowArgumentTransformation() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .initialMessage("[MARK: T0]")
+                        .elapsedTimeTemplate("[MARK: T{}: {} ({}ns, {}ms, {}s)]")
+                        .argumentTransformer((diffInNanos, logCount) -> {
+                            var nanoDuration = Duration.ofNanos(diffInNanos);
+                            return new Object[] {
+                                logCount,
+                                KiwiDurationFormatters.formatDurationWords(nanoDuration),
+                                diffInNanos,
+                                nanoDuration.toMillis(),
+                                nanoDuration.toSeconds() };
+                        })
+                        .build();
+
+                messages.forEach(message -> customLogger.logElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+        }
+
+        @Nested
+        class WhenLoggingElapsedTimeByAppending {
+
+            @Test
+            void shouldAllowCustomTemplate() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
+                        .build();
+                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+
+            @Test
+            void shouldAllowCustomInitialMessage() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
+                        .initialMessage("[MARK]")
+                        .build();
+
+                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+
+            @Test
+            void shouldAllowSkippingInitialMessage() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
+                        .skipInitialMessage(true)
+                        .build();
+
+                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+
+            @Test
+            void shouldAllowSettingAnInitialTimestamp() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .initialTimestamp(System.nanoTime())
+                        .elapsedTimeTemplate("[ELAPSED: {}ns, {}ms]")
+                        .build();
+
+                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+
+            @Test
+            void shouldAllowArgumentTransformation() {
+                var customLogger = TimestampingLogger.builder()
+                        .logger(logbackLogger)
+                        .initialMessage("[MARK: T0]")
+                        .elapsedTimeTemplate("[MARK: T{}: {} ({}ns, {}ms, {}s)]")
+                        .argumentTransformer((diffInNanos, logCount) -> {
+                            var nanoDuration = Duration.ofNanos(diffInNanos);
+                            return new Object[] {
+                                logCount,
+                                KiwiDurationFormatters.formatDurationWords(nanoDuration),
+                                diffInNanos,
+                                nanoDuration.toMillis(),
+                                nanoDuration.toSeconds() };
+                        })
+                        .build();
+
+                messages.forEach(message -> customLogger.logAppendingElapsed(Level.WARN, message));
+
+                List<String> eventMessages = appender.getOrderedEventMessages();
+                System.out.println("MESSAGES: " + eventMessages);
+
+                assertThat(eventMessages).isNotEmpty();
+            }
+        }
     }
 }
