@@ -4,11 +4,11 @@ import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.requireNotNull;
+import static org.kiwiproject.base.KiwiPreconditions.requirePositiveOrZero;
 
 import com.google.common.annotations.Beta;
 import lombok.Builder;
 
-import org.kiwiproject.base.KiwiPreconditions;
 import org.kiwiproject.base.KiwiStrings;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
@@ -27,7 +27,15 @@ import java.util.function.BiFunction;
  * Use the single argument constructor to create an instance with default values. Otherwise, use the {@link #builder()}
  * to customize the behavior.
  * <p>
- * TODO Describe available options
+ * The options provided via the builder are:
+ * <ul>
+ *   <li>logger - the SLF4J {@link Logger} to use</li>
+ *   <li>initialTimestamp - nanoseconds to use as the starting point against which the next elapsed time should be measured. Defaults to zero.</li>
+ *   <li>elapsedTimeTemplate - the template to use when logging elapsed time messages. Uses {@link KiwiStrings#format(String, Object...)} to format messages.</li>
+ *   <li>argumentTransformer - a {@link BiFunction} that accepts nanoseconds and the log count, and which should convert those into arguments for the {@code elapsedTimeTemplate}</li>
+ *   <li>skipInitialMessage - if true, no elapsed time message is logged the first time elapsed time is logged</li>
+ *   <li>initialMessage - the message to log the first time elapsed time is logged</li>
+ * </ul>
  * <p>
  * <em>Currently, this is intended only to be used within a single thread.</em>
  */
@@ -36,11 +44,13 @@ public class TimestampingLogger {
 
     @SuppressWarnings("NonConstantLogger")
     private final Logger logger;
-    private long previousTimestamp;
-    private int logCount;
     private final String elapsedTimeTemplate;
     private final BiFunction<Long, Integer, Object[]> argumentTransformer;
     private final String initialMessage;
+
+    // Fields whose values may change
+    private long previousTimestamp;
+    private int logCount;
 
     /**
      * Create a new instance with default values using the given {@link Logger}.
@@ -57,7 +67,7 @@ public class TimestampingLogger {
      * @param elapsedTimeTemplate the message template to use when logging elapsed time
      * @param argumentTransformer a function that transforms the elapsed nanoseconds and log count into template arguments
      * @param skipInitialMessage whether to skip logging the first time the elapsed time is logged
-     * @param initialMessage the message to log the first time the elapsed time is logged if no initial timestamp exists
+     * @param initialMessage the message to log the first time the elapsed time is logged
      */
     @Builder
     TimestampingLogger(Logger logger,
@@ -68,7 +78,7 @@ public class TimestampingLogger {
                        String initialMessage) {
 
         this.logger = requireNotNull(logger);
-        this.previousTimestamp = KiwiPreconditions.requirePositiveOrZero(initialTimestamp);
+        this.previousTimestamp = requirePositiveOrZero(initialTimestamp);
         this.logCount = 0;
 
         this.elapsedTimeTemplate = isBlank(elapsedTimeTemplate) ?
@@ -182,9 +192,7 @@ public class TimestampingLogger {
         }
     }
 
-    private void logAppendingElapsedSincePreviousTimestamp(Level level,
-                                                            String formattedMessage,
-                                                            long now) {
+    private void logAppendingElapsedSincePreviousTimestamp(Level level, String formattedMessage, long now) {
         if (previousTimestamp > 0) {
             var diffInNanos = now - previousTimestamp;
             var args = argumentTransformer.apply(diffInNanos, logCount);
