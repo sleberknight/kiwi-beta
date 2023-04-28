@@ -1,6 +1,5 @@
 package org.kiwiproject.beta.slf4j;
 
-import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Index.atIndex;
