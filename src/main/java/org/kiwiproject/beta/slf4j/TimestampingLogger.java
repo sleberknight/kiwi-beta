@@ -26,6 +26,7 @@ import java.util.function.BiFunction;
  * <p>
  * Use the single argument constructor to create an instance with default values. Otherwise, use the {@link #builder()}
  * to customize the behavior.
+ * <p>
  * TODO Describe available options
  * <p>
  * <em>Currently, this is intended only to be used within a single thread.</em>
@@ -52,7 +53,7 @@ public class TimestampingLogger {
      * Create a new instance.
      *
      * @param logger the {@link Logger} to use when logging
-     * @param initialTimestamp  allows setting an initial value against which elapsed time should be measured
+     * @param initialTimestamp allows setting an initial value against which elapsed time should be measured
      * @param elapsedTimeTemplate the message template to use when logging elapsed time
      * @param argumentTransformer a function that transforms the elapsed nanoseconds and log count into template arguments
      * @param skipInitialMessage whether to skip logging the first time the elapsed time is logged
