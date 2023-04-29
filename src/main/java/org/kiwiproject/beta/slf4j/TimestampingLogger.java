@@ -4,11 +4,10 @@ import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.requireNotNull;
+import static org.kiwiproject.base.KiwiPreconditions.requirePositiveOrZero;
 
 import com.google.common.annotations.Beta;
 import lombok.Builder;
-
-import org.kiwiproject.base.KiwiPreconditions;
 import org.kiwiproject.base.KiwiStrings;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
@@ -26,7 +25,68 @@ import java.util.function.BiFunction;
  * <p>
  * Use the single argument constructor to create an instance with default values. Otherwise, use the {@link #builder()}
  * to customize the behavior.
- * TODO Describe available options
+ * <p>
+ * The options provided via the builder are:
+ * <table>
+ *     <tr>
+ *         <th>Name</th>
+ *         <th>Default</th>
+ *         <th>Description</th>
+ *     </tr>
+ *     <tr>
+ *         <td>logger</td>
+ *         <td>(None)</td>
+ *         <td>The SLF4J {@link Logger} to use. This is required.</td>
+ *     </tr>
+ *     <tr>
+ *         <td>initialTimestamp</td>
+ *         <td>0</td>
+ *         <td>
+ *             The nanoseconds to use as the starting point against which the next elapsed time should be
+ *             measured, e.g. using {@link System#nanoTime()}. When this is zero, the first elapsed log message
+ *             will be the {@code initialMessage} to indicate there is not a previous timestamp against which
+ *             to measure. If you want to start measurement from the time a {@link TimestampingLogger} is
+ *             created, set it to {@link System#nanoTime()}.
+ *         </td>
+ *     </tr>
+ *     <tr>
+ *         <td>elapsedTimeTemplate</td>
+ *         <td>"[elapsed time since previous: {} nanoseconds / {} millis]"</td>
+ *         <td>
+ *             The template to use when logging elapsed time messages.
+ *             Uses {@link KiwiStrings#format(String, Object...)} to format messages.
+ *         </td>
+ *     </tr>
+ *     <tr>
+ *         <td>argumentTransformer</td>
+ *         <td>{@code new Object[] { elapsedNanos, elapsedMillis }}</td>
+ *         <td>
+ *             A {@link BiFunction} that accepts nanoseconds and the log count, and which should convert those
+ *             into arguments for the {@code elapsedTimeTemplate}. If you customize the {@code elapsedTimeTemplate}
+ *             then this should return an array with the same number of elements as there as placeholders in the
+ *             template. For example, the default template has two placeholders, for nanos and millis, and the
+ *             default transformer returns an array with two elements, the elapsed nanos and millis. The log count
+ *             is simply the number of times the elapsed time has been logged. It is not used by the default
+ *             {@code elapsedTimeTemplate}.
+ *         </td>
+ *     </tr>
+ *     <tr>
+ *         <td>skipInitialMessage</td>
+ *         <td>false</td>
+ *         <td>
+ *             When true, no elapsed time message is logged the first time an elapsed time is logged. By default,
+ *             an initial message will be printed, unless an {@code initialTimestamp} is supplied. In that case,
+ *             the first elapsed time message will use the {@code elapsedTimeTemplate}.
+ *         </td>
+ *     </tr>
+ *     <tr>
+ *         <td>initialMessage</td>
+ *         <td>"[elapsed time since previous: N/A (no previous timestamp)]"</td>
+ *         <td>
+ *             The message to log the first time elapsed time is logged, assuming the previous timestamp is zero.
+ *         </td>
+ *     </tr>
+ * </table>
  * <p>
  * <em>Currently, this is intended only to be used within a single thread.</em>
  */
@@ -35,11 +95,13 @@ public class TimestampingLogger {
 
     @SuppressWarnings("NonConstantLogger")
     private final Logger logger;
-    private long previousTimestamp;
-    private int logCount;
     private final String elapsedTimeTemplate;
     private final BiFunction<Long, Integer, Object[]> argumentTransformer;
     private final String initialMessage;
+
+    // Fields whose values may change
+    private long previousTimestamp;
+    private int logCount;
 
     /**
      * Create a new instance with default values using the given {@link Logger}.
@@ -52,11 +114,11 @@ public class TimestampingLogger {
      * Create a new instance.
      *
      * @param logger the {@link Logger} to use when logging
-     * @param initialTimestamp  allows setting an initial value against which elapsed time should be measured
+     * @param initialTimestamp allows setting an initial value against which elapsed time should be measured
      * @param elapsedTimeTemplate the message template to use when logging elapsed time
      * @param argumentTransformer a function that transforms the elapsed nanoseconds and log count into template arguments
      * @param skipInitialMessage whether to skip logging the first time the elapsed time is logged
-     * @param initialMessage the message to log the first time the elapsed time is logged if no initial timestamp exists
+     * @param initialMessage the message to log the first time the elapsed time is logged
      */
     @Builder
     TimestampingLogger(Logger logger,
@@ -67,7 +129,7 @@ public class TimestampingLogger {
                        String initialMessage) {
 
         this.logger = requireNotNull(logger);
-        this.previousTimestamp = KiwiPreconditions.requirePositiveOrZero(initialTimestamp);
+        this.previousTimestamp = requirePositiveOrZero(initialTimestamp);
         this.logCount = 0;
 
         this.elapsedTimeTemplate = isBlank(elapsedTimeTemplate) ?
@@ -181,9 +243,7 @@ public class TimestampingLogger {
         }
     }
 
-    private void logAppendingElapsedSincePreviousTimestamp(Level level,
-                                                            String formattedMessage,
-                                                            long now) {
+    private void logAppendingElapsedSincePreviousTimestamp(Level level, String formattedMessage, long now) {
         if (previousTimestamp > 0) {
             var diffInNanos = now - previousTimestamp;
             var args = argumentTransformer.apply(diffInNanos, logCount);
