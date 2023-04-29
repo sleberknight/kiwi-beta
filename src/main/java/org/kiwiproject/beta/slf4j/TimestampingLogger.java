@@ -8,7 +8,6 @@ import static org.kiwiproject.base.KiwiPreconditions.requirePositiveOrZero;
 
 import com.google.common.annotations.Beta;
 import lombok.Builder;
-
 import org.kiwiproject.base.KiwiStrings;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
@@ -29,12 +28,12 @@ import java.util.function.BiFunction;
  * <p>
  * The options provided via the builder are:
  * <ul>
- *   <li>logger - the SLF4J {@link Logger} to use</li>
- *   <li>initialTimestamp - nanoseconds to use as the starting point against which the next elapsed time should be measured. Defaults to zero.</li>
- *   <li>elapsedTimeTemplate - the template to use when logging elapsed time messages. Uses {@link KiwiStrings#format(String, Object...)} to format messages.</li>
- *   <li>argumentTransformer - a {@link BiFunction} that accepts nanoseconds and the log count, and which should convert those into arguments for the {@code elapsedTimeTemplate}</li>
- *   <li>skipInitialMessage - if true, no elapsed time message is logged the first time elapsed time is logged</li>
- *   <li>initialMessage - the message to log the first time elapsed time is logged</li>
+ *   <li>{@code logger} - the SLF4J {@link Logger} to use</li>
+ *   <li>{@code initialTimestamp} - nanoseconds to use as the starting point against which the next elapsed time should be measured. Defaults to zero.</li>
+ *   <li>{@code elapsedTimeTemplate} - the template to use when logging elapsed time messages. Uses {@link KiwiStrings#format(String, Object...)} to format messages.</li>
+ *   <li>{@code argumentTransformer} - a {@link BiFunction} that accepts nanoseconds and the log count, and which should convert those into arguments for the {@code elapsedTimeTemplate}</li>
+ *   <li>{@code skipInitialMessage} - if true, no elapsed time message is logged the first time elapsed time is logged</li>
+ *   <li>{@code initialMessage} - the message to log the first time elapsed time is logged</li>
  * </ul>
  * <p>
  * <em>Currently, this is intended only to be used within a single thread.</em>
