@@ -35,15 +35,17 @@ class KiwiJdbcMetaDataTest {
     @BeforeAll
     static void beforeAll(@H2Database H2FileBasedDatabase database) {
         withConnection(database.getDataSource(), conn -> {
-            var st = conn.createStatement();
-            st.execute("create table people (id integer, f_name varchar , l_name varchar, age integer)");
+            try (var st = conn.createStatement()) {
+                st.execute("create table people (id integer, f_name varchar , l_name varchar, age integer)");
+            }
 
-            var ps = conn.prepareStatement("insert into people values (?, ?, ?, ?)");
-            ps.setInt(1, 42);
-            ps.setString(2, "Darrell");
-            ps.setString(3, "Cartrip");
-            ps.setInt(4, 39);
-            ps.executeUpdate();
+            try (var ps = conn.prepareStatement("insert into people values (?, ?, ?, ?)")) {
+                ps.setInt(1, 42);
+                ps.setString(2, "Darrell");
+                ps.setString(3, "Cartrip");
+                ps.setInt(4, 39);
+                ps.executeUpdate();
+            }
         });
     }
 
@@ -58,32 +60,32 @@ class KiwiJdbcMetaDataTest {
         @Test
         void shouldReturnExpectedMatches() {
             withConnection(conn -> {
-                var st = conn.createStatement();
-                var rs = st.executeQuery("select id, f_name as first_name, l_name as last_name, age from people where id = 42");
-
-                assertAll(
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "id")).isTrue(),
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "f_name")).isFalse(),
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "first_name")).isTrue(),
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "l_name")).isFalse(),
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "last_name")).isTrue(),
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "age")).isTrue()
-                );
+                try (var st = conn.createStatement();
+                     var rs = st.executeQuery("select id, f_name as first_name, l_name as last_name, age from people where id = 42")) {
+                    assertAll(
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "id")).isTrue(),
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "f_name")).isFalse(),
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "first_name")).isTrue(),
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "l_name")).isFalse(),
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "last_name")).isTrue(),
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "age")).isTrue()
+                    );
+                }
             });
         }
 
         @Test
         void shouldBeCaseInsensitive() {
             withConnection(conn -> {
-                var st = conn.createStatement();
-                var rs = st.executeQuery("select id, f_name as first_name, l_name as last_name, age from people where id = 42");
-
-                assertAll(
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "ID")).isTrue(),
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "FIRST_NAME")).isTrue(),
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "LAST_NAME")).isTrue(),
-                        () -> assertThat(resultSetContainsColumnLabel(rs, "AGE")).isTrue()
-                );
+                try (var st = conn.createStatement();
+                     var rs = st.executeQuery("select id, f_name as first_name, l_name as last_name, age from people where id = 42")) {
+                    assertAll(
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "ID")).isTrue(),
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "FIRST_NAME")).isTrue(),
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "LAST_NAME")).isTrue(),
+                            () -> assertThat(resultSetContainsColumnLabel(rs, "AGE")).isTrue()
+                    );
+                }
             });
         }
 
