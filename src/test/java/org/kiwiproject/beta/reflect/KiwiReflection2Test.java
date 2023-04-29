@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.kiwiproject.beta.annotation.AccessedViaReflection;
 import org.kiwiproject.beta.reflect.KiwiReflection2.JavaAccessModifier;
 
 @DisplayName("KiwiReflection2")
@@ -148,6 +149,7 @@ class KiwiReflection2Test {
     }
 
     @SuppressWarnings({"EmptyMethod", "unused"})
+    @AccessedViaReflection("methods are accessed via reflection")
     public static class MethodAccessTestClass {
         public void publicMethod() {
         }
@@ -163,46 +165,55 @@ class KiwiReflection2Test {
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection
     public static class PublicClass {
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection
     protected static class ProtectedClass {
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection
     private static class PrivateClass {
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection
     static class PackagePrivateClass {
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection
     public static class PublicConstructorAccessTestClass {
         public PublicConstructorAccessTestClass() {
         }
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection
     public static class ProtectedConstructorAccessTestClass {
         protected ProtectedConstructorAccessTestClass() {
         }
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection
     public static class PrivateConstructorAccessTestClass {
         private PrivateConstructorAccessTestClass() {
         }
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection
     public static class PackagePrivateConstructorAccessTestClass {
         PackagePrivateConstructorAccessTestClass() {
         }
     }
 
     @SuppressWarnings("unused")
+    @AccessedViaReflection("Fields are accessed via reflection")
     public static class FieldAccessTestClass {
         public String publicField;
         protected String protectedField;

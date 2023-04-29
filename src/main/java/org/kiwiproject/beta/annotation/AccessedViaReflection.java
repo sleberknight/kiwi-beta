@@ -3,6 +3,7 @@ package org.kiwiproject.beta.annotation;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
 
 import com.google.common.annotations.Beta;
 
@@ -22,7 +23,7 @@ import java.lang.annotation.Target;
  * include it in this annotation.
  */
 @Documented
-@Target({METHOD, CONSTRUCTOR, FIELD})
+@Target({METHOD, CONSTRUCTOR, FIELD, TYPE})
 @Retention(RetentionPolicy.SOURCE)
 @Beta
 public @interface AccessedViaReflection {
