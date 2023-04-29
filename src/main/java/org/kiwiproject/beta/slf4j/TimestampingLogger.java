@@ -27,14 +27,66 @@ import java.util.function.BiFunction;
  * to customize the behavior.
  * <p>
  * The options provided via the builder are:
- * <ul>
- *   <li>{@code logger} - the SLF4J {@link Logger} to use</li>
- *   <li>{@code initialTimestamp} - nanoseconds to use as the starting point against which the next elapsed time should be measured. Defaults to zero.</li>
- *   <li>{@code elapsedTimeTemplate} - the template to use when logging elapsed time messages. Uses {@link KiwiStrings#format(String, Object...)} to format messages.</li>
- *   <li>{@code argumentTransformer} - a {@link BiFunction} that accepts nanoseconds and the log count, and which should convert those into arguments for the {@code elapsedTimeTemplate}</li>
- *   <li>{@code skipInitialMessage} - if true, no elapsed time message is logged the first time elapsed time is logged</li>
- *   <li>{@code initialMessage} - the message to log the first time elapsed time is logged</li>
- * </ul>
+ * <table>
+ *     <tr>
+ *         <th>Name</th>
+ *         <th>Default</th>
+ *         <th>Description</th>
+ *     </tr>
+ *     <tr>
+ *         <td>logger</td>
+ *         <td>(None)</td>
+ *         <td>The SLF4J {@link Logger} to use. This is required.</td>
+ *     </tr>
+ *     <tr>
+ *         <td>initialTimestamp</td>
+ *         <td>0</td>
+ *         <td>
+ *             The nanoseconds to use as the starting point against which the next elapsed time should be
+ *             measured, e.g. using {@link System#nanoTime()}. When this is zero, the first elapsed log message
+ *             will be the {@code initialMessage} to indicate there is not a previous timestamp against which
+ *             to measure. If you want to start measurement from the time a {@link TimestampingLogger} is
+ *             created, set it to {@link System#nanoTime()}.
+ *         </td>
+ *     </tr>
+ *     <tr>
+ *         <td>elapsedTimeTemplate</td>
+ *         <td>"[elapsed time since previous: {} nanoseconds / {} millis]"</td>
+ *         <td>
+ *             The template to use when logging elapsed time messages.
+ *             Uses {@link KiwiStrings#format(String, Object...)} to format messages.
+ *         </td>
+ *     </tr>
+ *     <tr>
+ *         <td>argumentTransformer</td>
+ *         <td>{@code new Object[] { elapsedNanos, elapsedMillis }}</td>
+ *         <td>
+ *             A {@link BiFunction} that accepts nanoseconds and the log count, and which should convert those
+ *             into arguments for the {@code elapsedTimeTemplate}. If you customize the {@code elapsedTimeTemplate}
+ *             then this should return an array with the same number of elements as there as placeholders in the
+ *             template. For example, the default template has two placeholders, for nanos and millis, and the
+ *             default transformer returns an array with two elements, the elapsed nanos and millis. The log count
+ *             is simply the number of times the elapsed time has been logged. It is not used by the default
+ *             {@code elapsedTimeTemplate}.
+ *         </td>
+ *     </tr>
+ *     <tr>
+ *         <td>skipInitialMessage</td>
+ *         <td>false</td>
+ *         <td>
+ *             When true, no elapsed time message is logged the first time an elapsed time is logged. By default,
+ *             an initial message will be printed, unless an {@code initialTimestamp} is supplied. In that case,
+ *             the first elapsed time message will use the {@code elapsedTimeTemplate}.
+ *         </td>
+ *     </tr>
+ *     <tr>
+ *         <td>initialMessage</td>
+ *         <td>"[elapsed time since previous: N/A (no previous timestamp)]"</td>
+ *         <td>
+ *             The message to log the first time elapsed time is logged, assuming the previous timestamp is zero.
+ *         </td>
+ *     </tr>
+ * </table>
  * <p>
  * <em>Currently, this is intended only to be used within a single thread.</em>
  */
