@@ -85,6 +85,18 @@
                 <type>pom</type>
             </dependency>
 
+            <dependency>
+                <groupId>org.kiwiproject</groupId>
+                <artifactId>kiwi</artifactId>
+                <version>${kiwi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.kiwiproject</groupId>
+                <artifactId>kiwi-test</artifactId>
+                <version>${kiwi-test.version}</version>
+            </dependency>
+
             <!--
                 Force activation version to resolve conflict between logback-classic and spring-data-commons.
                 logback-classic has an optional dependency on com.sun.mail:javax.mail:jar:1.6.2 which depends
@@ -108,7 +120,6 @@
         <dependency>
             <groupId>org.kiwiproject</groupId>
             <artifactId>kiwi</artifactId>
-            <version>${kiwi.version}</version>
         </dependency>
 
         <dependency>
@@ -254,7 +265,6 @@
         <dependency>
             <groupId>org.kiwiproject</groupId>
             <artifactId>kiwi-test</artifactId>
-            <version>${kiwi-test.version}</version>
             <scope>test</scope>
         </dependency>
 
