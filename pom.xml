@@ -35,7 +35,7 @@
         <!-- Versions for required/provided dependencies -->
 
         <camel.version>3.20.4</camel.version>
-        <checker-qual.version>3.33.0</checker-qual.version>
+        <checker-qual.version>3.34.0</checker-qual.version>
         <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
         <kiwi.version>2.5.0</kiwi.version>
