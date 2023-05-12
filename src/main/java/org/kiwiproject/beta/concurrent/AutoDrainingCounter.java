@@ -14,7 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 /**
  * Trying out an idea for a self-contained thread-safe counter that drains itself on a recurring basis.
@@ -34,7 +34,7 @@ public class AutoDrainingCounter implements Closeable {
 
     private final AtomicInteger count;
     private final Duration drainPeriod;
-    private final Consumer<Integer> drainCallback;
+    private final IntConsumer drainCallback;
     private final ScheduledExecutorService scheduledExecutor;
     private final AtomicBoolean counting;
 
@@ -42,7 +42,7 @@ public class AutoDrainingCounter implements Closeable {
         this(drainPeriod, null);
     }
 
-    public AutoDrainingCounter(Duration drainPeriod, @Nullable Consumer<Integer> drainCallback) {
+    public AutoDrainingCounter(Duration drainPeriod, @Nullable IntConsumer drainCallback) {
         this.count = new AtomicInteger();
         this.drainPeriod = drainPeriod;
         this.drainCallback = drainCallback;
@@ -55,7 +55,7 @@ public class AutoDrainingCounter implements Closeable {
     }
 
     public static AutoDrainingCounter createAndStart(Duration drainPeriod,
-                                                     @Nullable Consumer<Integer> drainCallback) {
+                                                     @Nullable IntConsumer drainCallback) {
         var counter = new AutoDrainingCounter(drainPeriod, drainCallback);
         counter.start();
         return counter;
