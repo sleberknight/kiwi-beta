@@ -159,7 +159,7 @@ public class TypeInfo {
      * Assumes this represents a Collection, and returns the single generic type, e.g. for a {@code Set<Integer>}
      * then Integer is returned. Throws an exception if this does not represent a Collection with one generic type.
      *
-     * @return the generic type of a Collection
+     * @return the generic type of the Collection
      * @throws IllegalStateException if this does not have exactly one generic type
      */
     public Type getOnlyGenericType() {
