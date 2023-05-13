@@ -54,6 +54,7 @@ class TypeInfoTest {
 
         @Test
         void shouldNotAllowNullArgument() {
+            // noinspection DataFlowIssue
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> TypeInfo.ofType(null));
         }
@@ -64,6 +65,7 @@ class TypeInfoTest {
 
         @Test
         void shouldNotAllowNullArgument() {
+            // noinspection DataFlowIssue
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> TypeInfo.ofSimpleType(null));
         }
@@ -90,6 +92,7 @@ class TypeInfoTest {
 
         @Test
         void shouldNotAllowNullArgument() {
+            // noinspection DataFlowIssue
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> TypeInfo.ofParameterizedType(null));
         }
@@ -182,6 +185,7 @@ class TypeInfoTest {
         void shouldNotAllowNullArgument() {
             var typeInfo = TypeInfo.ofSimpleType(Long.class);
 
+            // noinspection DataFlowIssue
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> typeInfo.hasExactRawType(null));
         }
@@ -216,6 +220,7 @@ class TypeInfoTest {
         void shouldNotAllowNullArgument() {
             var typeInfo = TypeInfo.ofSimpleType(Instant.class);
 
+            // noinspection DataFlowIssue
             assertThatIllegalArgumentException()
                     .isThrownBy(() -> typeInfo.hasRawTypeAssignableTo(null));
         }

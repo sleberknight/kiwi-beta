@@ -244,6 +244,7 @@ class KiwiReflection2Test {
 
         @Test
         void shouldNotAllowNullArgument() {
+            // noinspection DataFlowIssue
             assertThatIllegalArgumentException().isThrownBy(() -> KiwiReflection2.typeInformationOf((Field) null));
         }
 
@@ -353,6 +354,7 @@ class KiwiReflection2Test {
 
         @Test
         void shouldNotAllowNullArgument() {
+            // noinspection DataFlowIssue
             assertThatIllegalArgumentException().isThrownBy(() -> KiwiReflection2.typeInformationOf((Type) null));
         }
 
