@@ -1,5 +1,6 @@
 package org.kiwiproject.beta.reflect;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.isNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
@@ -72,8 +73,8 @@ public class TypeInfo {
      */
     public static TypeInfo ofSimpleType(@NonNull Type simpleType) {
         checkTypeArgument(simpleType);
-
-        // TODO Should we consider an illegal argument if simpleType is actually a ParameterizedType?
+        checkArgument(!(simpleType instanceof ParameterizedType),
+                "Do not call this method with a ParameterizedType. Use TypeInfo#ofType or TypeInfo#ofParameterizedType.");
 
         return new TypeInfo(simpleType, List.of());
     }

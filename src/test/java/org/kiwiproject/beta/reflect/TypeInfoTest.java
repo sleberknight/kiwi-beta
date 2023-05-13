@@ -68,8 +68,15 @@ class TypeInfoTest {
                     .isThrownBy(() -> TypeInfo.ofSimpleType(null));
         }
 
+        @Test
+        void shouldNotAllowParameterizedTypeArgument() {
+            var parameterizedType = mock(ParameterizedType.class);
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> TypeInfo.ofSimpleType(parameterizedType));
+        }
+
         @ParameterizedTest
-        @ValueSource(classes = { Boolean.class, Integer.class, Long.class, String.class })
+        @ValueSource(classes = {Boolean.class, Integer.class, Long.class, String.class})
         void shouldAlwaysHaveEmptyGenericTypes(Class<?> rawType) {
             var typeInfo = TypeInfo.ofSimpleType(rawType);
             assertAll(
