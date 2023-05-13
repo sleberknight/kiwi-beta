@@ -103,7 +103,7 @@ class TypeInfoTest {
             assertAll(
                     () -> assertThat(typeInfo.getRawType()).isEqualTo(List.class),
                     () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
-                    () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                    () -> assertThatIllegalStateException().isThrownBy(typeInfo::getOnlyGenericType),
                     () -> assertThat(typeInfo.isCollection()).isTrue(),
                     () -> assertThat(typeInfo.isMap()).isFalse(),
                     () -> assertThat(typeInfo.hasExactRawType(List.class)).isTrue());
@@ -245,14 +245,14 @@ class TypeInfoTest {
         void shouldThrowIllegalStateException_WhenThereAreNoValues() {
             var typeInfo = new TypeInfo(Collection.class, List.of());
 
-            assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType());
+            assertThatIllegalStateException().isThrownBy(typeInfo::getOnlyGenericType);
         }
 
         @Test
         void shouldThrowIllegalStateException_WhenThereIsMoreThanOneValue() {
             var typeInfo = new TypeInfo(Map.class, List.of(String.class, Object.class));
 
-            assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType());
+            assertThatIllegalStateException().isThrownBy(typeInfo::getOnlyGenericType);
         }
     }
 

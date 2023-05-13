@@ -7,9 +7,7 @@ import static org.kiwiproject.base.KiwiPreconditions.requireNotNull;
 import static org.kiwiproject.collect.KiwiLists.first;
 
 import com.google.common.annotations.VisibleForTesting;
-
 import lombok.Value;
-
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.lang.reflect.ParameterizedType;
@@ -29,14 +27,14 @@ public class TypeInfo {
      * If a simple type, this is the entirety of the type information. If a parameterized type, this is the
      * top-level type, e.g. List or Map.
      */
-    private Type rawType;
+    Type rawType;
 
     /**
      * If a simple type, this will be empty. If a parameterized type, then this list contains the generic types.
      * For example, a {@code List<String>} has one generic type, String, while a {@code Map<String, Integer>}
      * contains two generic types, String and Integer.
      */
-    private List<Type> genericTypes;
+    List<Type> genericTypes;
 
     /**
      * Package-private constructor to allow for testing, but not direct instantiation. Users of this class
