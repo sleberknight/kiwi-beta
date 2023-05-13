@@ -9,7 +9,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
@@ -191,15 +190,4 @@ public class KiwiReflection2 {
         return TypeInfo.ofType(type);
     }
 
-    /**
-     * Get the type information for the given {@link ParameterizedType}.
-     * <p>
-     * This is a convenience method that delegates to {@link TypeInfo#ofParameterizedType(ParameterizedType)}.
-     *
-     * @param type the parameterized type to check
-     * @return the type information
-     */
-    public static TypeInfo typeInformationOf(@NonNull ParameterizedType type) {
-        return TypeInfo.ofParameterizedType(type);
-    }
 }

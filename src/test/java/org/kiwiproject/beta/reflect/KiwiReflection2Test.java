@@ -16,7 +16,6 @@ import org.kiwiproject.beta.annotation.AccessedViaReflection;
 import org.kiwiproject.beta.reflect.KiwiReflection2.JavaAccessModifier;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -365,25 +364,6 @@ class KiwiReflection2Test {
             var typeInfo = KiwiReflection2.typeInformationOf(type);
 
             assertThat(typeInfo).isEqualTo(TypeInfo.ofType(type));
-        }
-    }
-
-    @Nested
-    class TypeInformationOfParameterizedType {
-
-        @Test
-        void shouldNotAllowNullArgument() {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiReflection2.typeInformationOf((ParameterizedType) null));
-        }
-
-        @Test
-        void shouldDelegateToTypeInfo() throws Exception {
-            var field = Person.class.getDeclaredField("nicknames");
-
-            var parameterizedType = (ParameterizedType) field.getGenericType();
-            var typeInfo = KiwiReflection2.typeInformationOf(parameterizedType);
-
-            assertThat(typeInfo).isEqualTo(TypeInfo.ofParameterizedType(parameterizedType));
         }
     }
 

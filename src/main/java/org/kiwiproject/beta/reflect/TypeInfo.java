@@ -51,6 +51,8 @@ public class TypeInfo {
      *
      * @param type the type, e.g. String, {@code List<Integer}, or {@code Map<String, Integer}
      * @return a new instance
+     * @see TypeInfo#ofSimpleType(Type)
+     * @see TypeInfo#ofParameterizedType(ParameterizedType)
      */
     public static TypeInfo ofType(@NonNull Type type) {
         checkTypeArgument(type);
