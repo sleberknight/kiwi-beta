@@ -1,13 +1,31 @@
 package org.kiwiproject.beta.reflect;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import lombok.Value;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.kiwiproject.beta.annotation.AccessedViaReflection;
 import org.kiwiproject.beta.reflect.KiwiReflection2.JavaAccessModifier;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @DisplayName("KiwiReflection2")
 class KiwiReflection2Test {
@@ -219,5 +237,173 @@ class KiwiReflection2Test {
         protected String protectedField;
         private String privateField;
         String packagePrivateField;
+    }
+
+    @Nested
+    class TypeInformationOfField {
+
+        @Test
+        void shouldNotAllowNullArgument() {
+            // noinspection DataFlowIssue
+            assertThatIllegalArgumentException().isThrownBy(() -> KiwiReflection2.typeInformationOf((Field) null));
+        }
+
+        @Nested
+        class ForSimpleTypes {
+
+            @Test
+            void shouldDetectBooleans() throws Exception {
+                var field = Person.class.getDeclaredField("alive");
+
+                var typeInfo = KiwiReflection2.typeInformationOf(field);
+
+                assertAll(
+                        () -> assertThat(typeInfo.getRawType()).isEqualTo(Boolean.class),
+                        () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
+                        () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                        () -> assertThat(typeInfo.isCollection()).isFalse(),
+                        () -> assertThat(typeInfo.isMap()).isFalse(),
+                        () -> assertThat(typeInfo.hasExactRawType(Boolean.class)).isTrue());
+            }
+
+            @Test
+            void shouldDetectStrings() throws Exception {
+                var field = Person.class.getDeclaredField("name");
+
+                var typeInfo = KiwiReflection2.typeInformationOf(field);
+
+                assertAll(
+                        () -> assertThat(typeInfo.getRawType()).isEqualTo(String.class),
+                        () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
+                        () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                        () -> assertThat(typeInfo.isCollection()).isFalse(),
+                        () -> assertThat(typeInfo.isMap()).isFalse(),
+                        () -> assertThat(typeInfo.hasExactRawType(String.class)).isTrue());
+            }
+        }
+
+        @Nested
+        class ForContainerTypes {
+
+            @Test
+            void shouldDetectGenericLists() throws Exception {
+                var field = Person.class.getDeclaredField("nicknames");
+
+                var typeInfo = KiwiReflection2.typeInformationOf(field);
+
+                assertAll(
+                        () -> assertThat(typeInfo.getRawType()).isEqualTo(List.class),
+                        () -> assertThat(typeInfo.getGenericTypes()).containsExactly(String.class),
+                        () -> assertThat(typeInfo.getOnlyGenericType()).isEqualTo(String.class),
+                        () -> assertThat(typeInfo.isCollection()).isTrue(),
+                        () -> assertThat(typeInfo.isMap()).isFalse(),
+                        () -> assertThat(typeInfo.hasExactRawType(List.class)).isTrue());
+            }
+
+            @Test
+            void shouldDetectRawListsEvenThoughYouShouldNotUseThem() throws Exception {
+                var field = Raw.class.getDeclaredField("rawList");
+
+                var typeInfo = KiwiReflection2.typeInformationOf(field);
+
+                assertAll(
+                        () -> assertThat(typeInfo.getRawType()).isEqualTo(List.class),
+                        () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
+                        () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                        () -> assertThat(typeInfo.isCollection()).isTrue(),
+                        () -> assertThat(typeInfo.isMap()).isFalse(),
+                        () -> assertThat(typeInfo.hasExactRawType(List.class)).isTrue());
+            }
+
+            @Test
+            void shouldDetectGenericMaps() throws Exception {
+                var field = Person.class.getDeclaredField("emailAddresses");
+
+                var typeInfo = KiwiReflection2.typeInformationOf(field);
+
+                assertAll(
+                    () -> assertThat(typeInfo.getRawType()).isEqualTo(Map.class),
+                    () -> assertThat(typeInfo.getGenericTypes()).containsExactly(String.class, String.class),
+                    () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                    () -> assertThat(typeInfo.isCollection()).isFalse(),
+                    () -> assertThat(typeInfo.isMap()).isTrue(),
+                    () -> assertThat(typeInfo.hasExactRawType(Map.class)).isTrue()
+                );
+            }
+
+            @Test
+            void shouldDetectRawMapsEvenThoughYouShouldNotUseThem() throws Exception {
+                var field = Raw.class.getDeclaredField("rawMap");
+
+                var typeInfo = KiwiReflection2.typeInformationOf(field);
+
+                assertAll(
+                    () -> assertThat(typeInfo.getRawType()).isEqualTo(Map.class),
+                    () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
+                    () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                    () -> assertThat(typeInfo.isCollection()).isFalse(),
+                    () -> assertThat(typeInfo.isMap()).isTrue(),
+                    () -> assertThat(typeInfo.hasExactRawType(Map.class)).isTrue()
+                );
+            }
+        }
+    }
+
+    @Nested
+    class TypeInformationOfType {
+
+        @Test
+        void shouldNotAllowNullArgument() {
+            // noinspection DataFlowIssue
+            assertThatIllegalArgumentException().isThrownBy(() -> KiwiReflection2.typeInformationOf((Type) null));
+        }
+
+        @Test
+        void shouldDelegateToTypeInfo() throws Exception {
+            var field = Person.class.getDeclaredField("name");
+
+            Type type = field.getGenericType();
+            var typeInfo = KiwiReflection2.typeInformationOf(type);
+
+            assertThat(typeInfo).isEqualTo(TypeInfo.ofType(type));
+        }
+    }
+
+    static Stream<Arguments> rawTypesThatAreAssignable() {
+        return Stream.of(
+            Arguments.of(ArrayList.class, List.class),
+            Arguments.of(HashSet.class, Set.class),
+            Arguments.of(HashMap.class, Map.class),
+            Arguments.of(LinkedList.class, Collection.class),
+            Arguments.of(LinkedList.class, LinkedList.class),
+            Arguments.of(Collection.class, Collection.class),
+            Arguments.of(String.class, CharSequence.class),
+            Arguments.of(Integer.class, Number.class)
+        );
+    }
+
+    static Stream<Arguments> rawTypesThatAreNotAssignable() {
+        return Stream.of(
+            Arguments.of(ArrayList.class, Map.class),
+            Arguments.of(Set.class, HashSet.class),
+            Arguments.of(Map.class, HashMap.class),
+            Arguments.of(HashMap.class, Collection.class),
+            Arguments.of(CharSequence.class, String.class),
+            Arguments.of(String.class, Number.class)
+        );
+    }
+
+    @Value
+    public static class Person {
+        String name;
+        Boolean alive;
+        List<String> nicknames;
+        Map<String, String> emailAddresses;
+    }
+
+    @SuppressWarnings("rawtypes")
+    static class Raw {
+        List rawList;
+        Map rawMap;
     }
 }

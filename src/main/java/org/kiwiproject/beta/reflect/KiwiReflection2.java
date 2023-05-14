@@ -1,10 +1,15 @@
 package org.kiwiproject.beta.reflect;
 
+import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
+
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 
 /**
  * Utilities related to reflection.
@@ -160,4 +165,29 @@ public class KiwiReflection2 {
     public static boolean isPackagePrivate(Class<?> clazz) {
         return !isPublic(clazz) && !isProtected(clazz) && !isPrivate(clazz);
     }
+
+    /**
+     * Get the type information for the given {@link Field}.
+     *
+     * @param field the Field to check
+     * @return the type information
+     */
+    public static TypeInfo typeInformationOf(@NonNull Field field) {
+        checkArgumentNotNull(field, "field to inspect must not be null");
+        var genericType = field.getGenericType();
+        return typeInformationOf(genericType);
+    }
+
+    /**
+     * Get the type information for the given {@link Type}.
+     * <p>
+     * This is a convenience method that delegates to {@link TypeInfo#ofType(Type)}.
+     *
+     * @param type the type to check
+     * @return the type information
+     */
+    public static TypeInfo typeInformationOf(@NonNull Type type) {
+        return TypeInfo.ofType(type);
+    }
+
 }
