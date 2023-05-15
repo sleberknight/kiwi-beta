@@ -7,10 +7,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -24,11 +28,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Stream;
 
 @DisplayName("TypeInfo")
 class TypeInfoTest {
@@ -124,8 +134,9 @@ class TypeInfoTest {
     class IsCollection {
 
         @ParameterizedTest
-        @ValueSource(classes = { Collection.class, Set.class, List.class, ArrayList.class, HashSet.class,
-                TreeSet.class })
+        @ValueSource(classes = {
+            Collection.class, Set.class, List.class, ArrayList.class, HashSet.class, TreeSet.class
+        })
         void shouldBeTrue_WhenCanAssignRawType_ToCollection(Class<?> rawType) {
             var parameterizedType = mock(ParameterizedType.class);
             when(parameterizedType.getRawType()).thenReturn(rawType);
@@ -150,6 +161,168 @@ class TypeInfoTest {
     }
 
     @Nested
+    class IsCollectionOf {
+
+        @Test
+        void shouldNotAllowNullArgument() {
+            var type = TypeInfo.ofSimpleType(String.class);
+
+            assertThatIllegalArgumentException().isThrownBy(() -> type.isCollectionOf(null));
+        }
+
+        @ParameterizedTest
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#collectionGenericTypeArguments")
+        void shouldBeTrue_WhenIsCollection_OfGenericType(Class<?> rawType, Class<?> genericType) {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(rawType);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { genericType });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isCollectionOf(genericType)).isTrue();
+        }
+
+        @ParameterizedTest
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#collectionGenericTypeArguments")
+        void shouldBeFalse_WhenIsNotCollection_OfGenericType(Class<?> rawType, Class<?> genericType) {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(rawType);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { genericType });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isCollectionOf(Number.class)).isFalse();
+        }
+
+        @ParameterizedTest
+        @ValueSource(classes = {Boolean.class, Integer.class, Long.class, String.class})
+        void shouldBeFalse_WhenIsSimpleType(Class<?> rawType) {
+            var typeInfo = TypeInfo.ofSimpleType(rawType);
+
+            assertThat(typeInfo.isCollectionOf(Boolean.class)).isFalse();
+        }
+
+        @Test
+        void shouldBeFalse_WhenIsMap() {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(Map.class);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { Integer.class, String.class });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isCollectionOf(String.class)).isFalse();
+        }
+    }
+
+    @Nested
+    class IsListOf {
+
+        @Test
+        void shouldNotAllowNullArgument() {
+            var type = TypeInfo.ofSimpleType(Boolean.class);
+
+            assertThatIllegalArgumentException().isThrownBy(() -> type.isListOf(null));
+        }
+
+        @ParameterizedTest
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#listGenericTypeArguments")
+        void shouldBeTrue_WhenIsList_OfGenericType(Class<?> rawType, Class<?> genericType) {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(rawType);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { genericType });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isListOf(genericType)).isTrue();
+        }
+
+        @ParameterizedTest
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#listGenericTypeArguments")
+        void shouldBeFalse_WhenIsNotList_OfGenericType(Class<?> rawType, Class<?> genericType) {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(rawType);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { genericType });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isListOf(Number.class)).isFalse();
+        }
+
+        @ParameterizedTest
+        @ValueSource(classes = {Boolean.class, Integer.class, Long.class, String.class})
+        void shouldBeFalse_WhenIsSimpleType(Class<?> rawType) {
+            var typeInfo = TypeInfo.ofSimpleType(rawType);
+
+            assertThat(typeInfo.isListOf(Boolean.class)).isFalse();
+        }
+
+        @Test
+        void shouldBeFalse_WhenIsMap() {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(Map.class);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { Integer.class, String.class });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isListOf(String.class)).isFalse();
+        }
+    }
+
+    @Nested
+    class IsSetOf {
+
+        @Test
+        void shouldNotAllowNullArgument() {
+            var type = TypeInfo.ofSimpleType(Long.class);
+
+            assertThatIllegalArgumentException().isThrownBy(() -> type.isSetOf(null));
+        }
+
+        @ParameterizedTest
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#setGenericTypeArguments")
+        void shouldBeTrue_WhenIsList_OfGenericType(Class<?> rawType, Class<?> genericType) {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(rawType);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { genericType });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isSetOf(genericType)).isTrue();
+        }
+
+        @ParameterizedTest
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#setGenericTypeArguments")
+        void shouldBeFalse_WhenIsNotList_OfGenericType(Class<?> rawType, Class<?> genericType) {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(rawType);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { genericType });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isSetOf(Number.class)).isFalse();
+        }
+
+        @ParameterizedTest
+        @ValueSource(classes = {Boolean.class, Integer.class, Long.class, String.class})
+        void shouldBeFalse_WhenIsSimpleType(Class<?> rawType) {
+            var typeInfo = TypeInfo.ofSimpleType(rawType);
+
+            assertThat(typeInfo.isSetOf(Boolean.class)).isFalse();
+        }
+
+        @Test
+        void shouldBeFalse_WhenIsMap() {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(Map.class);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { Integer.class, String.class });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isSetOf(String.class)).isFalse();
+        }
+    }
+
+    @Nested
     class IsMap {
 
         @ParameterizedTest
@@ -165,8 +338,9 @@ class TypeInfoTest {
         }
 
         @ParameterizedTest
-        @ValueSource(classes = { Collection.class, Set.class, List.class, ArrayList.class, HashSet.class,
-                TreeSet.class })
+        @ValueSource(classes = {
+            Collection.class, Set.class, List.class, ArrayList.class, HashSet.class, TreeSet.class
+        })
         void shouldBeFalse_WhenCannotAssignRawType_ToMap(Class<?> rawType) {
             var parameterizedType = mock(ParameterizedType.class);
             when(parameterizedType.getRawType()).thenReturn(rawType);
@@ -175,6 +349,67 @@ class TypeInfoTest {
             var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
 
             assertThat(typeInfo.isMap()).isFalse();
+        }
+    }
+
+    @Nested
+    class IsMapOf {
+
+        @Test
+        void shouldNotAllowNullKeyTypeArgument() {
+            var type = TypeInfo.ofSimpleType(Double.class);
+
+            assertThatIllegalArgumentException().isThrownBy(() -> type.isMapOf(null, Integer.class));
+        }
+
+        @Test
+        void shouldNotAllowNullValueTypeArgument() {
+            var type = TypeInfo.ofSimpleType(Double.class);
+
+            assertThatIllegalArgumentException().isThrownBy(() -> type.isMapOf(String.class, null));
+        }
+
+        @ParameterizedTest
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#mapGenericTypeArguments")
+        void shouldBeTrue_WhenIsList_OfGenericType(Class<?> rawType, Class<?> keyGenericType, Class<?> valueGenericType) {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(rawType);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { keyGenericType, valueGenericType });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isMapOf(keyGenericType, valueGenericType)).isTrue();
+        }
+
+        @ParameterizedTest
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#mapGenericTypeArguments")
+        void shouldBeFalse_WhenIsNotList_OfGenericType(Class<?> rawType, Class<?> keyGenericType, Class<?> valueGenericType) {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(rawType);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { keyGenericType, valueGenericType });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isMapOf(String.class, Object.class)).isFalse();
+        }
+
+        @ParameterizedTest
+        @ValueSource(classes = {Boolean.class, Integer.class, Long.class, String.class})
+        void shouldBeFalse_WhenIsSimpleType(Class<?> rawType) {
+            var typeInfo = TypeInfo.ofSimpleType(rawType);
+
+            assertThat(typeInfo.isMapOf(String.class, Object.class)).isFalse();
+        }
+
+        @Test
+        void shouldBeFalse_WhenIsCollection() {
+            var parameterizedType = mock(ParameterizedType.class);
+            when(parameterizedType.getRawType()).thenReturn(List.class);
+            when(parameterizedType.getActualTypeArguments()).thenReturn(new Type[] { Integer.class });
+
+            var typeInfo = TypeInfo.ofParameterizedType(parameterizedType);
+
+            assertThat(typeInfo.isMapOf(String.class, Object.class)).isFalse();
         }
     }
 
@@ -226,7 +461,7 @@ class TypeInfoTest {
         }
 
         @ParameterizedTest
-        @MethodSource("org.kiwiproject.beta.reflect.KiwiReflection2Test#rawTypesThatAreAssignable")
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#rawTypesThatAreAssignable")
         void shouldBeTrue_WhenRawType_CanBeAssignedToTestType(Class<?> rawType, Class<?> testType) {
             var typeInfo = TypeInfo.ofSimpleType(rawType);
 
@@ -234,7 +469,7 @@ class TypeInfoTest {
         }
 
         @ParameterizedTest
-        @MethodSource("org.kiwiproject.beta.reflect.KiwiReflection2Test#rawTypesThatAreNotAssignable")
+        @MethodSource("org.kiwiproject.beta.reflect.TypeInfoTest#rawTypesThatAreNotAssignable")
         void shouldBeFalse_WhenRawType_CannotBeAssignedToTestType(Class<?> rawType, Class<?> testType) {
             var typeInfo = TypeInfo.ofSimpleType(rawType);
 
@@ -288,5 +523,73 @@ class TypeInfoTest {
                         .withMessageContaining(typeName);
             }
         }
+    }
+
+    static Stream<Arguments> rawTypesThatAreAssignable() {
+        return Stream.of(
+            Arguments.of(ArrayList.class, List.class),
+            Arguments.of(HashSet.class, Set.class),
+            Arguments.of(HashMap.class, Map.class),
+            Arguments.of(LinkedList.class, Collection.class),
+            Arguments.of(LinkedList.class, LinkedList.class),
+            Arguments.of(Collection.class, Collection.class),
+            Arguments.of(String.class, CharSequence.class),
+            Arguments.of(Integer.class, Number.class)
+        );
+    }
+
+    static Stream<Arguments> rawTypesThatAreNotAssignable() {
+        return Stream.of(
+            Arguments.of(ArrayList.class, Map.class),
+            Arguments.of(Set.class, HashSet.class),
+            Arguments.of(Map.class, HashMap.class),
+            Arguments.of(HashMap.class, Collection.class),
+            Arguments.of(CharSequence.class, String.class),
+            Arguments.of(String.class, Number.class)
+        );
+    }
+
+    static Stream<Arguments> collectionGenericTypeArguments() {
+        return Stream.of(
+            Arguments.of(Collection.class, String.class),
+            Arguments.of(Collection.class, Integer.class),
+            Arguments.of(List.class, String.class),
+            Arguments.of(ArrayList.class, Long.class),
+            Arguments.of(Set.class, String.class),
+            Arguments.of(HashSet.class, Integer.class)
+        );
+    }
+
+    static Stream<Arguments> listGenericTypeArguments() {
+        return Stream.of(
+            Arguments.of(List.class, String.class),
+            Arguments.of(LinkedList.class, Integer.class),
+            Arguments.of(CopyOnWriteArrayList.class, String.class),
+            Arguments.of(ArrayList.class, Long.class),
+            Arguments.of(ImmutableList.class, String.class),
+            Arguments.of(ArrayList.class, Boolean.class)
+        );
+    }
+
+    static Stream<Arguments> setGenericTypeArguments() {
+        return Stream.of(
+            Arguments.of(Set.class, String.class),
+            Arguments.of(LinkedHashSet.class, Integer.class),
+            Arguments.of(HashSet.class, String.class),
+            Arguments.of(ImmutableSet.class, Long.class),
+            Arguments.of(TreeSet.class, String.class),
+            Arguments.of(NavigableSet.class, Integer.class)
+        );
+    }
+
+    static Stream<Arguments> mapGenericTypeArguments() {
+        return Stream.of(
+            Arguments.of(Map.class, String.class, Integer.class),
+            Arguments.of(LinkedHashMap.class, Integer.class, String.class),
+            Arguments.of(HashMap.class, String.class, Boolean.class),
+            Arguments.of(ImmutableMap.class, Long.class, String.class),
+            Arguments.of(TreeMap.class, String.class, String.class),
+            Arguments.of(NavigableMap.class, Integer.class, Double.class)
+        );
     }
 }
