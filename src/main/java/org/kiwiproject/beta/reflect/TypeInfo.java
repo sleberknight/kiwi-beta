@@ -6,6 +6,7 @@ import static java.util.Objects.isNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 import static org.kiwiproject.base.KiwiPreconditions.requireNotNull;
 import static org.kiwiproject.collect.KiwiLists.first;
+import static org.kiwiproject.collect.KiwiLists.second;
 
 import com.google.common.annotations.VisibleForTesting;
 import lombok.Value;
@@ -16,6 +17,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents either a simple type (e.g. Boolean or String) or a parameterized type (e.g. {@code List<String>}
@@ -110,12 +112,71 @@ public class TypeInfo {
     }
 
     /**
+     * Check if this is a collection (Collection, Set, List) that contains elements with the given generic type.
+     *
+     * @param genericType the exact generic type of the collection
+     * @return true if assignable to Collection and its elements have the exact generic type, otherwise false
+     */
+    public boolean isCollectionOf(@NonNull Class<?> genericType) {
+        checkGenericTypeArgument(genericType);
+        return isCollection() && hasOnlyGenericType(genericType);
+    }
+
+    /**
+     * Check if this is a List that contains elements with the given generic type.
+     *
+     * @param genericType the exact generic type of the list
+     * @return true if assignable to List and its elements have the exact generic type, otherwise false
+     */
+    public boolean isListOf(@NonNull Class<?> genericType) {
+        checkGenericTypeArgument(genericType);
+        return isRawTypeAssignableTo(List.class) && hasOnlyGenericType(genericType);
+    }
+
+    /**
+     * Check if this is a Set that contains elements with the given generic type.
+     *
+     * @param genericType the exact generic type of the set
+     * @return true if assignable to Set and its elements have the exact generic type, otherwise false
+     */
+    public boolean isSetOf(@NonNull Class<?> genericType) {
+        checkGenericTypeArgument(genericType);
+        return isRawTypeAssignableTo(Set.class) && hasOnlyGenericType(genericType);
+    }
+
+    /**
+     * @implNote Assumes this is called after having verified there is exactly one generic type.
+     * If this assumption is violated, an IllegalStateException is thrown.
+     */
+    private boolean hasOnlyGenericType(Class<?> genericType) {
+        return getOnlyGenericType().equals(genericType);
+    }
+
+    /**
      * Check if this is a map.
      *
      * @return true if assignable to Map, otherwise false
      */
     public boolean isMap() {
         return isRawTypeAssignableTo(Map.class);
+    }
+
+    /**
+     * Check if this is a Map that contains entries with the given key and value generic types.
+     *
+     * @param keyGenericType the exact generic type of the map keys
+     * @param valueGenericType the exact generic type of the map values
+     * @return true if assignable to Map and its elements have the exact key/value generic types, otherwise false
+     */
+    public boolean isMapOf(@NonNull Class<?> keyGenericType, @NonNull Class<?> valueGenericType) {
+        checkGenericTypeArgument(keyGenericType);
+        checkGenericTypeArgument(valueGenericType);
+
+        return isMap() && first(genericTypes).equals(keyGenericType) && second(genericTypes).equals(valueGenericType);
+    }
+
+    private static void checkGenericTypeArgument(Class<?> genericType) {
+        checkArgumentNotNull(genericType, "genericType to check must not be null");
     }
 
     /**

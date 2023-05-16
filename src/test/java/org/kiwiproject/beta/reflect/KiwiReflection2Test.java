@@ -10,22 +10,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.kiwiproject.beta.annotation.AccessedViaReflection;
 import org.kiwiproject.beta.reflect.KiwiReflection2.JavaAccessModifier;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
 
 @DisplayName("KiwiReflection2")
 class KiwiReflection2Test {
@@ -367,30 +359,6 @@ class KiwiReflection2Test {
 
             assertThat(typeInfo).isEqualTo(TypeInfo.ofType(type));
         }
-    }
-
-    static Stream<Arguments> rawTypesThatAreAssignable() {
-        return Stream.of(
-            Arguments.of(ArrayList.class, List.class),
-            Arguments.of(HashSet.class, Set.class),
-            Arguments.of(HashMap.class, Map.class),
-            Arguments.of(LinkedList.class, Collection.class),
-            Arguments.of(LinkedList.class, LinkedList.class),
-            Arguments.of(Collection.class, Collection.class),
-            Arguments.of(String.class, CharSequence.class),
-            Arguments.of(Integer.class, Number.class)
-        );
-    }
-
-    static Stream<Arguments> rawTypesThatAreNotAssignable() {
-        return Stream.of(
-            Arguments.of(ArrayList.class, Map.class),
-            Arguments.of(Set.class, HashSet.class),
-            Arguments.of(Map.class, HashMap.class),
-            Arguments.of(HashMap.class, Collection.class),
-            Arguments.of(CharSequence.class, String.class),
-            Arguments.of(String.class, Number.class)
-        );
     }
 
     @Value
