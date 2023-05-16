@@ -8,6 +8,7 @@ import static org.kiwiproject.base.KiwiPreconditions.requireNotNull;
 import static org.kiwiproject.collect.KiwiLists.first;
 import static org.kiwiproject.collect.KiwiLists.second;
 
+import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.Value;
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -24,6 +25,7 @@ import java.util.Set;
  * or {@code Map<String, Integer>}).
  */
 @Value
+@Beta
 public class TypeInfo {
 
     /**
