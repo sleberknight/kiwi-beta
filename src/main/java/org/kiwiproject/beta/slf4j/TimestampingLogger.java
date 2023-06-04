@@ -28,6 +28,7 @@ import java.util.function.BiFunction;
  * <p>
  * The options provided via the builder are:
  * <table>
+ *     <caption>Options provided via the builder</caption>
  *     <tr>
  *         <th>Name</th>
  *         <th>Default</th>

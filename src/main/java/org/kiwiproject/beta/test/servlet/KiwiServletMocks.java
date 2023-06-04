@@ -22,6 +22,10 @@ import java.security.cert.X509Certificate;
 public class KiwiServletMocks {
 
     /**
+     * Create a mock {@link HttpServletRequest} with the given subject distinguished name.
+     *
+     * @param dn the subject distinguished name
+     * @return a mocked HttpServletRequest with the given subject distinguished name
      * @implNote Don't inline the 'certificate' in the thenReturn() call on the mock request.
      * For some reason that I have not fully investigated, Mockito gets really upset and throws
      * a {@link org.mockito.exceptions.misusing.UnfinishedStubbingException}.
@@ -35,6 +39,9 @@ public class KiwiServletMocks {
     }
 
     /**
+     * Create a mock {@link HttpServletRequest} that contains no X509 certificate.
+     *
+     * @return a mocked HttpServletRequest with no X.509 certificate
      * @implNote This is not strictly necessary since a Mockito mock will return null for methods that
      * return a reference type if not provided any expectations. But, it makes test code more explicit
      * about the intent of the code, so that's why this exists.
@@ -46,6 +53,10 @@ public class KiwiServletMocks {
     }
 
     /**
+     * Create a mock {@link X509Certificate} with the given subject distinguished name.
+     *
+     * @param dn the subject distinguished name
+     * @return a mocked X509Certificate with the given subject distinguished name
      * @implNote Has to mock the {@link Principal} returned by {@link X509Certificate#getSubjectDN()} so
      * this actually creates two mocks. Also, since {@link X509Certificate#getSubjectX500Principal()} returns
      * an instance of the <em>final</em> class {@link X500Principal}, we can't mock it and instead a "real"
@@ -71,6 +82,9 @@ public class KiwiServletMocks {
      * Argument matcher that matches a certificate array containing exactly one {@link X509Certificate}
      * having the given subject DN. Uses the {@link X509Certificate#getSubjectDN()} to obtain the
      * {@link Principal} and then matches against {@link Principal#getName()}.
+     *
+     * @param subjectDn the subject distinguished name
+     * @return a Mockito argument matcher for an array of X509Certificate objects
      */
     public static ArgumentMatcher<X509Certificate[]> matchesExpectedCertArrayBySubjectDN(String subjectDn) {
 
@@ -85,6 +99,9 @@ public class KiwiServletMocks {
 
     /**
      * Argument matcher that matches a certificate having the given subject DN.
+     *
+     * @param subjectDn the subject distinguished name
+     * @return a Mockito argument matcher for an array of X509Certificate objects
      */
     public static ArgumentMatcher<X509Certificate> matchesExpectedCertBySubjectDN(String subjectDn) {
 
@@ -99,6 +116,9 @@ public class KiwiServletMocks {
      * Argument matcher that matches a certificate array containing exactly one {@link X509Certificate}
      * having an {@link X500Principal} with the given name. Uses {@link X509Certificate#getSubjectX500Principal()}
      * and to obtain the {@link X500Principal} and then matches against {@link X500Principal#getName()}.
+     *
+     * @param name the name for the X500Principal
+     * @return a Mockito argument matcher for an array of X509Certificate objects
      */
     public static ArgumentMatcher<X509Certificate[]> matchesCertArrayByX500PrincipalName(String name) {
 
@@ -119,6 +139,9 @@ public class KiwiServletMocks {
 
     /**
      * Argument matcher that matches a certificate having an {@link X500Principal} with the given name.
+     *
+     * @param name the name for the X500Principal
+     * @return a Mockito argument matcher for an array of X509Certificate objects
      */
     public static ArgumentMatcher<X509Certificate> matchesExpectedCertByX500PrincipalName(String name) {
 
