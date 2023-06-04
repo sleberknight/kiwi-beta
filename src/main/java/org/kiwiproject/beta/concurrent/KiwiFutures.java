@@ -101,7 +101,7 @@ public class KiwiFutures {
      * implementation, but since I cannot explain it, that logic was removed from this implementation. See
      * <a href="https://github.com/openjdk/jdk19/blob/master/src/java.base/share/classes/java/util/concurrent/Future.java#L188">Future#resultNow</a>
      * for the JDK 19 implementation. If anyone happens upon this code and knows the reason why JDK 19 contains the
-     * loop, please create an issue or discussion in <a href="https://github.com/sleberknight/kiwi-beta"</a>.
+     * loop, please create an issue or discussion in <a href="https://github.com/sleberknight/kiwi-beta">kiwi-beta</a>.
      */
     @SuppressWarnings("java:S2142")
     public static <V> V resultNow(Future<V> future) {
