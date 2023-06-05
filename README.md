@@ -3,6 +3,7 @@
 [![Build](https://github.com/sleberknight/kiwi-beta/actions/workflows/maven.yml/badge.svg)](https://github.com/sleberknight/kiwi-beta/actions?query=workflow%3Abuild)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sleberknight_kiwi-beta&metric=alert_status)](https://sonarcloud.io/project/overview?id=sleberknight_kiwi-beta)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sleberknight_kiwi-beta&metric=coverage)](https://sonarcloud.io/summary/new_code?id=sleberknight_kiwi-beta)
+[![Qodana](https://github.com/sleberknight/kiwi-beta/actions/workflows/qodana.yml/badge.svg)](https://github.com/sleberknight/kiwi-beta/actions/workflows/qodana.yml)
 [![Lift](https://lift.sonatype.com/api/badge/github.com/sleberknight/kiwi-beta)](https://lift.sonatype.com/)
 [![javadoc](https://javadoc.io/badge2/org.kiwiproject/kiwi-beta/javadoc.svg)](https://javadoc.io/doc/org.kiwiproject/kiwi-beta)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
