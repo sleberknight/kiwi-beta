@@ -1,13 +1,11 @@
 package org.kiwiproject.beta.reflect;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
@@ -192,36 +190,4 @@ public class KiwiReflection2 {
         return TypeInfo.ofType(type);
     }
 
-    /**
-     * Creates an empty array of the specified type.
-     *
-     * @param <T>  the type parameter representing the component type of the array
-     * @param type the class object representing the component type of the array
-     * @return an empty array of the specified type
-     * @throws IllegalArgumentException if type is null or is {@link Void#TYPE}
-     * @see Array#newInstance(Class, int)
-     * @implNote This method exists because {@link Array#newInstance(Class, int)} returns Object and thus
-     * requires a cast. Using this method, code can be a little cleaner without a cast.
-     */
-    public static <T> T[] emptyArray(Class<T> type) {
-        return newArray(type, 0);
-    }
-
-    /**
-     * Creates a new array of the specified type and length. All values in the array are null.
-     *
-     * @param <T>    the type parameter representing the component type of the array
-     * @param type   the class object representing the component type of the array
-     * @param length the length of the new array
-     * @return a new array of the specified type and length
-     * @throws IllegalArgumentException if type is null or is {@link Void#TYPE}, or length is negative
-     * @see Array#newInstance(Class, int)
-     * @implNote This method exists because {@link Array#newInstance(Class, int)} returns Object and thus
-     * requires a cast. Using this method, code can be a little cleaner without a cast.     */
-    @SuppressWarnings("unchecked")
-    public static <T> T[] newArray(Class<T> type, int length) {
-        checkArgumentNotNull(type);
-        checkArgument(length >= 0, "value must be positive or zero");
-        return (T[]) Array.newInstance(type, length);
-    }
 }
