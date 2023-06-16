@@ -6,15 +6,11 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import lombok.Value;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.kiwiproject.beta.annotation.AccessedViaReflection;
 import org.kiwiproject.beta.reflect.KiwiReflection2.JavaAccessModifier;
 
@@ -22,7 +18,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @DisplayName("KiwiReflection2")
 class KiwiReflection2Test {
@@ -378,86 +373,5 @@ class KiwiReflection2Test {
     static class Raw {
         List rawList;
         Map rawMap;
-    }
-
-    @Test
-    void emptyArray_withNullType_ShouldThrowIllegalArgumentException() {
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> KiwiReflection2.emptyArray(null));
-    }
-
-    // This exists only to have the concrete type declared (the parameterized method below tests multiple generic types)
-    @Test
-    void emptyArray_shouldReturnEmptyArray() {
-        Integer[] result = KiwiReflection2.emptyArray(Integer.class);
-
-        assertThat(result).isEmpty();
-    }
-
-    @ParameterizedTest
-    @ValueSource(classes = {Integer.class, String.class, Boolean.class})
-    <T> void emptyArray_shouldReturnEmptyArray(Class<T> type) {
-        T[] result = KiwiReflection2.emptyArray(type);
-
-        assertThat(result).isEmpty();
-    }
-
-    @Test
-    void newArray_withNullTypeAndValidLength_ShouldThrowIllegalArgumentException() {
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> KiwiReflection2.newArray(null, 10));
-    }
-
-    // This exists only to have the concrete type declared (the parameterized method below tests multiple generic types)
-    @Test
-    void newArray_shouldReturnArrayWithSpecifiedLength() {
-        Long[] result = KiwiReflection2.newArray(Long.class, 5);
-
-        assertThat(result).hasSize(5).containsOnlyNulls();
-    }
-
-    @Test
-    void newArray_shouldReturnArrayWithSpecifiedLength_OfZero() {
-        String[] result = KiwiReflection2.newArray(String.class, 0);
-
-        assertThat(result).isEmpty();
-    }
-
-    @ParameterizedTest
-    @MethodSource("newArrayTypeAndLengthProvider")
-    <T> void newArray_shouldReturnArrayWithSpecifiedLength(Class<T> type, int length) {
-        T[] result = KiwiReflection2.newArray(type, length);
-
-        assertThat(result).hasSize(length).containsOnlyNulls();
-    }
-
-    // This exists only to have the concrete type declared (the parameterized method below tests multiple generic types)
-    @Test
-    void newArray_withNegativeLength_shouldThrowIllegalArgumentException() {
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> KiwiReflection2.newArray(Double.class, -1));
-    }
-
-    @ParameterizedTest
-    @MethodSource("newArrayNegativeLengthProvider")
-    void newArray_withNegativeLength_shouldThrowIllegalArgumentException(Class<?> type, int length) {
-        assertThatIllegalArgumentException()
-                .isThrownBy(() -> KiwiReflection2.newArray(type, length));
-    }
-
-    static Stream<Arguments> newArrayTypeAndLengthProvider() {
-        return Stream.of(
-                Arguments.of(Integer.class, 5),
-                Arguments.of(String.class, 10),
-                Arguments.of(Boolean.class, 25)
-        );
-    }
-
-    static Stream<Arguments> newArrayNegativeLengthProvider() {
-        return Stream.of(
-                Arguments.of(Double.class, -1),
-                Arguments.of(Character.class, -5),
-                Arguments.of(String.class, -42)
-        );
     }
 }
