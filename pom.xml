@@ -126,6 +126,18 @@
 
         <!-- provided dependencies -->
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <!--
             Requires compile (provided) scope since the KiwiServletMocks uses AssertJ.
          -->
