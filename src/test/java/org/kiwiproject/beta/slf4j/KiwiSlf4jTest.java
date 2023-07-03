@@ -19,7 +19,7 @@ import org.slf4j.event.Level;
 import java.io.IOException;
 
 /**
- * @implNote See the loggers defined for this test in {@code src/test/resources/logback.xml}.
+ * @implNote See the loggers defined for this test in {@code src/test/resources/logback-test.xml}.
  */
 @DisplayName("KiwiSlf4j")
 class KiwiSlf4jTest {

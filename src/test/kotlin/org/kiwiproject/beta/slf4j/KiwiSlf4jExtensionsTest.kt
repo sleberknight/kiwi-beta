@@ -13,7 +13,7 @@ import org.slf4j.event.Level
 import java.io.IOException
 
 //
-// See the loggers (which must exist) for this test in src/test/resources/logback.xml
+// See the loggers (which must exist) for this test in src/test/resources/logback-test.xml
 //
 @DisplayName("KiwiSlf4jExtensions")
 internal class KiwiSlf4jExtensionsTest {
