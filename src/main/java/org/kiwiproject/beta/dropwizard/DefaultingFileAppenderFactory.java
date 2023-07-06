@@ -2,28 +2,25 @@ package org.kiwiproject.beta.dropwizard;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.google.common.annotations.Beta;
-
-import lombok.Getter;
-import lombok.Setter;
-
-import org.kiwiproject.jar.KiwiJars;
-
-import java.io.File;
-import java.util.Optional;
-import java.util.TimeZone;
-
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.spi.DeferredProcessingAware;
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.google.common.annotations.Beta;
 import io.dropwizard.logging.AppenderFactory;
 import io.dropwizard.logging.DropwizardLayout;
 import io.dropwizard.logging.FileAppenderFactory;
 import io.dropwizard.logging.async.AsyncAppenderFactory;
 import io.dropwizard.logging.filter.LevelFilterFactory;
 import io.dropwizard.logging.layout.LayoutFactory;
+import lombok.Getter;
+import lombok.Setter;
+import org.kiwiproject.jar.KiwiJars;
+
+import java.io.File;
+import java.util.Optional;
+import java.util.TimeZone;
 
 /**
  * A Dropwizard {@link AppenderFactory} implementation which extends {@link FileAppenderFactory} to provide default
@@ -41,6 +38,9 @@ import io.dropwizard.logging.layout.LayoutFactory;
  * <a href="https://maven.apache.org/plugins/maven-shade-plugin/">Maven Shade Plugin</a> with the
  * <a href="https://maven.apache.org/plugins/maven-shade-plugin/examples/resource-transformers.html#ServicesResourceTransformer">ServicesResourceTransformer</a>
  * to combine these service files.
+ * <p>
+ * Last, in the <a href="https://www.dropwizard.io/en/stable/manual/configuration.html#logging">logging configuration</a>
+ * of your Dropwizard configuration file, you can add an {@code appender} of type {@code rollingWithDefaults}.
  *
  * @see AppenderFactory
  * @see FileAppenderFactory
@@ -49,7 +49,7 @@ import io.dropwizard.logging.layout.LayoutFactory;
 @Beta
 @Getter
 @Setter
-@JsonTypeName("rolling")
+@JsonTypeName("rollingWithDefaults")
 public class DefaultingFileAppenderFactory<E extends DeferredProcessingAware> extends FileAppenderFactory<E> {
 
     private static final String DEFAULT_LOG_FORMAT = "%-5level [%date] [%thread] %logger{5}: %message%n";
