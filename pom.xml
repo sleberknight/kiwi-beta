@@ -29,7 +29,7 @@
         <kiwi-bom.version>1.0.0</kiwi-bom.version>
 
         <!-- Kotlin properties -->
-        <kotlin.version>1.8.22</kotlin.version>
+        <kotlin.version>1.9.0</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
         <!-- Versions for required/provided dependencies -->
