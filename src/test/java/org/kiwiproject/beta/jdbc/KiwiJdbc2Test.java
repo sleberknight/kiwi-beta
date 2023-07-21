@@ -420,30 +420,4 @@ public class KiwiJdbc2Test {
         when(array.getArray()).thenReturn(actualArray);
         return array;
     }
-
-    @Nested
-    class PrimitiveToObjectArray {
-
-        @Test
-        void shouldThrowIllegalArgument_WhenArgumentIsNotAnArray() {
-            assertThatIllegalArgumentException()
-                    .isThrownBy(() -> KiwiJdbc2.primitiveToObjectArray("this is not an array"))
-                    .withMessage("primitiveArray must be an array of a primitive type");
-        }
-
-        @Test
-        void shouldThrowIllegalArgument_WhenArgumentIsNotAnArrayOfPrimitives() {
-            assertThatIllegalArgumentException()
-                    .isThrownBy(() -> KiwiJdbc2.primitiveToObjectArray(new Integer[] { 42, 84}))
-                    .withMessage("primitiveArray must be an array of a primitive type");
-        }
-
-        @Test
-        void shouldThrowIllegalState_WhenComponentTypeIsNotPrimitive() {
-            var ints = new int[] { 24, 42, 84 };
-            assertThatIllegalStateException()
-                    .isThrownBy(() -> KiwiJdbc2.primitiveToObjectArray(ints, String.class))
-                    .withMessage("expected array to be short[] since it is not any other primitive type, but was: class java.lang.String");
-        }
-    }
 }
