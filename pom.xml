@@ -35,6 +35,7 @@
         <!-- Versions for required/provided dependencies -->
 
         <camel.version>3.21.0</camel.version>
+        <jakarta.ws.rs-api>2.1.6</jakarta.ws.rs-api>
         <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
         <kiwi.version>2.6.0</kiwi.version>
@@ -125,6 +126,13 @@
         </dependency>
 
         <!-- provided dependencies -->
+
+        <dependency>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>${jakarta.ws.rs-api}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -263,6 +271,12 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
             <scope>test</scope>
         </dependency>
 
