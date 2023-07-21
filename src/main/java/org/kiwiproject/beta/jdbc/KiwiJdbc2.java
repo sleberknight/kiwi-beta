@@ -5,13 +5,9 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.isNull;
 
 import com.google.common.annotations.Beta;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-
 import lombok.experimental.UtilityClass;
-
-import org.apache.commons.lang3.ArrayUtils;
 import org.kiwiproject.beta.collect.KiwiArrays2;
 
 import java.sql.ResultSet;
@@ -204,7 +200,7 @@ public class KiwiJdbc2 {
         checkIsArray(clazz, columnLabel);
 
         if (clazz.getComponentType().isPrimitive()) {
-            return primitiveToObjectArray(array);
+            return KiwiArrays2.primitiveToObjectArray(array, type);
         }
 
         return (T[]) array;
@@ -212,56 +208,5 @@ public class KiwiJdbc2 {
 
     private static void checkIsArray(Class<?> clazz, String columnLabel) {
         checkState(clazz.isArray(), "expected an array in column '%s' but found: %s", columnLabel, clazz);
-    }
-
-    // TODO: Consider moving this to KiwiArrays2; additional considerations such as what to do for null input?
-    @VisibleForTesting
-    static <T> T[] primitiveToObjectArray(Object primitiveArray) {
-        var arrayClass = primitiveArray.getClass();
-        var componentType = arrayClass.getComponentType();
-        checkArgument(arrayClass.isArray() && componentType.isPrimitive(),
-                "primitiveArray must be an array of a primitive type");
-
-        return primitiveToObjectArray(primitiveArray, componentType);
-    }
-
-    /**
-     * @implNote This is not pretty, but I cannot find an existing utility that does this (e.g. in Apache Commons
-     * or Google Guava), and because of needing to handle all Java primitive types, I can't think of a cleaner way to
-     * do this, even though this isn't exactly what I would call clean code...
-     */
-    @SuppressWarnings({"unchecked"})
-    @VisibleForTesting
-    static <T> T[] primitiveToObjectArray(Object primitiveArray, Class<?> componentType) {
-        if (componentType.equals(Boolean.TYPE)) {
-            var primitiveBooleanArray = (boolean[]) primitiveArray;
-            return (T[]) ArrayUtils.toObject(primitiveBooleanArray);
-        } else if (componentType.equals(Byte.TYPE)) {
-            var primitiveByteArray = (byte[]) primitiveArray;
-            return (T[]) ArrayUtils.toObject(primitiveByteArray);
-        } else if (componentType.equals(Character.TYPE)) {
-            var primitiveCharArray = (char[]) primitiveArray;
-            return (T[]) ArrayUtils.toObject(primitiveCharArray);
-        } else if (componentType.equals(Double.TYPE)) {
-            var primitiveDoubleArray = (double[]) primitiveArray;
-            return (T[]) ArrayUtils.toObject(primitiveDoubleArray);
-        } else if (componentType.equals(Float.TYPE)) {
-            var primitiveFloatArray = (float[]) primitiveArray;
-            return (T[]) ArrayUtils.toObject(primitiveFloatArray);
-        } else if (componentType.equals(Integer.TYPE)) {
-            var primitiveIntArray = (int[]) primitiveArray;
-            return (T[]) ArrayUtils.toObject(primitiveIntArray);
-        } else if (componentType.equals(Long.TYPE)) {
-            var primitiveLongArray = (long[]) primitiveArray;
-            return (T[]) ArrayUtils.toObject(primitiveLongArray);
-        }
-
-        // it should be a short[] since we've checked the other seven primitive types above
-        checkState(primitiveArray instanceof short[],
-                "expected array to be short[] since it is not any other primitive type, but was: %s",
-                componentType);
-
-        var primitiveShortArray = (short[]) primitiveArray;
-        return  (T[]) ArrayUtils.toObject(primitiveShortArray);
     }
 }
