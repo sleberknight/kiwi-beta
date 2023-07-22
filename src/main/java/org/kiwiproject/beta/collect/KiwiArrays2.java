@@ -6,6 +6,7 @@ import static java.util.Objects.isNull;
 import static org.apache.commons.lang3.ClassUtils.isPrimitiveWrapper;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
+import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.ArrayUtils;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -19,6 +20,7 @@ import java.util.Optional;
  * These utilities can be considered for inclusion into kiwi's {@link org.kiwiproject.collect.KiwiArrays} class.
  */
 @UtilityClass
+@Beta
 public class KiwiArrays2 {
 
     /**
