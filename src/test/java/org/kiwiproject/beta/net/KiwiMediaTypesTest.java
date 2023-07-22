@@ -136,15 +136,34 @@ class KiwiMediaTypesTest {
 
         @ParameterizedTest
         @ValueSource(strings = {
-            "application/xml",
-            "text/css",
-            "text/html; charset=utf-8",
-            "text/xml; charset=ISO-8859-1",
-            "image/jpeg"
+                "application/xml",
+                "text/css",
+                "text/html; charset=utf-8",
+                "text/xml; charset=ISO-8859-1",
+                "image/jpeg"
         })
         void shouldBeFalse_WhenNotJsonType(String mediaType) {
             assertThat(KiwiMediaTypes.isJson(MediaType.valueOf(mediaType))).isFalse();
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "text/xml",
+            "text/xml; charset=utf-8",
+            "application/xml",
+            "application/xml; charset=utf-8",
+            "application/json",
+            "application/json; charset=utf-8",
+            "text/html; charset=utf-8",
+            "text/html; charset=ISO-8859-1",
+    })
+    void shouldReturnJakartaMediaTypeAsStringWithoutParameters(String mediaType) {
+        var jakartaMediaType = MediaType.valueOf(mediaType);
+        var plainMediaType = KiwiMediaTypes.toStringWithoutParameters(jakartaMediaType);
+
+        var expectedMediaType = com.google.common.net.MediaType.parse(mediaType).withoutParameters().toString();
+        assertThat(plainMediaType).isEqualTo(expectedMediaType);
     }
 
     @Nested
