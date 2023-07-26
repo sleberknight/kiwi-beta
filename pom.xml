@@ -35,7 +35,7 @@
         <!-- Versions for required/provided dependencies -->
 
         <camel.version>3.21.0</camel.version>
-        <jakarta.ws.rs-api>2.1.6</jakarta.ws.rs-api>
+        <jakarta.ws.rs-api>3.1.0</jakarta.ws.rs-api>
         <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
         <kiwi.version>2.6.0</kiwi.version>
