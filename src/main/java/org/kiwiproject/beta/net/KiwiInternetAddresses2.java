@@ -4,8 +4,12 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.VisibleForTesting;
 import lombok.Value;
 import lombok.experimental.UtilityClass;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.kiwiproject.base.DefaultEnvironment;
+import org.kiwiproject.base.KiwiEnvironment;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -19,6 +23,30 @@ import java.util.function.Supplier;
 @Beta
 @UtilityClass
 public class KiwiInternetAddresses2 {
+
+    // This is static and NOT final in order to facilitate testing
+    @VisibleForTesting
+    static KiwiEnvironment kiwiEnvironment = new DefaultEnvironment();
+
+    /**
+     * Return a {@link SimpleAddressHolder} containing a hostname and IP stored in the given
+     * environment variables, or fall back to the hostname and address returned by
+     * {@link InetAddress#getLocalHost()} when the environment variables do not exist or have
+     * blank values.
+     *
+     * @param hostnameEnvVar the environment variable to check for hostname
+     * @param ipEnvVar       the environment variable to check for IP address
+     * @return a new SimpleAddressHolder instance
+     * @see #resolveLocalAddressPreferringSupplied(Supplier, Supplier)
+     */
+    public static SimpleAddressHolder resolveLocalAddressPreferringEnv(@Nullable String hostnameEnvVar,
+                                                                       @Nullable String ipEnvVar) {
+
+        var hostnameFromEnv = isBlank(hostnameEnvVar) ? "" : kiwiEnvironment.getenv(hostnameEnvVar);
+        var ipFromEnv = isBlank(ipEnvVar) ? "" : kiwiEnvironment.getenv(ipEnvVar);
+
+        return resolveLocalAddressPreferringSupplied(() -> hostnameFromEnv, () -> ipFromEnv);
+    }
 
     /**
      * Return a {@link SimpleAddressHolder} containing a hostname and IP supplied by the given
