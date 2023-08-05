@@ -18,7 +18,7 @@ import java.util.Set;
 
 /**
  * JDBC utilities that may (or may not) eventually move into {@code KiwiJdbc} in
- * <a href="https://github.com/kiwiproject/kiwi">kiwi</kiwi>.
+ * <a href="https://github.com/kiwiproject/kiwi">kiwi</a>.
  */
 @UtilityClass
 @Beta
@@ -169,7 +169,7 @@ public class KiwiJdbc2 {
      * <p>
      * If the target type is a primitive double, int, or long, you can specify the wrapper type, or you can
      * instead use one of the specialized primitive methods, e.g. {@link #doubleArray(ResultSet, String)}.
-     * Note that if the array returned by {@link Array#getArray()} is of a primitive type such as {@code char[]},
+     * Note that if the array returned by {@link java.sql.Array#getArray()} is of a primitive type such as {@code char[]},
      * then this method must convert that array to an array of wrapper objects which adds additional overhead.
      * In those cases, using the specialized primitive methods will result in better performance (for the
      * supported primitive types).
