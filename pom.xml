@@ -38,7 +38,7 @@
         <jakarta.ws.rs-api>2.1.6</jakarta.ws.rs-api>
         <jakarta.xml.soap-api.version>1.4.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>2.3.3</jakarta.xml.ws-api.version>
-        <kiwi.version>2.6.0</kiwi.version>
+        <kiwi.version>2.7.0</kiwi.version>
         <metrics-healthchecks-severity.version>1.0.12</metrics-healthchecks-severity.version>
 
         <!-- Versions for optional dependencies -->
