@@ -2,7 +2,6 @@ package org.kiwiproject.beta.dao;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
@@ -263,7 +262,7 @@ public class DaoHelpers {
             return;
         }
 
-        var nonNullSorts = sorts.stream().filter(Objects::nonNull).collect(toList());
+        var nonNullSorts = sorts.stream().filter(Objects::nonNull).toList();
 
         // Verify all sorts are valid before proceeding
         nonNullSorts.forEach(sort -> allowedSortFields.assertAllowed(sort.getProperty()));

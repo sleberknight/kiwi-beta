@@ -2,7 +2,6 @@ package org.kiwiproject.beta.base;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
@@ -189,7 +188,7 @@ public class KiwiRunnables {
      * @return a List containing a {@link RunResult} corresponding to each {@link ThrowingRunnable} argument, in order
      */
     public static List<RunResult> runAll(ThrowingRunnable... runnables) {
-        return Arrays.stream(runnables).map(KiwiRunnables::run).collect(toUnmodifiableList());
+        return Arrays.stream(runnables).map(KiwiRunnables::run).toList();
     }
 
     /**

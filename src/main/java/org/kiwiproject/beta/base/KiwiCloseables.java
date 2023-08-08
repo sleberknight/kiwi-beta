@@ -3,7 +3,6 @@ package org.kiwiproject.beta.base;
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
@@ -76,8 +75,8 @@ public class KiwiCloseables {
          */
         public static CloseDescriptor of(@Nullable Object object, String closeMethodName) {
             checkArgumentNotBlank(closeMethodName, "closeMethodName must not be blank");
-            return (object instanceof CloseDescriptor) ?
-                    (CloseDescriptor) object : new CloseDescriptor(object, closeMethodName);
+            return (object instanceof CloseDescriptor closeDescriptor) ?
+                    closeDescriptor : new CloseDescriptor(object, closeMethodName);
         }
     }
 
@@ -124,8 +123,8 @@ public class KiwiCloseables {
             return;
         }
 
-        if (object instanceof Closeable) {
-            closeQuietly((Closeable) object);
+        if (object instanceof Closeable closeable) {
+            closeQuietly(closeable);
             return;
         }
 
@@ -243,7 +242,7 @@ public class KiwiCloseables {
         return Arrays.stream(objects)
                 .map(CloseDescriptor::of)
                 .map(KiwiCloseables::close)
-                .collect(toUnmodifiableList());
+                .toList();
     }
 
     private static void validateNonNullVarargs(Object... objects) {
@@ -267,8 +266,8 @@ public class KiwiCloseables {
             return CloseResult.ofNull();
         }
 
-        if (object instanceof Closeable) {
-            return close((Closeable) object);
+        if (object instanceof Closeable closeable) {
+            return close(closeable);
         }
 
         var methodName = descriptor.closeMethodName();

@@ -1,6 +1,5 @@
 package org.kiwiproject.beta.dropwizard;
 
-import static java.util.stream.Collectors.toList;
 import static org.kiwiproject.base.KiwiPreconditions.requireNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.requireNotNull;
 import static org.kiwiproject.logging.LazyLogParameterSupplier.lazy;
@@ -46,7 +45,7 @@ public class ManagedCamelContext implements Managed {
         LOG.info("Started Camel context {} has {} routes. Route IDs: {}",
                 name,
                 lazy(camelContext::getRoutesSize),
-                lazy(() -> camelContext.getRoutes().stream().map(Route::getId).collect(toList())));
+                lazy(() -> camelContext.getRoutes().stream().map(Route::getId).toList()));
     }
 
     @Override

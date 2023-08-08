@@ -15,7 +15,6 @@ import static org.kiwiproject.collect.KiwiLists.third;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -227,11 +226,7 @@ class TimestampingLoggerTest {
                         .endsWith(" millis]"));
     }
 
-    @AllArgsConstructor
-    static class LoggedMessages {
-        final List<String> logMessages;
-        final List<String> elapsedTimeMessages;
-
+    record LoggedMessages(List<String> logMessages, List<String> elapsedTimeMessages) {
         /**
          * Split all event messages into two lists: one containing the log messages, the other containing elapsed time
          * messages. The input list must have an even number of elements.
@@ -349,11 +344,11 @@ class TimestampingLoggerTest {
                         .argumentTransformer((diffInNanos, logCount) -> {
                             var nanoDuration = Duration.ofNanos(diffInNanos);
                             return new Object[] {
-                                logCount,
-                                KiwiDurationFormatters.formatDurationWords(nanoDuration),
-                                diffInNanos,
-                                nanoDuration.toMillis(),
-                                nanoDuration.toSeconds() };
+                                    logCount,
+                                    KiwiDurationFormatters.formatDurationWords(nanoDuration),
+                                    diffInNanos,
+                                    nanoDuration.toMillis(),
+                                    nanoDuration.toSeconds()};
                         })
                         .build();
 
@@ -460,11 +455,11 @@ class TimestampingLoggerTest {
                         .argumentTransformer((diffInNanos, logCount) -> {
                             var nanoDuration = Duration.ofNanos(diffInNanos);
                             return new Object[] {
-                                logCount,
-                                KiwiDurationFormatters.formatDurationWords(nanoDuration),
-                                diffInNanos,
-                                nanoDuration.toMillis(),
-                                nanoDuration.toSeconds() };
+                                    logCount,
+                                    KiwiDurationFormatters.formatDurationWords(nanoDuration),
+                                    diffInNanos,
+                                    nanoDuration.toMillis(),
+                                    nanoDuration.toSeconds()};
                         })
                         .build();
 

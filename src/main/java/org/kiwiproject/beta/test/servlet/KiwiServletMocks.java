@@ -5,12 +5,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.common.annotations.Beta;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.experimental.UtilityClass;
 import org.kiwiproject.beta.servlet.KiwiServletRequests;
 import org.mockito.ArgumentMatcher;
 
 import javax.security.auth.x500.X500Principal;
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
 

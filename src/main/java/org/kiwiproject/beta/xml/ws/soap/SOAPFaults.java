@@ -1,7 +1,6 @@
 package org.kiwiproject.beta.xml.ws.soap;
 
 import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 import static org.kiwiproject.collect.KiwiMaps.newLinkedHashMap;
@@ -9,6 +8,9 @@ import static org.kiwiproject.collect.KiwiMaps.newLinkedHashMap;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Streams;
+import jakarta.xml.soap.DetailEntry;
+import jakarta.xml.soap.SOAPFault;
+import jakarta.xml.ws.soap.SOAPFaultException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -16,9 +18,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import org.slf4j.Logger;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.SOAPFault;
-import javax.xml.ws.soap.SOAPFaultException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -137,13 +136,12 @@ public class SOAPFaults {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     @VisibleForTesting
     static List<String> getReasonTexts(SOAPFault fault, String errorText) {
         try {
             Iterator<String> faultReasonTexts = fault.getFaultReasonTexts();
 
-            return Streams.stream(faultReasonTexts).collect(toList());
+            return Streams.stream(faultReasonTexts).toList();
         } catch (UnsupportedOperationException unsupportedEx) {
             LOG.debug("faultReasonTexts is not supported");
             LOG.trace("faultReasonTexts unsupported stack trace:", unsupportedEx);
@@ -154,13 +152,12 @@ public class SOAPFaults {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     @VisibleForTesting
     static List<String> getFaultSubcodes(SOAPFault fault) {
         try {
             return Streams.stream(fault.getFaultSubcodes())
                     .map(QName::toString)
-                    .collect(toList());
+                    .toList();
         } catch (UnsupportedOperationException unsupportedEx) {
             LOG.debug("faultSubcodes is not supported");
             LOG.trace("faultSubcodes unsupported stack trace:", unsupportedEx);
@@ -168,7 +165,6 @@ public class SOAPFaults {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     @VisibleForTesting
     static List<String> getDetailsAsStrings(SOAPFault fault, String errorText) {
         try {
@@ -185,7 +181,7 @@ public class SOAPFaults {
                         var nodeValue = detailEntry.getNodeValue();
                         return nodeName + " = " + nodeValue;
                     })
-                    .collect(toList());
+                    .toList();
 
         } catch (Exception e) {
             LOG.warn("Error getting fault Detail information", e);

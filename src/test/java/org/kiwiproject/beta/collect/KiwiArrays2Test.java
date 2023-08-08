@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -234,6 +235,7 @@ class KiwiArrays2Test {
         @Test
         void shouldReturnNull_WhenArgumentIsNull() {
             byte[] bytes = null;
+            //noinspection ConstantValue
             Byte[] result = KiwiArrays2.primitiveToObjectArrayOrNull(bytes, Byte.class);
             assertThat(result).isNull();
         }
@@ -255,6 +257,7 @@ class KiwiArrays2Test {
         @Test
         void shouldReturnEmptyOptional_WhenArgumentIsNull() {
             byte[] bytes = null;
+            //noinspection ConstantValue
             Optional<Byte[]> result = KiwiArrays2.primitiveToObjectArrayOrEmpty(bytes, Byte.class);
             assertThat(result).isEmpty();
         }

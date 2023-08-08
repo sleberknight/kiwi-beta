@@ -1,7 +1,5 @@
 package org.kiwiproject.beta.test.logback;
 
-import static java.util.stream.Collectors.toList;
-
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.google.common.annotations.Beta;
 import org.assertj.core.api.Assertions;
@@ -9,7 +7,7 @@ import org.assertj.core.api.Assertions;
 import java.util.List;
 
 /**
- * AssertJ assertions for {@link InMemoryAppender}.
+ * Provides AssertJ assertions for {@link InMemoryAppender}.
  */
 @Beta
 public class InMemoryAppenderAssertions {
@@ -59,7 +57,7 @@ public class InMemoryAppenderAssertions {
      * @return this instance
      */
     public InMemoryAppenderAssertions containsMessage(String message) {
-        var messages = appender.getOrderedEvents().stream().map(ILoggingEvent::getMessage).collect(toList());
+        var messages = appender.getOrderedEvents().stream().map(ILoggingEvent::getMessage).toList();
         Assertions.assertThat(messages).contains(message);
         return this;
     }

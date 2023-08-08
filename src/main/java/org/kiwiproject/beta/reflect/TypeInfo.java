@@ -62,8 +62,8 @@ public class TypeInfo {
     public static TypeInfo ofType(@NonNull Type type) {
         checkTypeArgument(type);
 
-        if (type instanceof ParameterizedType) {
-            return TypeInfo.ofParameterizedType((ParameterizedType) type);
+        if (type instanceof ParameterizedType parameterizedType) {
+            return TypeInfo.ofParameterizedType(parameterizedType);
         }
 
         return TypeInfo.ofSimpleType(type);

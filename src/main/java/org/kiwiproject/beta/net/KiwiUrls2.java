@@ -33,6 +33,17 @@ public class KiwiUrls2 {
                 .collect(toSet());
     }
 
+    /*
+        On usages of the above method, IntelliJ reports the "may contain URL objects" inspection, described as:
+
+        Reports hashCode() and equals() calls on java.net.URL objects and calls that add URL objects to maps and sets.
+        URL's equals() and hashCode() methods can perform a DNS lookup to resolve the host name. This may cause
+        significant delays, depending on the availability and speed of the network and the DNS server. Using
+        java.net.URI instead of java.net.URL will avoid the DNS lookup.
+
+        TODO Consider changing these (or adding new methods) that accept URI objects
+    */
+
     /**
      * Strip any path or query parameters from the given URL, returning only host[:port].
      */
