@@ -3,11 +3,10 @@ package org.kiwiproject.beta.base.process;
 import com.google.common.annotations.Beta;
 import io.dropwizard.util.DataSize;
 import io.dropwizard.util.Duration;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * Configuration class that can be used in conjunction with {@link ProcessOutputHandler}.

@@ -38,6 +38,7 @@ class MutableParamTest {
     /**
      * This class is NOT an example of good design...
      */
+    @SuppressWarnings("ClassCanBeRecord")
     static class Testing {
 
         @Getter

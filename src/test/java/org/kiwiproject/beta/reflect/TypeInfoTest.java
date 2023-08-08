@@ -167,6 +167,7 @@ class TypeInfoTest {
         void shouldNotAllowNullArgument() {
             var type = TypeInfo.ofSimpleType(String.class);
 
+            //noinspection DataFlowIssue
             assertThatIllegalArgumentException().isThrownBy(() -> type.isCollectionOf(null));
         }
 
@@ -221,6 +222,7 @@ class TypeInfoTest {
         void shouldNotAllowNullArgument() {
             var type = TypeInfo.ofSimpleType(Boolean.class);
 
+            //noinspection DataFlowIssue
             assertThatIllegalArgumentException().isThrownBy(() -> type.isListOf(null));
         }
 
@@ -275,6 +277,7 @@ class TypeInfoTest {
         void shouldNotAllowNullArgument() {
             var type = TypeInfo.ofSimpleType(Long.class);
 
+            //noinspection DataFlowIssue
             assertThatIllegalArgumentException().isThrownBy(() -> type.isSetOf(null));
         }
 
@@ -359,6 +362,7 @@ class TypeInfoTest {
         void shouldNotAllowNullKeyTypeArgument() {
             var type = TypeInfo.ofSimpleType(Double.class);
 
+            //noinspection DataFlowIssue
             assertThatIllegalArgumentException().isThrownBy(() -> type.isMapOf(null, Integer.class));
         }
 
@@ -366,6 +370,7 @@ class TypeInfoTest {
         void shouldNotAllowNullValueTypeArgument() {
             var type = TypeInfo.ofSimpleType(Double.class);
 
+            //noinspection DataFlowIssue
             assertThatIllegalArgumentException().isThrownBy(() -> type.isMapOf(String.class, null));
         }
 

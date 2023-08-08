@@ -17,124 +17,54 @@ import org.slf4j.event.Level;
 public class KiwiSlf4j {
 
     public static boolean isEnabled(Logger logger, Level level) {
-        switch (level) {
-            case ERROR:
-                return logger.isErrorEnabled();
-
-            case WARN:
-                return logger.isWarnEnabled();
-
-            case INFO:
-                return logger.isInfoEnabled();
-
-            case DEBUG:
-                return logger.isDebugEnabled();
-
-            case TRACE:
-                return logger.isTraceEnabled();
-        }
-
-        // Won't need the following nonsense as of JDK 14 and higher; can then use the exhaustive switch expression.
-        // See: https://openjdk.java.net/jeps/361
-
-        throw new IllegalStateException("Unhandled Level: " + level);
+        return switch (level) {
+            case ERROR -> logger.isErrorEnabled();
+            case WARN -> logger.isWarnEnabled();
+            case INFO -> logger.isInfoEnabled();
+            case DEBUG -> logger.isDebugEnabled();
+            case TRACE -> logger.isTraceEnabled();
+        };
     }
 
     public static void log(Logger logger, Level level, String message) {
         switch (level) {
-            case ERROR:
-                logger.error(message);
-                break;
-
-            case WARN:
-                logger.warn(message);
-                break;
-
-            case INFO:
-                logger.info(message);
-                break;
-
-            case DEBUG:
-                logger.debug(message);
-                break;
-
-            case TRACE:
-                logger.trace(message);
-                break;
+            case ERROR -> logger.error(message);
+            case WARN -> logger.warn(message);
+            case INFO -> logger.info(message);
+            case DEBUG -> logger.debug(message);
+            case TRACE -> logger.trace(message);
         }
     }
 
     @SuppressWarnings("DuplicatedCode")
     public static void log(Logger logger, Level level, String format, Object arg) {
         switch (level) {
-            case ERROR:
-                logger.error(format, arg);
-                break;
-
-            case WARN:
-                logger.warn(format, arg);
-                break;
-
-            case INFO:
-                logger.info(format, arg);
-                break;
-
-            case DEBUG:
-                logger.debug(format, arg);
-                break;
-
-            case TRACE:
-                logger.trace(format, arg);
-                break;
+            case ERROR -> logger.error(format, arg);
+            case WARN -> logger.warn(format, arg);
+            case INFO -> logger.info(format, arg);
+            case DEBUG -> logger.debug(format, arg);
+            case TRACE -> logger.trace(format, arg);
         }
     }
 
     public static void log(Logger logger, Level level, String format, Object arg1, Object arg2) {
         switch (level) {
-            case ERROR:
-                logger.error(format, arg1, arg2);
-                break;
-
-            case WARN:
-                logger.warn(format, arg1, arg2);
-                break;
-
-            case INFO:
-                logger.info(format, arg1, arg2);
-                break;
-
-            case DEBUG:
-                logger.debug(format, arg1, arg2);
-                break;
-
-            case TRACE:
-                logger.trace(format, arg1, arg2);
-                break;
+            case ERROR -> logger.error(format, arg1, arg2);
+            case WARN -> logger.warn(format, arg1, arg2);
+            case INFO -> logger.info(format, arg1, arg2);
+            case DEBUG -> logger.debug(format, arg1, arg2);
+            case TRACE -> logger.trace(format, arg1, arg2);
         }
     }
 
     @SuppressWarnings("DuplicatedCode")
     public static void log(Logger logger, Level level, String format, Object... arguments) {
         switch (level) {
-            case ERROR:
-                logger.error(format, arguments);
-                break;
-
-            case WARN:
-                logger.warn(format, arguments);
-                break;
-
-            case INFO:
-                logger.info(format, arguments);
-                break;
-
-            case DEBUG:
-                logger.debug(format, arguments);
-                break;
-
-            case TRACE:
-                logger.trace(format, arguments);
-                break;
+            case ERROR -> logger.error(format, arguments);
+            case WARN -> logger.warn(format, arguments);
+            case INFO -> logger.info(format, arguments);
+            case DEBUG -> logger.debug(format, arguments);
+            case TRACE -> logger.trace(format, arguments);
         }
 
     }
@@ -142,25 +72,11 @@ public class KiwiSlf4j {
     @SuppressWarnings("DuplicatedCode")
     public static void log(Logger logger, Level level, String message, Throwable t) {
         switch (level) {
-            case ERROR:
-                logger.error(message, t);
-                break;
-
-            case WARN:
-                logger.warn(message, t);
-                break;
-
-            case INFO:
-                logger.info(message, t);
-                break;
-
-            case DEBUG:
-                logger.debug(message, t);
-                break;
-
-            case TRACE:
-                logger.trace(message, t);
-                break;
+            case ERROR -> logger.error(message, t);
+            case WARN -> logger.warn(message, t);
+            case INFO -> logger.info(message, t);
+            case DEBUG -> logger.debug(message, t);
+            case TRACE -> logger.trace(message, t);
         }
     }
 }

@@ -1,7 +1,6 @@
 package org.kiwiproject.beta.test.logback;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
@@ -62,7 +61,7 @@ public class InMemoryAppender extends AppenderBase<ILoggingEvent> {
      * @return a list containing the logged events
      */
     public List<ILoggingEvent> getOrderedEvents() {
-        return getOrderedEventStream().collect(toList());
+        return getOrderedEventStream().toList();
     }
 
     /**
@@ -73,7 +72,7 @@ public class InMemoryAppender extends AppenderBase<ILoggingEvent> {
     public List<String> getOrderedEventMessages() {
         return getOrderedEventStream()
                 .map(ILoggingEvent::getFormattedMessage)
-                .collect(toList());
+                .toList();
     }
 
     /**

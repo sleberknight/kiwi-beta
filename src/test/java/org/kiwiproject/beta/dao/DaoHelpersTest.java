@@ -1,7 +1,6 @@
 package org.kiwiproject.beta.dao;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.kiwiproject.base.KiwiStrings.f;
@@ -340,7 +339,7 @@ class DaoHelpersTest {
             var sorts = sortFields
                     .stream()
                     .map(sortField -> KiwiSort.of(sortField, KiwiSort.Direction.ASC))
-                    .collect(toUnmodifiableList())
+                    .toList()
                     .toArray(KiwiSort[]::new);
 
             DaoHelpers.addSorts(query, allowedSortFields, sorts);

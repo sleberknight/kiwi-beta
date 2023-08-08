@@ -43,7 +43,7 @@ public class KiwiMediaTypes {
      * @param mediaType the media type to check
      * @return true if the media type is an XML type ignoring any parameters, otherwise false
      */
-    public static boolean isXml(javax.ws.rs.core.MediaType mediaType) {
+    public static boolean isXml(jakarta.ws.rs.core.MediaType mediaType) {
         checkArgumentNotNull(mediaType, "mediaType must not be null");
         return isXml(toStringWithoutParameters(mediaType));
     }
@@ -72,13 +72,13 @@ public class KiwiMediaTypes {
      * @param mediaType the media type to check
      * @return true if the media type is JSON ignoring any parameters, otherwise false
      */
-    public static boolean isJson(javax.ws.rs.core.MediaType mediaType) {
+    public static boolean isJson(jakarta.ws.rs.core.MediaType mediaType) {
         checkArgumentNotNull(mediaType, "mediaType must not be null");
         return isJson(toStringWithoutParameters(mediaType));
     }
 
     /**
-     * Get the string value of the given {@link javax.ws.rs.core.MediaType} with only the type/subtype.
+     * Get the string value of the given {@link jakarta.ws.rs.core.MediaType} with only the type/subtype.
      *
      * @implNote This method concatenates the type and subtype of the MediaType because the
      * MediaType#toString requires a Jakarta RS implementation in order to create a RuntimeDelegate
@@ -87,7 +87,7 @@ public class KiwiMediaTypes {
      * the type and subtype, since they are just fields in MediaType and don't need a Jakarta RS
      * implementation to be available.
      */
-    public static String toStringWithoutParameters(javax.ws.rs.core.MediaType mediaType) {
+    public static String toStringWithoutParameters(jakarta.ws.rs.core.MediaType mediaType) {
         return f("{}/{}", mediaType.getType(), mediaType.getSubtype());
     }
 

@@ -42,22 +42,12 @@ public class KiwiReflection2 {
      * @return true if the member has the given modifier; otherwise false
      */
     public static boolean hasAccessModifier(Member member, JavaAccessModifier modifier) {
-        switch (modifier) {
-            case PUBLIC:
-                return isPublic(member);
-
-            case PROTECTED:
-                return isProtected(member);
-
-            case PRIVATE:
-                return isPrivate(member);
-
-            case PACKAGE_PRIVATE:
-                return isPackagePrivate(member);
-
-            default:
-                throw new IllegalArgumentException("Illegal or unknown JavaAccessModifier: " + modifier);
-        }
+        return switch (modifier) {
+            case PUBLIC -> isPublic(member);
+            case PROTECTED -> isProtected(member);
+            case PRIVATE -> isPrivate(member);
+            case PACKAGE_PRIVATE -> isPackagePrivate(member);
+        };
     }
 
     /**
@@ -68,22 +58,12 @@ public class KiwiReflection2 {
      * @return true if the class has the given modifier; otherwise false
      */
     public static boolean hasAccessModifier(Class<?> clazz, JavaAccessModifier modifier) {
-        switch (modifier) {
-            case PUBLIC:
-                return isPublic(clazz);
-
-            case PROTECTED:
-                return isProtected(clazz);
-
-            case PRIVATE:
-                return isPrivate(clazz);
-
-            case PACKAGE_PRIVATE:
-                return isPackagePrivate(clazz);
-
-            default:
-                throw new IllegalArgumentException("Illegal or unknown JavaAccessModifier: " + modifier);
-        }
+        return switch (modifier) {
+            case PUBLIC -> isPublic(clazz);
+            case PROTECTED -> isProtected(clazz);
+            case PRIVATE -> isPrivate(clazz);
+            case PACKAGE_PRIVATE -> isPackagePrivate(clazz);
+        };
     }
 
     /**

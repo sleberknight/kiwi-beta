@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import lombok.Value;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -361,12 +360,7 @@ class KiwiReflection2Test {
         }
     }
 
-    @Value
-    public static class Person {
-        String name;
-        Boolean alive;
-        List<String> nicknames;
-        Map<String, String> emailAddresses;
+    public record Person(String name, Boolean alive, List<String> nicknames, Map<String, String> emailAddresses) {
     }
 
     @SuppressWarnings("rawtypes")
