@@ -59,7 +59,7 @@ public class JakartaRestTestHelpers {
     }
 
     @SuppressWarnings({"unchecked"})
-    private static <T> T readEntity(Response realResponse) {
-        return (T) realResponse.getEntity();
+    private static <T> T readEntity(Response outboundResponse) {
+        return (T) outboundResponse.getEntity();
     }
 }
