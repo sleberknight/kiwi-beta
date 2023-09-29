@@ -15,6 +15,7 @@ import org.kiwiproject.base.process.Processes;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -74,7 +75,7 @@ class ProcessHelpersTest {
         void shouldHandleTimeoutsGracefully_WhenProcessTakesLongerThanTimeout() {
             // This should take WAY more than 10 milliseconds
             var command = List.of("ls", "-lAR", "/");
-            var processResult = ProcessHelpers.execute(processHelper, command, 10, TimeUnit.MILLISECONDS);
+            var processResult = ProcessHelpers.execute(processHelper, command, Duration.ofMillis(10));
 
             assertThat(processResult.isTimedOut()).isTrue();
             assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(10);
@@ -91,7 +92,7 @@ class ProcessHelpersTest {
         void shouldHandleTimeoutsGracefully_WhenProcessNeverExits() {
             // Executing cat with no args causes it to wait indefinitely for stdin
             var command = List.of("cat");
-            var processResult = ProcessHelpers.execute(processHelper, command, 100, TimeUnit.MILLISECONDS);
+            var processResult = ProcessHelpers.execute(processHelper, command, Duration.ofMillis(100));
 
             assertThat(processResult.isTimedOut()).isTrue();
             assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(100);

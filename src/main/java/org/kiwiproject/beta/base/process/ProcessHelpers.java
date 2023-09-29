@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.kiwiproject.base.process.ProcessHelper;
 import org.kiwiproject.io.KiwiIO;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -53,6 +54,19 @@ public class ProcessHelpers {
     /**
      * Execute command with the given timeout.
      *
+     * @see #execute(ProcessHelper, List, long, TimeUnit)
+     */
+    public static ProcessResult execute(ProcessHelper processHelper,
+                                        List<String> command,
+                                        Duration timeout) {
+
+        var timeoutNanos = timeout.toNanos();
+        return execute(processHelper, command, timeoutNanos, TimeUnit.NANOSECONDS);
+    }
+
+    /**
+     * Execute command with the given timeout.
+     *
      * @implNote This uses {@link CompletableFuture} to ensure we time out even if the stdout
      * or stderr blocks, which according to the {@link Process} docs, can at least theoretically
      * happen. For example, if someone gives the command {@code ls -laR /} to list all files in
@@ -60,7 +74,7 @@ public class ProcessHelpers {
      */
     public static ProcessResult execute(ProcessHelper processHelper,
                                         List<String> command,
-                                        int timeout,
+                                        long timeout,
                                         TimeUnit timeoutUnit) {
 
         var timeoutMillis = Ints.checkedCast(timeoutUnit.toMillis(timeout));
