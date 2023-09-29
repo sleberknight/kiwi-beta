@@ -4,6 +4,8 @@ import static org.mockito.AdditionalAnswers.answer;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
 
+import com.google.common.annotations.Beta;
+
 import lombok.experimental.UtilityClass;
 
 import org.mockito.ArgumentMatchers;
@@ -15,6 +17,7 @@ import jakarta.ws.rs.core.Response;
  * Test utilities for Jakarta RESTful Web Services.
  */
 @UtilityClass
+@Beta
 public class JakartaRestTestHelpers {
 
     /**
@@ -43,25 +46,20 @@ public class JakartaRestTestHelpers {
         var inboundResponse = spy(outboundResponse);
 
         // handle readEntity(Class)
-        doAnswer(answer((Class<?> type) -> readEntity(inboundResponse, type)))
+        doAnswer(answer((Class<?> type) -> readEntity(inboundResponse)))
                 .when(inboundResponse)
                 .readEntity(ArgumentMatchers.<Class<?>>any());
 
         // handle readEntity(GenericType)
-        doAnswer(answer((GenericType<?> type) -> readEntity(inboundResponse, type)))
+        doAnswer(answer((GenericType<?> type) -> readEntity(inboundResponse)))
                 .when(inboundResponse)
                 .readEntity(ArgumentMatchers.<GenericType<?>>any());
 
         return inboundResponse;
     }
 
-    @SuppressWarnings({"unchecked", "unused"})
-    private static <T> T readEntity(Response realResponse, Class<T> typeNeededForCast) {
-        return (T) realResponse.getEntity();
-    }
-
-    @SuppressWarnings({"unchecked", "unused"})
-    private static <T> T readEntity(Response realResponse, GenericType<T> typeNeededForCast) {
+    @SuppressWarnings({"unchecked"})
+    private static <T> T readEntity(Response realResponse) {
         return (T) realResponse.getEntity();
     }
 }
