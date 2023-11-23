@@ -31,7 +31,7 @@ import java.util.TimeZone;
  * This factory provides the same properties available in {@link FileAppenderFactory} and one additional property
  * which allows you to easily use the default Dropwizard log format instead of the one provided here.
  * <p>
- * To use this in a Dropwizard application, the FQCN must be listed in a {@code META-INF/services/io.dropwizard.logging.AppenderFactory}
+ * To use this in a Dropwizard application, the FQCN must be listed in a {@code META-INF/services/io.dropwizard.logging.common.AppenderFactory}
  * file. Dropwizard already provides this file with its own implementations (in the {@code dropwizard-logging} JAR).
  * This library also provides the same file with our implementation. These two files (and any others from other providers)
  * must all be combined so the resulting file contains all implementations. We generally use the
