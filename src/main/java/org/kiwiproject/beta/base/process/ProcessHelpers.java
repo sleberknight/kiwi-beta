@@ -45,7 +45,7 @@ public class ProcessHelpers {
     /**
      * Execute command with timeout of 5 seconds.
      *
-     * @implNote See the implementation note in {@link #execute(ProcessHelper, List, int, TimeUnit)}.
+     * @implNote See the implementation note in {@link #execute(ProcessHelper, List, long, TimeUnit)}.
      */
     public static ProcessResult execute(ProcessHelper processHelper, List<String> command) {
         return execute(processHelper, command, DEFAULT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
