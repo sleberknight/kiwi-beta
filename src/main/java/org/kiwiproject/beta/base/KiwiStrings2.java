@@ -49,7 +49,7 @@ public class KiwiStrings2 {
     /**
      * Convert a camelCase value to snake_case.
      *
-     * @param value the camelCase value, must not be blank
+     * @param value the camelCase value; must not be blank
      * @return the converted snake_case value
      * @throws IllegalArgumentException if value is blank
      */
@@ -123,7 +123,7 @@ public class KiwiStrings2 {
      * string but are random upper and lower case using the given {@link Locale}.
      *
      * @param input  the input string to generate random case variants for
-     * @param locale the Locale to use to conversion to upper and lower case
+     * @param locale the Locale to use to conversion to upper and lower cases
      * @return an unmodifiable set containing three random case variants of the input string
      */
     public static Set<String> randomCaseVariants(@NonNull String input, @NonNull Locale locale) {
@@ -145,10 +145,10 @@ public class KiwiStrings2 {
      * Set the maximum number of random strings that can be generated using {@link #randomCaseVariants(String, int)}
      * and {@link #randomCaseVariants(String, int, Locale)} to the given limit.
      * <p>
-     * Setting this too high (e.g. to {@link Integer#MAX_VALUE}) will probably result in bad things happening
+     * Setting this too high (e.g., to {@link Integer#MAX_VALUE}) will probably result in bad things happening
      * such as extremely long run times, out of memory errors, etc. Why? Because if the input string is very
      * long, and the strings are generated using random capitalization, it could take a prohibitively long
-     * time (i.e. near infinity) to generate the desired number of unique variants.
+     * time (i.e., near infinity) to generate the desired number of unique variants.
      *
      * @param limit the maximum number of random strings
      * @implNote This is expected to be called rarely, but it still uses an internal lock to
@@ -172,7 +172,7 @@ public class KiwiStrings2 {
     }
 
     /**
-     * Generate a set of strings whose characters match the input string but are random upper and lower case
+     * Generate a set of strings whose characters match the input string but are randomly upper and lower case
      * using the default {@link Locale}.
      * <p>
      * The maximum number of distinct strings that can be generated is 2^N where N is the length of the
@@ -198,7 +198,7 @@ public class KiwiStrings2 {
      *
      * @param input       the input string to generate random case variants for
      * @param desiredSize the number of desired strings in the returned set
-     * @param locale      the Locale to use to conversion to upper and lower case
+     * @param locale      the Locale to use during conversion to upper and lower cases
      * @return an unmodifiable set containing random case variants of the input string
      */
     public static Set<String> randomCaseVariants(@NonNull String input, int desiredSize, @NonNull Locale locale) {
@@ -219,8 +219,8 @@ public class KiwiStrings2 {
     /**
      * Returns the maximum number of variants containing unique capitalization for the given input string.
      * This is 2 raised to the power of the length of the input string. For example, if the input string
-     * is 5 characters long, then the maximum unique variants is 2^5 = 32, while if the input string is
-     * 10 characters long, the maximum unique variants is 2^10 = 1024.
+     * is 5 characters long, then the maximum unique variants are 2^5 = 32, while if the input string is
+     * 10 characters long, the maximum unique variants are 2^10 = 1024.
      *
      * @implNote If input is longer than 32 characters, 2^32 is greater than {@link Integer#MAX_VALUE}, but
      * casting the result of {@link Math#pow(double, double)} to {@code int} results in {@link Integer#MAX_VALUE}.
@@ -238,7 +238,7 @@ public class KiwiStrings2 {
      * upper and lower case using the given {@link Locale}.
      *
      * @param input  the input string to randomly capitalize
-     * @param locale the Locale to use to conversion to upper and lower case
+     * @param locale the Locale to use during conversion to upper and lower cases
      * @return a string marching the input string but with random capitalization
      */
     public static String randomlyCapitalize(@NonNull String input, @NonNull Locale locale) {
@@ -275,7 +275,7 @@ public class KiwiStrings2 {
      * Uses the given {@link Locale} to perform case conversions.
      *
      * @param input  the input string to generate "standard" case variants for
-     * @param locale the Locale to use to conversion to upper and lower case
+     * @param locale the Locale to use to conversion during upper and lower cases
      * @return an unmodifiable set containing the three "standard" case variants of the input string
      */
     public static Set<String> standardCaseVariants(@NonNull String input, @NonNull Locale locale) {

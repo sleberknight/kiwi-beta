@@ -21,7 +21,7 @@ import java.lang.reflect.Type;
 public class KiwiReflection2 {
 
     /**
-     * Describes the access modifiers allowed on Java members, e.g. classes, fields, methods, and constructors.
+     * Describes the access modifiers allowed on Java members, e.g., classes, fields, methods, and constructors.
      * <p>
      * Note that {@link JavaAccessModifier#PACKAGE_PRIVATE} means there is no explicit modifier keyword as
      * described in section <a href="https://docs.oracle.com/javase/specs/jls/se19/html/jls-6.html#jls-6.6">6.6 Access Control</a>
@@ -39,7 +39,7 @@ public class KiwiReflection2 {
      *
      * @param member the Java member to check
      * @param modifier the modified to check against
-     * @return true if the member has the given modifier; otherwise false
+     * @return true if the member has the given modifier, otherwise false
      */
     public static boolean hasAccessModifier(Member member, JavaAccessModifier modifier) {
         return switch (modifier) {
@@ -55,7 +55,7 @@ public class KiwiReflection2 {
      *
      * @param clazz the Java class to check
      * @param modifier the modified to check against
-     * @return true if the class has the given modifier; otherwise false
+     * @return true if the class has the given modifier, otherwise false
      */
     public static boolean hasAccessModifier(Class<?> clazz, JavaAccessModifier modifier) {
         return switch (modifier) {
@@ -70,7 +70,7 @@ public class KiwiReflection2 {
      * Check if the member has the {@code public} modifier.
      *
      * @param member the member to check
-     * @return true if the member is public; otherwise false
+     * @return true if the member is public, otherwise false
      */
     public static boolean isPublic(Member member) {
         return Modifier.isPublic(member.getModifiers());
@@ -80,7 +80,7 @@ public class KiwiReflection2 {
      * Check if the class has the {@code public} modifier.
      *
      * @param clazz the class to check
-     * @return true if the class is public; otherwise false
+     * @return true if the class is public, otherwise false
      */
     public static boolean isPublic(Class<?> clazz) {
         return Modifier.isPublic(clazz.getModifiers());
@@ -90,7 +90,7 @@ public class KiwiReflection2 {
      * Check if the member has the {@code protected} modifier.
      *
      * @param member the member to check
-     * @return true if the member is protected; otherwise false
+     * @return true if the member is protected, otherwise false
      */
     public static boolean isProtected(Member member) {
         return Modifier.isProtected(member.getModifiers());
@@ -100,7 +100,7 @@ public class KiwiReflection2 {
      * Check if the class has the {@code protected} modifier.
      *
      * @param clazz the class to check
-     * @return true if the class is protected; otherwise false
+     * @return true if the class is protected, otherwise false
      */
     public static boolean isProtected(Class<?> clazz) {
         return Modifier.isProtected(clazz.getModifiers());
@@ -110,7 +110,7 @@ public class KiwiReflection2 {
      * Check if the member has the {@code private} modifier.
      *
      * @param member the member to check
-     * @return true if the member is private; otherwise false
+     * @return true if the member is private, otherwise false
      */
     public static boolean isPrivate(Member member) {
         return Modifier.isPrivate(member.getModifiers());
@@ -120,27 +120,28 @@ public class KiwiReflection2 {
      * Check if the class has the {@code private} modifier.
      *
      * @param clazz the class to check
-     * @return true if the class is private; otherwise false
+     * @return true if the class is private, otherwise false
      */
     public static boolean isPrivate(Class<?> clazz) {
         return Modifier.isPrivate(clazz.getModifiers());
     }
 
     /**
-     * Check if the member has no explicit modifier, i.e. is accessible only by other members of the same package.
+     * Check if the member has no explicit modifier, i.e., is accessible only by other members of the same package.
      *
      * @param member the member to check
-     * @return true if the member has no explicit modifier; otherwise false
+     * @return true, if the member has no explicit modifier, otherwise false
      */
     public static boolean isPackagePrivate(Member member) {
         return !isPublic(member) && !isProtected(member) && !isPrivate(member);
     }
 
     /**
-     * Check if the class has no explicit modifier, i.e. is accessible only by other classes and members in the same package.
+     * Check if the class has no explicit modifier,
+     * i.e., is accessible only by other classes and members in the same package.
      *
      * @param clazz the class to check
-     * @return true if the class has no explicit modifier; otherwise false
+     * @return true if the class has no explicit modifier, otherwise false
      */
     public static boolean isPackagePrivate(Class<?> clazz) {
         return !isPublic(clazz) && !isProtected(clazz) && !isPrivate(clazz);

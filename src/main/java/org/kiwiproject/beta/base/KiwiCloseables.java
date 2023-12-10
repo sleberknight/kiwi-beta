@@ -166,12 +166,12 @@ public class KiwiCloseables {
     public static class CloseResult {
 
         /**
-         * If true the object was successfully closed.
+         * If true, the object was successfully closed.
          */
         private boolean closed;
 
         /**
-         * If true the object was null.
+         * If true, the object was null.
          */
         private boolean wasNull;
 
@@ -212,14 +212,14 @@ public class KiwiCloseables {
         }
 
         /**
-         * @return true if the object was successfully closed or was null; otherwise false
+         * @return true if the object was successfully closed or was null, otherwise false
          */
         public boolean closedOrWasNull() {
             return closed || wasNull;
         }
 
         /**
-         * @return true if the close operation failed; otherwise false
+         * @return true if the close operation failed, otherwise false
          */
         public boolean hasError() {
             return nonNull(error);

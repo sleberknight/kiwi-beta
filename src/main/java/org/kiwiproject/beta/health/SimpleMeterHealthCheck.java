@@ -14,11 +14,11 @@ import org.kiwiproject.metrics.health.HealthCheckResults;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Very simple health check that checks if a {@link Meter} has any errors in the last 15 minutes, calculated
+ * Basic health check that checks if a {@link Meter} has any errors in the last 15 minutes, calculated
  * using the 15-minute rate from the meter. The returned results are built using {@link HealthCheckResults} so
  * they contain a "severity" detail.
  *
- * @implNote If the {@link Meter} from Metrics library uses exponentially-weighted moving averages, it is
+ * @implNote If the {@link Meter} from Metrics library uses exponentially weighted moving averages, it is
  * actually not trivial to compute an exact number of errors in the last N time units. Here, this is using
  * the 15-minute rate from the supplied meter and using that to estimate the number of errors. See specifically
  * {@link com.codahale.metrics.MovingAverages} and {@link Meter#Meter(MovingAverages)}.

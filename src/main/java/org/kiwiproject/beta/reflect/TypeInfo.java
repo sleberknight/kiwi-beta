@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents either a simple type (e.g. Boolean or String) or a parameterized type (e.g. {@code List<String>}
+ * Represents either a simple type (e.g., Boolean or String) or a parameterized type (e.g. {@code List<String>}
  * or {@code Map<String, Integer>}).
  */
 @Value
@@ -30,7 +30,7 @@ public class TypeInfo {
 
     /**
      * If a simple type, this is the entirety of the type information. If a parameterized type, this is the
-     * top-level type, e.g. List or Map.
+     * top-level type, e.g., List or Map.
      */
     Type rawType;
 
@@ -54,7 +54,7 @@ public class TypeInfo {
     /**
      * Create a new instance representing either a simple type or a parameterized type.
      *
-     * @param type the type, e.g. String, {@code List<Integer}, or {@code Map<String, Integer}
+     * @param type the type, e.g., String, {@code List<Integer}, or {@code Map<String, Integer}
      * @return a new instance
      * @see TypeInfo#ofSimpleType(Type)
      * @see TypeInfo#ofParameterizedType(ParameterizedType)
@@ -72,7 +72,7 @@ public class TypeInfo {
     /**
      * Create a new instance representing a simple type such as Integer or String, or raw collections.
      *
-     * @param simpleType the type, e.g. String, but also can represent a raw Collection, Map, etc.
+     * @param simpleType the type, e.g., String, but also can represent a raw Collection, Map, etc.
      * @return a new instance with the given raw type and an empty list of generic types
      */
     public static TypeInfo ofSimpleType(@NonNull Type simpleType) {
@@ -117,7 +117,7 @@ public class TypeInfo {
      * Check if this is a collection (Collection, Set, List) that contains elements with the given generic type.
      *
      * @param genericType the exact generic type of the collection
-     * @return true if assignable to Collection and its elements have the exact generic type, otherwise false
+     * @return true if assignable to Collection, and its elements have the exact generic type, otherwise false
      */
     public boolean isCollectionOf(@NonNull Class<?> genericType) {
         checkGenericTypeArgument(genericType);
@@ -168,7 +168,7 @@ public class TypeInfo {
      *
      * @param keyGenericType the exact generic type of the map keys
      * @param valueGenericType the exact generic type of the map values
-     * @return true if assignable to Map and its elements have the exact key/value generic types, otherwise false
+     * @return true if assignable to Map, and its elements have the exact key/value generic types, otherwise false
      */
     public boolean isMapOf(@NonNull Class<?> keyGenericType, @NonNull Class<?> valueGenericType) {
         checkGenericTypeArgument(keyGenericType);
@@ -184,7 +184,7 @@ public class TypeInfo {
     /**
      * Check if the raw type is exactly the same as {@code testType}.
      *
-     * @param testType the type to test against, e.g. Boolean or String
+     * @param testType the type to test against, e.g., Boolean or String
      * @return true if this has the exact raw type given, otherwise false
      */
     public boolean hasExactRawType(@NonNull Class<?> testType) {
@@ -193,7 +193,7 @@ public class TypeInfo {
     }
 
     /**
-     * Check if the raw type is assignable to the {@code testType}, for example a raw type of ArrayList
+     * Check if the raw type is assignable to the {@code testType}, for example, a raw type of ArrayList
      * is assignable to List, and a String is assignable to a CharSequence.
      *
      * @param testType the type to test against, e.g. Collection, Map, CharSequence
@@ -219,7 +219,7 @@ public class TypeInfo {
     }
 
     /**
-     * Assumes this represents a Collection, and returns the single generic type, e.g. for a {@code Set<Integer>}
+     * Assumes this represents a Collection, and returns the single generic type, e.g., for a {@code Set<Integer>}
      * then Integer is returned. Throws an exception if this does not represent a Collection with one generic type.
      *
      * @return the generic type of the Collection

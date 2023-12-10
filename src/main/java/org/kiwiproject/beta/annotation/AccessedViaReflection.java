@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 /**
  * When placed on a method or constructor, indicates that the member is called via
  * reflection, and is this used and should not be considered for removal. When placed
- * on a field, indicates that the field is accessed via reflection to get or set it.
+ * on a field, it indicates that the field is accessed via reflection to get or set it.
  * When placed on a type (class, interface, annotation, enum, or record), indicates that
  * the type may be loaded via reflection using {@link Class#forName(String)} or a similar
  * mechanism. Placing on a type can also mean that the type and/or some or all of its

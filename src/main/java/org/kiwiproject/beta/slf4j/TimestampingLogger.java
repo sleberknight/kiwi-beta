@@ -155,7 +155,7 @@ public class TimestampingLogger {
     }
 
     /**
-     * Logs a message and elapsed time message at TRACE level.
+     * Logs a message and an elapsed time message at TRACE level.
      *
      * @param message the message or message template
      * @param args    the arguments to the message template, if any
@@ -166,7 +166,7 @@ public class TimestampingLogger {
     }
 
     /**
-     * Logs a message and elapsed time message at DEBUG level.
+     * Logs a message and an elapsed time message at DEBUG level.
      *
      * @param message the message or message template
      * @param args    the arguments to the message template, if any

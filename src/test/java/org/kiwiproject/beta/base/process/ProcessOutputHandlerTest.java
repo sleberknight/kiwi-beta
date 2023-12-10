@@ -228,8 +228,8 @@ class ProcessOutputHandlerTest {
     }
 
     private String createTestInputRequiringNumReads(int numReadsWanted) {
-        // if caller wants N reads, then create a string with one more char than (N - 1) times the buffer capacity
-        // for example, if caller wants N=3 reads and buffer capacity is 10, then string will be:
+        // if caller wants N reads, then create a string with one more char than (N - 1) times the buffer capacity,
+        // for example, if caller wants N=3 reads and buffer capacity is 10, then the string will be:
         // 1 + (3 - 1) * 10 = 21 characters long, and the reads will be 10 bytes, then 10 bytes, then 1 byte.
 
         var bufferMultiplier = numReadsWanted - 1;

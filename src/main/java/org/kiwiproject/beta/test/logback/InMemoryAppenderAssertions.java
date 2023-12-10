@@ -63,7 +63,7 @@ public class InMemoryAppenderAssertions {
     }
 
     /**
-     * A terminal method if you want to get the actual logging events after performing assertions, for example
+     * A terminal method if you want to get the actual logging events after performing assertions, for example,
      * to perform additional inspections. Does not perform any assertions.
      *
      * @return a List containing the logging events

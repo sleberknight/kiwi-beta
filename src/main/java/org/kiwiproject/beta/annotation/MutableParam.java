@@ -9,14 +9,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to make it clear that a method/constructor parameter might be mutated, e.g. auditing
+ * Annotation to make it clear that a method/constructor parameter might be mutated, e.g., auditing
  * properties such as createdAt, createdBy, etc. that are automatically set on a persistent entity.
  * <p>
  * While we consider mutating arguments in any way to be generally poor practice that can lead to
  * unexpected and/or confusing behavior, sometimes it would be impossible or much more difficult to
  * avoid doing than to just make the behavior explicit. Consider, for example, the Java Collections
  * shuffle method which shuffles a collection in-place. It might be better to create a new shuffled
- * Collection rather than change in-place, but in some situations like unit tests it may be
+ * Collection rather than change in-place, but in some situations like unit tests, it may be
  * acceptable.
  * <p>
  * At the very least, adding this annotation makes it clear that a parameter might be changed in

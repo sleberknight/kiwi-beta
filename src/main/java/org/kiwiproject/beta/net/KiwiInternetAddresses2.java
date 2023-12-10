@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 @UtilityClass
 public class KiwiInternetAddresses2 {
 
-    // This is static and NOT final in order to facilitate testing
+    // This is static and NOT final to facilitate testing
     @VisibleForTesting
     static KiwiEnvironment kiwiEnvironment = new DefaultEnvironment();
 
@@ -57,13 +57,13 @@ public class KiwiInternetAddresses2 {
      * some external configuration such as environment variables or system properties specified via command line.
      * The suppliers can do something like: {@code () -> environment.getenv("CUSTOM_HOST"))}.
      *
-     * @param hostnameSupplier supplier of hostname, may return blank string
-     * @param ipSupplier       supplier of ip address, may return blank string
+     * @param hostnameSupplier supplier of hostname, the supplier may return blank string
+     * @param ipSupplier       supplier of ip address, the supplier may return blank string
      * @return a new SimpleAddressHolder instance
      * @implNote This is a pretty narrow use case, so it most likely won't ever move into kiwi proper. The one
      * place we actually use this is in a "core service" library which does a bunch of setup and initialization
      * common across services. One of the specific things it does is to get the hostname and IP address to use
-     * when registering a service, e.g. to Consul. We permit specific overrides to the hostname and/or IP address
+     * when registering a service, e.g., to Consul. We permit specific overrides to the hostname and/or IP address
      * via environment variables in a service host.
      */
     public static SimpleAddressHolder resolveLocalAddressPreferringSupplied(Supplier<String> hostnameSupplier,

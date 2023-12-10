@@ -32,7 +32,7 @@ public class KiwiFutures {
 
     /**
      * This is the handler for InterruptedException. This exists to facilitate testing the case when a Future throws
-     * an InterruptedException, by allowing tests to replace it, so that test threads are not actually interrupted.
+     * an InterruptedException, by allowing tests to replace it, so that test threads are not interrupted.
      */
     @VisibleForTesting
     static Function<InterruptedException, IllegalStateException> interruptedExceptionHandler = DEFAULT_INTERRUPTED_EXCEPTION_HANDLER;
@@ -47,7 +47,7 @@ public class KiwiFutures {
     }
 
     /**
-     * Represents the state of a Future.
+     * Represents the state of a {@link Future}.
      *
      * @implNote This is a copy of the Future.State enum that was added in JDK 19.
      */
@@ -73,7 +73,7 @@ public class KiwiFutures {
         FAILED,
 
         /**
-         * The task was cancelled.
+         * The task was canceled.
          *
          * @see Future#cancel(boolean)
          */
@@ -129,7 +129,7 @@ public class KiwiFutures {
      * @param future the Future that should have completed with an Exception
      * @return the exception thrown by the task
      * @throws IllegalArgumentException if the future is null
-     * @throws IllegalStateException if the task has not completed, was interrupted, completed normally, or was cancelled
+     * @throws IllegalStateException if the task has not completed, was interrupted, completed normally, or was canceled
      * @apiNote JDK 19 adds {@code exceptionNow} as an instance method in {@link Future}, at which point this method
      * will no longer be needed. Code written for JDKs before 19 can use this method as a stand-in.
      * @implNote See the implementation note in {@link #resultNow(Future)}. The same loop-based implementation exists
@@ -161,13 +161,13 @@ public class KiwiFutures {
     }
 
     /**
-     * Returns the state of a Future.
+     * Returns the state of a {@link Future}.
      *
      * @param <V> the result type of the future
      * @param future the Future to check
      * @return the {@link FutureState} representing the Future's state
      * @throws IllegalArgumentException if the future is null
-     * @throws IllegalStateException if the task has was interrupted
+     * @throws IllegalStateException if the task was interrupted
      * @apiNote JDK 19 adds {@code state} as an instance method in {@link Future}, at which point this method
      * will no longer be needed. Code written for JDKs before 19 can use this method as a stand-in.
      * @implNote See the implementation note in {@link #resultNow(Future)}. The same loop-based implementation exists
@@ -201,7 +201,7 @@ public class KiwiFutures {
     /**
      * Check whether a {@link Future} is done.
      * <p>
-     * This is a convenience method, for those who prefer (like me) to read code like:
+     * This is a convenience method for those who prefer (like me) to read code like:
      * <pre>
      * var future = ...;
      * if (isNotDone(future)) {

@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Extremely simply way to whitelist fields, e.g. from a web form.
+ * Extremely simply way to "allow-list" fields, e.g., from a web form.
  */
 @Beta
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -141,7 +141,7 @@ public class AllowedFields {
      * Find the prefixed field name for the given (unprefixed) field name.
      *
      * @param fieldName the field name to find
-     * @return the full prefixed field name (e.g. u.lastName) for the given field name (e.g. lastName)
+     * @return the full prefixed field name (e.g., u.lastName) for the given field name (e.g., lastName)
      */
     public String getPrefixedFieldName(String fieldName) {
         checkArgumentNotBlank(fieldName);

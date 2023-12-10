@@ -42,9 +42,9 @@ public class KiwiServletMocks {
      * Create a mock {@link HttpServletRequest} that contains no X509 certificate.
      *
      * @return a mocked HttpServletRequest with no X.509 certificate
-     * @implNote This is not strictly necessary since a Mockito mock will return null for methods that
-     * return a reference type if not provided any expectations. But, it makes test code more explicit
-     * about the intent of the code, so that's why this exists.
+     * @implNote This is not strictly necessary since Mockito will return null for methods that
+     * return a reference type if not provided any expectations.
+     * But it makes test code more explicit about the intent of the code, so that's why this exists.
      */
     public static HttpServletRequest mockHttpServletRequestWithNoCertificate() {
         var request = mock(HttpServletRequest.class);
@@ -65,6 +65,7 @@ public class KiwiServletMocks {
      * regarding the getSubjectDN method being "denigrated". And, Java 16 deprecated {@link X509Certificate#getSubjectDN()}
      * though (as of this writing on Nov. 8, 2022) not for removal.
      */
+    @SuppressWarnings("deprecation")
     public static X509Certificate mockX509Certificate(String dn) {
         var cert = mock(X509Certificate.class);
         var principal = mock(Principal.class);
@@ -86,6 +87,7 @@ public class KiwiServletMocks {
      * @param subjectDn the subject distinguished name
      * @return a Mockito argument matcher for an array of X509Certificate objects
      */
+    @SuppressWarnings("deprecation")
     public static ArgumentMatcher<X509Certificate[]> matchesExpectedCertArrayBySubjectDN(String subjectDn) {
 
         return certs -> {
@@ -103,6 +105,7 @@ public class KiwiServletMocks {
      * @param subjectDn the subject distinguished name
      * @return a Mockito argument matcher for an array of X509Certificate objects
      */
+    @SuppressWarnings("deprecation")
     public static ArgumentMatcher<X509Certificate> matchesExpectedCertBySubjectDN(String subjectDn) {
 
         return cert -> {
