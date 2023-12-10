@@ -21,7 +21,7 @@ import java.util.Optional;
 @Beta
 public class KiwiServletRequests {
 
-    public static final String X509_CERTIFICATE_ATTRIBUTE = "javax.servlet.request.X509Certificate";
+    public static final String X509_CERTIFICATE_ATTRIBUTE = "jakarta.servlet.request.X509Certificate";
 
     public static boolean hasCertificates(ServletRequest request) {
         return nonNull(request.getAttribute(X509_CERTIFICATE_ATTRIBUTE));
