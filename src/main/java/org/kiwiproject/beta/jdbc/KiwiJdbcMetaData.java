@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 public class KiwiJdbcMetaData {
 
     /**
-     * Check whether a {@link ResultSet} contains a column label, ignoring case since some database systems (e.g. H2)
+     * Check whether a {@link ResultSet} contains a column label, ignoring case since some database systems (e.g., H2)
      * return column metadata in all capitals, e.g. {@code FIRST_NAME} instead of {@code first_name}.
      *
      * @param rs          the ResultSet to check
@@ -25,7 +25,7 @@ public class KiwiJdbcMetaData {
      * @throws RuntimeSQLException if there was any error getting column metadata
      */
     public static boolean resultSetContainsColumnLabel(ResultSet rs, String columnLabel) {
-        // NOTE: column numbers in JDBC result sets are 1-based, i.e. 1, 2, ..., N
+        // NOTE: column numbers in JDBC result sets are 1-based, i.e., 1, 2, ..., N
         try {
             var metaData = rs.getMetaData();
             var columnCount = metaData.getColumnCount();
@@ -43,7 +43,7 @@ public class KiwiJdbcMetaData {
         try {
             return metaData.getColumnLabel(colNum).equalsIgnoreCase(columnLabel);
         } catch (SQLException e) {
-            throw new RuntimeSQLException(e);  // this really should never happen, so just wrap in a runtime exception
+            throw new RuntimeSQLException(e);  // this really should never happen, so wrap in a runtime exception
         }
     }
 

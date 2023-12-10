@@ -35,10 +35,12 @@ public class KiwiMediaTypes {
     private static final String XML_SUBTYPE = "xml";
 
     /**
-     * Checks if media type is "application/xml" or "text/xml", ignoring parameters such that
+     * Checks if the media type is "application/xml" or "text/xml", ignoring parameters such that
      * "text/xml; charset=utf-8" is considered XML.
      * <p>
-     * To use this method, the jakarta.ws.rs:jakarta.ws.rs-api dependency must be present.
+     * To use this method,
+     * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
+     * dependency must be present.
      *
      * @param mediaType the media type to check
      * @return true if the media type is an XML type ignoring any parameters, otherwise false
@@ -49,7 +51,7 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if media type is "application/xml" or "text/xml", ignoring parameters such that
+     * Checks if the media type is "application/xml" or "text/xml", ignoring parameters such that
      * "text/xml; charset=utf-8" is considered XML.
      *
      * @param mediaType the media type to check
@@ -64,10 +66,12 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if media type is "application/json", ignoring parameters such that "application/json; charset=utf-8"
+     * Checks if the media type is "application/json", ignoring parameters such that "application/json; charset=utf-8"
      * is considered JSON.
      * <p>
-     * To use this method, the jakarta.ws.rs:jakarta.ws.rs-api dependency must be present.
+     * To use this method,
+     * the <a href="https://mvnrepository.com/search?q=akarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
+     * dependency must be present.
      *
      * @param mediaType the media type to check
      * @return true if the media type is JSON ignoring any parameters, otherwise false
@@ -81,9 +85,9 @@ public class KiwiMediaTypes {
      * Get the string value of the given {@link jakarta.ws.rs.core.MediaType} with only the type/subtype.
      *
      * @implNote This method concatenates the type and subtype of the MediaType because the
-     * MediaType#toString requires a Jakarta RS implementation in order to create a RuntimeDelegate
+     * MediaType#toString requires a Jakarta RS implementation to create a RuntimeDelegate
      * which is then used to convert to a String. Presumably if this method is used, the implementation
-     * is available, but just in case it isn't, this method manually creates the media type string using
+     * is available. However, just in case it isn't, this method manually creates the media type string using
      * the type and subtype, since they are just fields in MediaType and don't need a Jakarta RS
      * implementation to be available.
      */
@@ -92,7 +96,7 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if media type is "application/json", ignoring parameters such that "application/json; charset=utf-8"
+     * Checks if the media type is "application/json", ignoring parameters such that "application/json; charset=utf-8"
      * is considered JSON.
      *
      * @param mediaType the media type to check

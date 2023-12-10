@@ -166,14 +166,14 @@ public class KiwiRunnables {
         }
 
         /**
-         * @return true if the operation succeeded; otherwise false
+         * @return true if the operation succeeded, otherwise false
          */
         public boolean success() {
             return isNull(error);
         }
 
         /**
-         * @return true if the operation failed; otherwise false
+         * @return true if the operation failed, otherwise false
          */
         public boolean hasError() {
             return nonNull(error);

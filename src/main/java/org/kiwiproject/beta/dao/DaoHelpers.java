@@ -26,7 +26,7 @@ import java.util.Optional;
 
 /**
  * Some simple utilities useful to data access code that is building queries,
- * for example structured query languages such as SQL or HQL.
+ * for example, structured query languages such as SQL or HQL.
  * <p>
  * This is useful in situations where you have a relatively static query, but
  * you need to add dynamically defined sorting/ordering.
@@ -283,7 +283,7 @@ public class DaoHelpers {
     }
 
     /**
-     * @implNote Eventually KiwiSort should have a method to directly obtain the Direction object.
+     * @implNote Eventually, KiwiSort should have a method to directly obtain the Direction object.
      * See the proposed KiwiSort feature <a href="https://github.com/kiwiproject/kiwi/discussions/707">here</a>.
      * For now, we need to convert it manually from a String, and KiwiSort should never have a
      * null/blank value returned by getDirection() thus the state check below. Also, the value

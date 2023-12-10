@@ -165,7 +165,7 @@ public class KiwiJdbc2 {
     }
 
     /**
-     * Get an ARRAY column as an array of th specified reference type.
+     * Get an ARRAY column as an array of the specified reference type.
      * <p>
      * If the target type is a primitive double, int, or long, you can specify the wrapper type, or you can
      * instead use one of the specialized primitive methods, e.g. {@link #doubleArray(ResultSet, String)}.

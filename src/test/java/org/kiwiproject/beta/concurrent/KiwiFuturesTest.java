@@ -262,7 +262,7 @@ class KiwiFuturesTest {
     }
 
     /**
-     * @implNote Using a "real mock" instead of Mockito here because it is simple to do so, and avoids incurring
+     * @implNote Using a "real mock" instead of Mockito here because it and avoids incurring
      * the "startup time" of Mockito.
      */
     static class AlwaysInterruptingFuture implements Future<Long> {

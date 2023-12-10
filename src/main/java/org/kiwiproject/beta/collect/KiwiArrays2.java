@@ -106,7 +106,7 @@ public class KiwiArrays2 {
 	 * @return an array of the wrapper type
      * @throws IllegalArgumentException if the input array is null or is not an array of primitives or the wrapper type
      * is not a primitive wrapper class
-     * @implNote The internal logic is not pretty, but I cannot find an existing utility that does this (e.g. in
+     * @implNote The internal logic is not pretty, but I cannot find an existing utility that does this (e.g., in
      * Apache Commons or Google Guava). Apache Commons Lang's {@code ArrayUtils} is used internally to convert
      * primitive arrays, but because of needing to handle all Java primitive types, I can't think of a cleaner way to
      * do this other than a conditional covering all eight primitive types.

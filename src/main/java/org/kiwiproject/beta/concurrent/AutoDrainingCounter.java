@@ -21,7 +21,7 @@ import java.util.function.IntConsumer;
  * <p>
  * Client code determines the "drain period" after which the count is reset to zero, and can increment as often
  * as it needs to. Clients can obtain the current count at any time. Clients should ensure the counter is "started"
- * before using it, otherwise it won't drain. No checks are done on this in this first implementation.
+ * before using it; otherwise it won't drain. No checks are done on this in this first implementation.
  * <p>
  * Clients can also supply a callback which will be called whenever the counter drains. The counter will pass
  * the count before draining to the callback. If a drain callback is provided, its implementation should return

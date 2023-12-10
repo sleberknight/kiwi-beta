@@ -5,13 +5,10 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
 
 import com.google.common.annotations.Beta;
-
-import lombok.experimental.UtilityClass;
-
-import org.mockito.ArgumentMatchers;
-
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
+import lombok.experimental.UtilityClass;
+import org.mockito.ArgumentMatchers;
 
 /**
  * Test utilities for Jakarta RESTful Web Services.
@@ -21,13 +18,13 @@ import jakarta.ws.rs.core.Response;
 public class JakartaRestTestHelpers {
 
     /**
-     * Converts an <em>outbound</em> {@link Response} built as if from inside a Jakarta EE resource, e.g. something like
+     * Converts an <em>outbound</em> {@link Response} built as if from inside a Jakarta EE resource, e.g., something like
      * {@code Response.ok(entity).build()}, into an <em>inbound</em> Response on which {@link Response#readEntity(Class)}
      * can be called. Inbound responses are what Jakarta Clients return, and the {@code readEntity} methods are
      * how client code obtains the response entity.
      * <p>
-     * This is useful if you are testing client code and you want to mock the response returned by an endpoint in order
-     * to test how the client responds to various responses, e.g. different error conditions. If you don't do this
+     * This is useful if you are testing client code, and you want to mock the response returned by an endpoint
+     * to test how the client responds to various responses, e.g., different error conditions. If you don't do this
      * and your test attempts to read an entity from an outbound response, an IllegalStateException is thrown.
      * <p>
      * Note that in this implementation, only {@link Response#readEntity(Class)} and

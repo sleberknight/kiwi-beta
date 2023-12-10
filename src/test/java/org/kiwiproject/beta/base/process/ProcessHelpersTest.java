@@ -90,7 +90,7 @@ class ProcessHelpersTest {
 
         @Test
         void shouldHandleTimeoutsGracefully_WhenProcessNeverExits() {
-            // Executing cat with no args causes it to wait indefinitely for stdin
+            // Executing cat command with no args causes it to wait indefinitely for stdin
             var command = List.of("cat");
             var processResult = ProcessHelpers.execute(processHelper, command, Duration.ofMillis(100));
 

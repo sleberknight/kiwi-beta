@@ -372,7 +372,7 @@ class DaoHelpersTest {
             assertThat(query).hasToString(BASE_QUERY + " order by age DESC, lastName ASC");
         }
 
-        // salary is the illegal field
+        // salary is the illegal field here
         @ParameterizedTest
         @CsvSource({
                 "salary, lastName, firstName",

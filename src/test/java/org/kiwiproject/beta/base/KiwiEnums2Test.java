@@ -44,7 +44,7 @@ class KiwiEnums2Test {
 
         /**
          * @implNote This declares the argument type to be a class E that extends Enum, which works due
-         * to type erasure. Clearly none of the arguments are classes that extend Enum, since the point of
+         * to type erasure. None of the arguments are classes that extend Enum, since the point of
          * this test is to ensure we don't allow classes that aren't Enums.
          */
         @ParameterizedTest
