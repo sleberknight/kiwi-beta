@@ -1,7 +1,6 @@
 package org.kiwiproject.beta.util.git;
 
 import com.google.common.annotations.Beta;
-
 import lombok.experimental.UtilityClass;
 
 import java.util.regex.Pattern;

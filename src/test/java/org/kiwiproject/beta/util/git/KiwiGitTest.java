@@ -21,7 +21,7 @@ class KiwiGitTest {
             "973f2d2c72",
             "7ac1fe6a472",
             "6069f26bea43",
-            "bafcade",  // low probability (0.104%), but can can happen (this is a commit in this repo)
+                "bafcade",  // low probability (0.104%), but can happen (this is a commit in this repo)
             "5381228",  // higher probability than only letters (3.725%) (this is a commit in this repo)
             "427738254",  // ditto above even though 9 digits long (1.455%) (this is a commit in this repo)
             "aaaaaaa",  // very unlikely, but we'll still accept it for now
