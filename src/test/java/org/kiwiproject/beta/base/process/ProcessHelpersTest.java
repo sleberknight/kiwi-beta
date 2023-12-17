@@ -46,7 +46,7 @@ class ProcessHelpersTest {
             var processResult = ProcessHelpers.execute(processHelper, command, 10_000_000, TimeUnit.MICROSECONDS);
 
             assertThat(processResult.isTimedOut()).describedAs("timed out after 10 seconds").isFalse();
-            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(1000);
+            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(10_000);
             assertThat(processResult.getExitCode()).hasValue(0);
             assertThat(processResult.isSuccessfulExit()).isTrue();
             assertThat(processResult.isNotSuccessfulExit()).isFalse();
