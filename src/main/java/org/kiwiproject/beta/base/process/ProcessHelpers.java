@@ -84,6 +84,7 @@ public class ProcessHelpers {
 
     private static ProcessResult tryExecute(ProcessHelper processHelper, List<String> command, int timeoutMillis) {
         try {
+            LOG.trace("Executing command with timeout of {} millis: {}", timeoutMillis, command);
             return CompletableFuture
                     .supplyAsync(() -> executeSync(processHelper, command, timeoutMillis))
                     .get(timeoutMillis, TimeUnit.MILLISECONDS);
