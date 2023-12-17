@@ -44,10 +44,10 @@ class ProcessHelpersTest {
         @RetryingTest(3)
         void shouldReadStdOut() {
             var command = List.of("echo", "foo bar baz");
-            var processResult = ProcessHelpers.execute(processHelper, command, 10_000_000, TimeUnit.MICROSECONDS);
+            var processResult = ProcessHelpers.execute(processHelper, command, 1_000_000, TimeUnit.MICROSECONDS);
 
-            assertThat(processResult.isTimedOut()).describedAs("timed out after 10 seconds").isFalse();
-            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(10_000);
+            assertThat(processResult.isTimedOut()).describedAs("timed out after 1 second").isFalse();
+            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(1000);
             assertThat(processResult.getExitCode()).hasValue(0);
             assertThat(processResult.isSuccessfulExit()).isTrue();
             assertThat(processResult.isNotSuccessfulExit()).isFalse();
@@ -120,10 +120,10 @@ class ProcessHelpersTest {
 
             // Trying to run a command that does not exist results in IOException
             var command = List.of("some", "command");
-            var processResult = ProcessHelpers.execute(processHelperSpy, command, 7_500, TimeUnit.MILLISECONDS);
+            var processResult = ProcessHelpers.execute(processHelperSpy, command, 1_500, TimeUnit.MILLISECONDS);
 
-            assertThat(processResult.isTimedOut()).describedAs("timed out after 7.5 seconds").isFalse();
-            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(7_500);
+            assertThat(processResult.isTimedOut()).describedAs("timed out after 1.5 seconds").isFalse();
+            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(1_500);
             assertThat(processResult.getExitCode()).isEmpty();
             assertThat(processResult.isSuccessfulExit()).isFalse();
             assertThat(processResult.isNotSuccessfulExit()).isTrue();
