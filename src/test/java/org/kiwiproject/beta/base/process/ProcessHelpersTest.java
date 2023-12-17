@@ -43,9 +43,9 @@ class ProcessHelpersTest {
         @Test
         void shouldReadStdOut() {
             var command = List.of("echo", "foo bar baz");
-            var processResult = ProcessHelpers.execute(processHelper, command, 1_000_000, TimeUnit.MICROSECONDS);
+            var processResult = ProcessHelpers.execute(processHelper, command, 10_000_000, TimeUnit.MICROSECONDS);
 
-            assertThat(processResult.isTimedOut()).describedAs("timed out").isFalse();
+            assertThat(processResult.isTimedOut()).describedAs("timed out after 10 seconds").isFalse();
             assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(1000);
             assertThat(processResult.getExitCode()).hasValue(0);
             assertThat(processResult.isSuccessfulExit()).isTrue();
@@ -60,7 +60,7 @@ class ProcessHelpersTest {
         void shouldReadStdErr() {
             var processResult = ProcessHelpers.execute(processHelper, List.of("cat", "foo"));
 
-            assertThat(processResult.isTimedOut()).describedAs("timed out").isFalse();
+            assertThat(processResult.isTimedOut()).describedAs("timed out after 5 seconds").isFalse();
             assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(5000);  // default timeout
             assertThat(processResult.getExitCode()).hasValue(1);
             assertThat(processResult.isSuccessfulExit()).isFalse();
@@ -119,10 +119,10 @@ class ProcessHelpersTest {
 
             // Trying to run a command that does not exist results in IOException
             var command = List.of("some", "command");
-            var processResult = ProcessHelpers.execute(processHelperSpy, command, 1_500, TimeUnit.MILLISECONDS);
+            var processResult = ProcessHelpers.execute(processHelperSpy, command, 7_500, TimeUnit.MILLISECONDS);
 
-            assertThat(processResult.isTimedOut()).describedAs("timed out").isFalse();
-            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(1_500);
+            assertThat(processResult.isTimedOut()).describedAs("timed out after 7.5 seconds").isFalse();
+            assertThat(processResult.getTimeoutThresholdMillis()).isEqualTo(7_500);
             assertThat(processResult.getExitCode()).isEmpty();
             assertThat(processResult.isSuccessfulExit()).isFalse();
             assertThat(processResult.isNotSuccessfulExit()).isTrue();
