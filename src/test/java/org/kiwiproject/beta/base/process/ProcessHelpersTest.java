@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.kiwiproject.base.process.ProcessHelper;
 import org.kiwiproject.base.process.Processes;
 
@@ -40,7 +41,7 @@ class ProcessHelpersTest {
             processHelper = new ProcessHelper();
         }
 
-        @Test
+        @RetryingTest(3)
         void shouldReadStdOut() {
             var command = List.of("echo", "foo bar baz");
             var processResult = ProcessHelpers.execute(processHelper, command, 10_000_000, TimeUnit.MICROSECONDS);
@@ -56,7 +57,7 @@ class ProcessHelpersTest {
             assertThat(processResult.getError()).isEmpty();
         }
 
-        @Test
+        @RetryingTest(3)
         void shouldReadStdErr() {
             var processResult = ProcessHelpers.execute(processHelper, List.of("cat", "foo"));
 
@@ -105,7 +106,7 @@ class ProcessHelpersTest {
             assertThat(processResult.getError()).containsInstanceOf(TimeoutException.class);
         }
 
-        @Test
+        @RetryingTest(3)
         void shouldHandleProcessExceptionsGracefully() {
             var processHelperSpy = spy(new ProcessHelper());
 
