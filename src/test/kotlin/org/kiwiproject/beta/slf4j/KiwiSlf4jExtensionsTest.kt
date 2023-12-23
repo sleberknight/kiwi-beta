@@ -1,3 +1,5 @@
+@file:Suppress("removal")
+
 package org.kiwiproject.beta.slf4j
 
 import org.assertj.core.api.Assertions.assertThat
@@ -15,6 +17,7 @@ import java.io.IOException
 //
 // See the loggers (which must exist) for this test in src/test/resources/logback-test.xml
 //
+@Suppress("removal")
 @DisplayName("KiwiSlf4jExtensions")
 internal class KiwiSlf4jExtensionsTest {
 

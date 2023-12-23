@@ -3,13 +3,20 @@ package org.kiwiproject.beta.test.logback;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.google.common.annotations.Beta;
 import org.assertj.core.api.Assertions;
+import org.kiwiproject.base.KiwiDeprecated;
 
 import java.util.List;
 
 /**
  * Provides AssertJ assertions for {@link InMemoryAppender}.
+ *
+ * @deprecated replaced by InMemoryAppenderAssertions in
+ * <a href="https://github.com/kiwiproject/kiwi-test/">kiwi-test</a> 3.2.0
  */
 @Beta
+@Deprecated(since = "1.3.0", forRemoval = true)
+@KiwiDeprecated(replacedBy = "InMemoryAppenderAssertions in kiwi-test 3.2.0")
+@SuppressWarnings({"removal", "java:S1133", "DeprecatedIsStillUsed"})
 public class InMemoryAppenderAssertions {
 
     private final InMemoryAppender appender;

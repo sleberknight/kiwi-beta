@@ -27,6 +27,7 @@ class KiwiServletMocksTest {
 
         var x509Cert = x509Certs[0];
 
+        //noinspection deprecation
         var principal = x509Cert.getSubjectDN();
         assertThat(principal.getName()).isEqualTo(dn);
 

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+@SuppressWarnings("removal")
 @DisplayName("TimestampingLogger")
 class TimestampingLoggerTest {
 
