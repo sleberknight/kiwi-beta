@@ -5,6 +5,7 @@ import static java.util.Comparator.comparing;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 import com.google.common.annotations.Beta;
+import org.kiwiproject.base.KiwiDeprecated;
 
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,14 @@ import java.util.stream.Stream;
  * A logback appender that stores logging events in an in-memory map.
  * <p>
  * This is for testing purposes only, and is not at all intended for production use!
+ *
+ * @deprecated replaced by InMemoryAppender in
+ * <a href="https://github.com/kiwiproject/kiwi-test/">kiwi-test</a> 3.2.0
  */
 @Beta
+@Deprecated(since = "1.3.0", forRemoval = true)
+@KiwiDeprecated(replacedBy = "InMemoryAppender in kiwi-test 3.2.0")
+@SuppressWarnings("java:S1133")
 public class InMemoryAppender extends AppenderBase<ILoggingEvent> {
 
     private final AtomicInteger messageOrder;

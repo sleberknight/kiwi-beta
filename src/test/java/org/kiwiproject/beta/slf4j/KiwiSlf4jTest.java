@@ -21,6 +21,7 @@ import java.io.IOException;
 /**
  * @implNote See the loggers defined for this test in {@code src/test/resources/logback-test.xml}.
  */
+@SuppressWarnings("removal")
 @DisplayName("KiwiSlf4j")
 class KiwiSlf4jTest {
 
