@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Utilities related to URLs and URIs.
+ * Utilities related to URLs.
  * <p>
  * These utilities could be considered for kiwi's {@link org.kiwiproject.net.KiwiUrls} class.
  * Or, they could just stay here forever. One can never really know these things...
