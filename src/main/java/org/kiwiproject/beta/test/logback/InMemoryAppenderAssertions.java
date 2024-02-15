@@ -16,7 +16,7 @@ import java.util.List;
 @Beta
 @Deprecated(since = "1.3.0", forRemoval = true)
 @KiwiDeprecated(replacedBy = "InMemoryAppenderAssertions in kiwi-test 3.2.0")
-@SuppressWarnings({"removal", "java:S1133", "DeprecatedIsStillUsed"})
+@SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed"})
 public class InMemoryAppenderAssertions {
 
     private final InMemoryAppender appender;
