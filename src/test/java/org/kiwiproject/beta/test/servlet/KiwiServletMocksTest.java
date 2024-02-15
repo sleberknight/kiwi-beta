@@ -14,6 +14,7 @@ import java.security.cert.X509Certificate;
 class KiwiServletMocksTest {
 
     @Test
+    @SuppressWarnings("deprecation")
     void shouldMockHttpServletRequestWithCertificate() {
         var dn = "CN=John Doe, OU=Test, O=Kiwiproject, C=US";
 
@@ -27,7 +28,6 @@ class KiwiServletMocksTest {
 
         var x509Cert = x509Certs[0];
 
-        //noinspection deprecation
         var principal = x509Cert.getSubjectDN();
         assertThat(principal.getName()).isEqualTo(dn);
 
