@@ -21,7 +21,8 @@ jobs:
           fetch-depth: 0
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2024.1.2
-        linter: jetbrains/qodana-jvm-community:2024.1
+        with:
+          linter: jetbrains/qodana-jvm-community:2024.1
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
 
