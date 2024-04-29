@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 @Beta
 @Deprecated(since = "1.3.0", forRemoval = true)
 @KiwiDeprecated(replacedBy = "InMemoryAppender in kiwi-test 3.2.0")
-@SuppressWarnings("java:S1133")
+@SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed"})
 public class InMemoryAppender extends AppenderBase<ILoggingEvent> {
 
     private final AtomicInteger messageOrder;
