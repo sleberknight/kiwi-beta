@@ -8,7 +8,7 @@ import org.checkerframework.checker.index.qual.NonNegative;
 import java.util.function.Predicate;
 
 /**
- * A Predicate that wraps a Predicate and tracks the number of
+ * A {@link Predicate} that wraps a Predicate and tracks the number of
  * true and false results.
  * <p>
  * This should be used only on one stream, unless you want to
@@ -28,7 +28,7 @@ public class CountingPredicate<T> implements Predicate<T> {
      * Create a new instance that wraps {@code predicate} in order to
      * count the number of true and false results.
      *
-     * @param predicate
+     * @param predicate the original {@link Predicate} to wrap
      */
     public CountingPredicate(Predicate<T> predicate) {
         this.predicate = requireNotNull(predicate);
