@@ -35,7 +35,7 @@
         <!-- Versions for required/provided dependencies -->
 
         <camel.version>4.6.0</camel.version>
-        <jakarta.xml.soap-api.version>2.0.1</jakarta.xml.soap-api.version>
+        <jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
         <kiwi.version>3.4.0</kiwi.version>
         <metrics-healthchecks-severity.version>2.0.3</metrics-healthchecks-severity.version>
