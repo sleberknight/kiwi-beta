@@ -1,12 +1,23 @@
 package org.kiwiproject.beta.base.process;
 
+import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
+import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotEmpty;
+import static org.kiwiproject.collect.KiwiLists.last;
+
 import com.google.common.annotations.Beta;
 import com.google.common.primitives.Ints;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.kiwiproject.base.KiwiStrings;
 import org.kiwiproject.base.process.ProcessHelper;
+import org.kiwiproject.base.process.Processes;
+import org.kiwiproject.collect.KiwiLists;
 import org.kiwiproject.io.KiwiIO;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -130,5 +141,128 @@ public class ProcessHelpers {
                 .stdOutLines(List.of())
                 .stdErrLines(List.of())
                 .build();
+    }
+
+    /**
+     * Convenience method that splits the given {@code command} on spaces before passing
+     * it to {@link Processes#launch(List)}.
+     * <p>
+     * <strong>Warning:</strong>
+     * If a command argument contains spaces and needs to be quoted, you cannot
+     * use this method. Instead, use {@link Processes#launch(List)} or {@link Processes#launch(String...)}.
+     * The reason is that this method just splits on all spaces, so arguments with spaces
+     * would be broken up, and the quotes would become part of the two separate arguments.
+     * In other words, this method is not a command parser.
+     *
+     * @param command the command to execute
+     * @return the new {@link Processs}
+     * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
+     */
+    public static Process launchCommand(String command) {
+        return launchCommand(null, command);
+    }
+
+    /**
+     * Convenience method that splits the given {@code command} on spaces before passing
+     * it to {@link Processes#launch(List)}. The command uses the given working directory.
+     * <p>
+     * <strong>Warning:</strong> See the warning in {@link #launchCommand(String)}.
+     *
+     * @param workingDirectory the working directory for the command
+     * @param command the command to execute
+     * @return the new {@link Processs}
+     * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
+     */
+    public static Process launchCommand(@Nullable File workingDirectory, String command) {
+        checkArgumentNotBlank(command, "command must not be blank");
+
+        var commandList = KiwiStrings.splitToList(command);
+        return Processes.launch(workingDirectory, commandList);
+    }
+
+    /**
+     * Convenience method that splits a pipeline using "|" and then splits each
+     * individual command on spaces.
+     * <p>
+     * <strong>Warning:</strong> The same caveats on command splitting on spaces
+     * apply to this method, as described in {@link #launchCommand(String)}. For
+     * similar reasons, nested pipelines won't work either.
+     *
+     * @param pipeline the pipeline command
+     * @return the <strong>last</strong> {@link Process} in the pipeline
+     * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
+     * @see ProcessBuilder#startPipeline
+     */
+    public static Process launchPipelineCommand(String pipeline) {
+        return launchPipelineCommand(null, pipeline);
+    }
+
+    /**
+     * Convenience method that splits a pipeline using "|" and then splits each
+     * individual command on spaces. Each command in the pipeline uses the given
+     * working directory.
+     * <p>
+     * <strong>Warning:</strong> The same caveats on command splitting on spaces
+     * apply to this method, as described in {@link #launchCommand(String)}. For
+     * similar reasons, nested pipelines won't work either.
+     *
+     * @param workingDirectory the working directory for each command in the pipeline
+     * @param pipeline the pipeline command
+     * @return the <strong>last</strong> {@link Process} in the pipeline
+     * @throws UncheckedIOException if anything goes wrong executing the command
+     * @see ProcessBuilder#startPipeline
+     */
+    public static Process launchPipelineCommand(@Nullable File workingDirectory, String pipeline) {
+        checkArgumentNotBlank(pipeline, "pipeline must not be blank");
+
+        List<List<String>> pipelineCommands = KiwiStrings.splitToList(pipeline, '|')
+                .stream()
+                .map(KiwiStrings::splitToList)
+                .toList();
+
+        return launchPipeline(workingDirectory, pipelineCommands);
+    }
+
+    /**
+     * Executes a pipeline of the given commands. Each command is split on spaces.
+     * <p>
+     * <strong>Warning:</strong> The same caveats on command splitting on spaces
+     * apply to this method, as described in {@link #launchCommand(String)}.
+     *
+     * @param commands the commands in the pipeline
+     * @return the <strong>last</strong> {@link Process} in the pipeline
+     * @throws UncheckedIOException if anything goes wrong executing the command
+     * @see ProcessBuilder#startPipeline
+     */
+    public static Process launchPipeline(List<List<String>> commands) {
+        return launchPipeline(null, commands);
+    }
+
+    /**
+     * Executes a pipeline of the given commands. Each command is split on spaces.
+     * Each command in the pipeline uses the given working directory.
+     * <p>
+     * <strong>Warning:</strong> The same caveats on command splitting on spaces
+     * apply to this method, as described in {@link #launchCommand(String)}.
+     *
+     * @param workingDirectory the working directory for each command in the pipeline
+     * @param commands the commands in the pipeline
+     * @return the <strong>last</strong> {@link Process} in the pipeline
+     * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
+     * @see ProcessBuilder#startPipeline
+     */
+    public static Process launchPipeline(@Nullable File workingDirectory,  List<List<String>> commands) {
+        checkArgumentNotEmpty(commands, "commands must not be empty");
+        var procBuilders = commands.stream()
+                .filter(command -> KiwiLists.isNotNullOrEmpty(command))
+                .map(command -> new ProcessBuilder(command).directory(workingDirectory))
+                .toList();
+
+        try {
+            var procs = ProcessBuilder.startPipeline(procBuilders);
+            return last(procs);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }

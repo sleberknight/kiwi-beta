@@ -1,6 +1,9 @@
 package org.kiwiproject.beta.base.process;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.kiwiproject.base.process.Processes.waitForExit;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
@@ -10,12 +13,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.RetryingTest;
 import org.kiwiproject.base.process.ProcessHelper;
 import org.kiwiproject.base.process.Processes;
+import org.kiwiproject.io.KiwiIO;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -137,6 +148,174 @@ class ProcessHelpersTest {
                     .isExactlyInstanceOf(UncheckedIOException.class)
                     .hasCauseExactlyInstanceOf(IOException.class)
                     .hasMessageContaining(message);
+        }
+    }
+
+    @Nested
+    class LaunchCommand {
+
+        @Test
+        void shouldLaunchCommand() {
+            var process = ProcessHelpers.launchCommand("echo foo bar baz");
+            waitForExit(process);
+
+            var output = KiwiIO.readInputStreamOf(process).stripTrailing();
+            assertThat(output).isEqualTo("foo bar baz");
+        }
+
+        @Test
+        void shouldLaunchCommand_WithWorkingDirectory(@TempDir Path tempDir) throws IOException {
+            var dir = tempDir.toFile();
+
+            var subdir = Path.of(dir.toString(), "subdir");
+            Files.createDirectory(subdir);
+
+            var process = ProcessHelpers.launchCommand(dir, "ls -1");
+            waitForExit(process);
+
+            var output = KiwiIO.readLinesFromInputStreamOf(process);
+            assertThat(output).contains("subdir");
+        }
+
+        @ParameterizedTest
+        @NullSource
+        @ValueSource(strings = {"", " ", " \r\n "})
+        void shouldNotAllowBlankCommands(String command) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> ProcessHelpers.launchCommand(command));
+        }
+    }
+
+    @Nested
+    class LaunchPipelineCommand {
+
+        @Test
+        void shouldLaunchRegularCommands() {
+            var process = ProcessHelpers.launchPipelineCommand("echo foo bar baz");
+            waitForExit(process);
+
+            var output = KiwiIO.readInputStreamOf(process).stripTrailing();
+            assertThat(output).isEqualTo("foo bar baz");
+        }
+
+        @Test
+        void shouldLaunchPipelineCommands() {
+            var process = ProcessHelpers.launchPipelineCommand("echo -e foo\nbar\nbaz | sort");
+            waitForExit(process);
+
+            var output = KiwiIO.readLinesFromInputStreamOf(process);
+            assertThat(output).containsExactly(
+                "bar",
+                "baz",
+                "foo"
+            );
+        }
+
+        @ParameterizedTest
+        @NullSource
+        @ValueSource(strings = {"", " ", " \r\n "})
+        void shouldNotAllowBlankPipelines(String command) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> ProcessHelpers.launchPipelineCommand(command));
+        }
+
+        @Test
+        void shouldLaunchPipelineCommands_WithWorkingDirectory(@TempDir Path tempDir) throws IOException {
+            var dir = tempDir.toFile();
+
+            var subdirA = Path.of(dir.toString(), "a_subdir");
+            Files.createDirectory(subdirA);
+
+            var subdirB = Path.of(dir.toString(), "b_subdir");
+            Files.createDirectory(subdirB);
+
+            var subdirC = Path.of(dir.toString(), "c_subdir");
+            Files.createDirectory(subdirC);
+
+            var process = ProcessHelpers.launchPipelineCommand(dir, "ls -1 | sort -r");
+            waitForExit(process);
+
+            var output = KiwiIO.readLinesFromInputStreamOf(process);
+            assertThat(output).containsSequence("c_subdir", "b_subdir", "a_subdir");
+        }
+    }
+
+    @Nested
+    class LaunchPipeline {
+
+        @Test
+        void shouldLaunchPipeline() {
+            var commands = List.of(
+                List.of("echo", "-e", "foo foo\nbar bar\nbaz baz"),
+                List.of("sort")
+            );
+            var process = ProcessHelpers.launchPipeline(commands);
+            waitForExit(process);
+
+            var output = KiwiIO.readLinesFromInputStreamOf(process);
+            assertThat(output).containsExactly(
+                "bar bar",
+                "baz baz",
+                "foo foo"
+            );
+        }
+
+        @Test
+        void shouldLaunchPipeline_WithWorkingDirectory(@TempDir Path tempDir) throws IOException {
+            var dir = tempDir.toFile();
+
+            var subdirA = Path.of(dir.toString(), "d_subdir");
+            Files.createDirectory(subdirA);
+
+            var subdirB = Path.of(dir.toString(), "e_subdir");
+            Files.createDirectory(subdirB);
+
+            var subdirC = Path.of(dir.toString(), "f_subdir");
+            Files.createDirectory(subdirC);
+
+            var ls = List.of("ls", "-1");
+            var sort = List.of("sort", "-r");
+
+            var process = ProcessHelpers.launchPipeline(dir, List.of(ls, sort));
+            waitForExit(process);
+
+            var output = KiwiIO.readLinesFromInputStreamOf(process);
+            assertThat(output).containsSequence("f_subdir", "e_subdir", "d_subdir");
+        }
+
+        @Test
+        void shouldNotAllowEmptyPipeline() {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> ProcessHelpers.launchPipeline(List.of()));
+        }
+
+        @Test
+        void shouldIgnoreEmptyCommandsWithinPipeline() {
+            var pipeline = List.<List<String>>of(
+                List.of(),
+                List.of("ls", "-1"),
+                List.of(),
+                List.of("sort", "--reverse"),
+                List.of()
+            );
+
+            var process = ProcessHelpers.launchPipeline(pipeline);
+            waitForExit(process);
+
+            assertThat(process.exitValue()).isZero();
+        }
+
+        @Test
+        void shouldThrowUncheckedIOException_WhenInvalidWorkingDirectory() {
+            var ls = List.of("ls", "-1");
+            var sort = List.of("sort", "-r");
+
+            var dir = new File("/foo/bar/baz" + System.currentTimeMillis());
+
+            assertThatExceptionOfType(UncheckedIOException.class)
+                    .isThrownBy(() -> ProcessHelpers.launchPipeline(dir, List.of(ls, sort)))
+                    .havingCause()
+                    .isExactlyInstanceOf(IOException.class);
         }
     }
 }
