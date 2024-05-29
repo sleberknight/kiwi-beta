@@ -155,7 +155,7 @@ public class ProcessHelpers {
      * In other words, this method is not a command parser.
      *
      * @param command the command to execute
-     * @return the new {@link Processs}
+     * @return the new {@link Process}
      * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
      */
     public static Process launchCommand(String command) {
@@ -170,7 +170,7 @@ public class ProcessHelpers {
      *
      * @param workingDirectory the working directory for the command
      * @param command the command to execute
-     * @return the new {@link Processs}
+     * @return the new {@link Process}
      * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
      */
     public static Process launchCommand(@Nullable File workingDirectory, String command) {
