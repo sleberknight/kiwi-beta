@@ -309,11 +309,12 @@ class ProcessHelpersTest {
         void shouldThrowUncheckedIOException_WhenInvalidWorkingDirectory() {
             var ls = List.of("ls", "-1");
             var sort = List.of("sort", "-r");
+            var pipeline = List.of(ls, sort);
 
             var dir = new File("/foo/bar/baz" + System.currentTimeMillis());
 
             assertThatExceptionOfType(UncheckedIOException.class)
-                    .isThrownBy(() -> ProcessHelpers.launchPipeline(dir, List.of(ls, sort)))
+                    .isThrownBy(() -> ProcessHelpers.launchPipeline(dir, pipeline))
                     .havingCause()
                     .isExactlyInstanceOf(IOException.class);
         }

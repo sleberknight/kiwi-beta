@@ -224,10 +224,7 @@ public class ProcessHelpers {
     }
 
     /**
-     * Executes a pipeline of the given commands. Each command is split on spaces.
-     * <p>
-     * <strong>Warning:</strong> The same caveats on command splitting on spaces
-     * apply to this method, as described in {@link #launchCommand(String)}.
+     * Executes a pipeline of the given commands.
      *
      * @param commands the commands in the pipeline
      * @return the <strong>last</strong> {@link Process} in the pipeline
@@ -239,11 +236,9 @@ public class ProcessHelpers {
     }
 
     /**
-     * Executes a pipeline of the given commands. Each command is split on spaces.
-     * Each command in the pipeline uses the given working directory.
+     * Executes a pipeline of the given commands.
      * <p>
-     * <strong>Warning:</strong> The same caveats on command splitting on spaces
-     * apply to this method, as described in {@link #launchCommand(String)}.
+     * Each command in the pipeline uses the given working directory.
      *
      * @param workingDirectory the working directory for each command in the pipeline
      * @param commands the commands in the pipeline
@@ -254,7 +249,7 @@ public class ProcessHelpers {
     public static Process launchPipeline(@Nullable File workingDirectory,  List<List<String>> commands) {
         checkArgumentNotEmpty(commands, "commands must not be empty");
         var procBuilders = commands.stream()
-                .filter(command -> KiwiLists.isNotNullOrEmpty(command))
+                .filter(KiwiLists::isNotNullOrEmpty)
                 .map(command -> new ProcessBuilder(command).directory(workingDirectory))
                 .toList();
 
