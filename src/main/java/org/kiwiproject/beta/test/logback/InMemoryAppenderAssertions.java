@@ -11,11 +11,16 @@ import java.util.List;
  * Provides AssertJ assertions for {@link InMemoryAppender}.
  *
  * @deprecated replaced by InMemoryAppenderAssertions in
- * <a href="https://github.com/kiwiproject/kiwi-test/">kiwi-test</a> 3.2.0
+ * <a href="https://github.com/kiwiproject/kiwi-test/">kiwi-test</a> 3.2.0.
+ * Will be removed in version 2.0.0.
  */
 @Beta
 @Deprecated(since = "1.3.0", forRemoval = true)
-@KiwiDeprecated(replacedBy = "InMemoryAppenderAssertions in kiwi-test 3.2.0")
+@KiwiDeprecated(
+    removeAt = "2.0.0",
+    replacedBy = "InMemoryAppenderAssertions in kiwi-test 3.2.0",
+    reference = "https://github.com/sleberknight/kiwi-beta/issues/422"
+)
 @SuppressWarnings({"removal", "java:S1133", "DeprecatedIsStillUsed"})
 public class InMemoryAppenderAssertions {
 
