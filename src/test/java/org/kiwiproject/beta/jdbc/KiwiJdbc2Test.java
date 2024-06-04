@@ -1,7 +1,6 @@
 package org.kiwiproject.beta.jdbc;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
@@ -69,7 +68,7 @@ public class KiwiJdbc2Test {
 
             List<Long> luckyNumbers = KiwiJdbc2.arrayAsList(resultSet, "lucky_numbers", Long.class);
 
-            var expectedValues = Arrays.stream(values).boxed().collect(toList());
+            var expectedValues = Arrays.stream(values).boxed().toList();
             assertThat(luckyNumbers).containsExactlyElementsOf(expectedValues);
 
             verify(resultSet).getArray("lucky_numbers");
@@ -111,7 +110,7 @@ public class KiwiJdbc2Test {
 
             Set<Integer> luckyNumbers = KiwiJdbc2.arrayAsSet(resultSet, "lucky_numbers", Integer.class);
 
-            var expectedValues = Arrays.stream(values).boxed().collect(toSet());
+            var expectedValues = Arrays.stream(values).boxed().collect(toUnmodifiableSet());
             assertThat(luckyNumbers).containsExactlyInAnyOrderElementsOf(expectedValues);
 
             verify(resultSet).getArray("lucky_numbers");

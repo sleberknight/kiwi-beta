@@ -1,6 +1,5 @@
 package org.kiwiproject.beta.net;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
@@ -41,7 +40,7 @@ class KiwiUrls2Test {
                             "https://dev-jump-proxy-1.acme.com/proxy/discovery",
                             "https://dev-jump-proxy-2.acme.com/proxy/discovery")
                     .map(KiwiUrls::createUrlObject)
-                    .collect(toList());
+                    .toList();
 
             var uniqueHostOnlyUrls = KiwiUrls2.uniqueHostOnlyUrls(urls);
 
@@ -63,7 +62,7 @@ class KiwiUrls2Test {
                             "https://dev-jump-proxy-1.acme.com:7443/proxy/discovery",
                             "https://dev-jump-proxy-2.acme.com:7443/proxy/discovery")
                     .map(KiwiUrls::createUrlObject)
-                    .collect(toList());
+                    .toList();
 
             var uniqueHostOnlyUrls = KiwiUrls2.uniqueHostOnlyUrls(urls);
 
@@ -99,7 +98,7 @@ class KiwiUrls2Test {
                             "https://dev-jump-proxy-1.acme.com/proxy/discovery",
                             "https://dev-jump-proxy-2.acme.com/proxy/discovery")
                     .map(KiwiUrls::createUrlObject)
-                    .collect(toList());
+                    .toList();
 
             var uniqueAuthorityOnlyUrls = KiwiUrls2.uniqueAuthorityOnlyUrls(urls);
 
@@ -121,7 +120,7 @@ class KiwiUrls2Test {
                             "https://dev-jump-proxy-1.acme.com:7443/proxy/discovery",
                             "https://dev-jump-proxy-2.acme.com:7443/proxy/discovery")
                     .map(KiwiUrls::createUrlObject)
-                    .collect(toList());
+                    .toList();
 
             var uniqueAuthorityOnlyUrls = KiwiUrls2.uniqueAuthorityOnlyUrls(urls);
 
@@ -157,7 +156,7 @@ class KiwiUrls2Test {
                             "https://dev-jump-proxy-1.acme.com/proxy/discovery",
                             "https://dev-jump-proxy-2.acme.com/proxy/discovery")
                     .map(KiwiUrls::createUrlObject)
-                    .collect(toList());
+                    .toList();
 
             var uniqueAuthorityOnlyUrls = KiwiUrls2.uniqueAuthorityOnlyUrlsAsList(urls);
 
@@ -179,7 +178,7 @@ class KiwiUrls2Test {
                             "https://dev-jump-proxy-1.acme.com:7443/proxy/discovery",
                             "https://dev-jump-proxy-2.acme.com:7443/proxy/discovery")
                     .map(KiwiUrls::createUrlObject)
-                    .collect(toList());
+                    .toList();
 
             var uniqueAuthorityOnlyUrls = KiwiUrls2.uniqueAuthorityOnlyUrlsAsList(urls);
 
@@ -205,9 +204,11 @@ class KiwiUrls2Test {
                 "https://dev-jump-proxy-1.acme.com/proxy/registry1/eureka",
                 "https://dev-jump-proxy-1.acme.com/proxy/registry2/eureka",
                 "https://dev-jump-proxy-1.acme.com/proxy/registry1/consul",
-                "https://dev-jump-proxy-1.acme.com/proxy/discovery"
+                "https://dev-jump-proxy-1.acme.com/proxy/discovery",
+                "https://dev-jump-proxy-1.acme.com/proxy/registry1/eureka?param1=value1",
+                "https://dev-jump-proxy-1.acme.com/proxy/discovery/param1=value1&param2=value2"
         })
-        void shouldRemovePaths(String urlSpec) {
+        void shouldRemovePathsAndQueryStrings(String urlSpec) {
             var url = KiwiUrls.createUrlObject(urlSpec);
             var modifiedUri = KiwiUrls2.hostOnlyUrlFrom(url);
             assertThat(modifiedUri).hasToString("https://dev-jump-proxy-1.acme.com");
@@ -218,31 +219,11 @@ class KiwiUrls2Test {
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/eureka",
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/registry2/eureka",
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/consul",
-                "https://dev-jump-proxy-1.acme.com:8443/proxy/discovery"
-        })
-        void shouldRemovePaths_AndRetainPort(String urlSpec) {
-            var url = KiwiUrls.createUrlObject(urlSpec);
-            var modifiedUri = KiwiUrls2.hostOnlyUrlFrom(url);
-            assertThat(modifiedUri).hasToString("https://dev-jump-proxy-1.acme.com:8443");
-        }
-
-        @ParameterizedTest
-        @ValueSource(strings = {
-                "https://dev-jump-proxy-1.acme.com/proxy/registry1/eureka?param1=value1",
-                "https://dev-jump-proxy-1.acme.com/proxy/discovery/param1=value1&param2=value2"
-        })
-        void shouldRemoveQueryStrings(String urlSpec) {
-            var url = KiwiUrls.createUrlObject(urlSpec);
-            var modifiedUri = KiwiUrls2.hostOnlyUrlFrom(url);
-            assertThat(modifiedUri).hasToString("https://dev-jump-proxy-1.acme.com");
-        }
-
-        @ParameterizedTest
-        @ValueSource(strings = {
+                "https://dev-jump-proxy-1.acme.com:8443/proxy/discovery",
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/eureka?param1=value1",
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/discovery/param1=value1&param2=value2"
         })
-        void shouldRemoveQueryStrings_AndRetainPort(String urlSpec) {
+        void shouldRemovePathsandQueryStrings_ButRetainPort(String urlSpec) {
             var url = KiwiUrls.createUrlObject(urlSpec);
             var modifiedUri = KiwiUrls2.hostOnlyUrlFrom(url);
             assertThat(modifiedUri).hasToString("https://dev-jump-proxy-1.acme.com:8443");
@@ -262,29 +243,7 @@ class KiwiUrls2Test {
                 "https://dev-jump-proxy-1.acme.com/proxy/registry1/eureka",
                 "https://dev-jump-proxy-1.acme.com/proxy/registry2/eureka",
                 "https://dev-jump-proxy-1.acme.com/proxy/registry1/consul",
-                "https://dev-jump-proxy-1.acme.com/proxy/discovery"
-        })
-        void shouldRemovePaths(String urlSpec) {
-            var url = KiwiUrls.createUrlObject(urlSpec);
-            var modifiedUri = KiwiUrls2.authorityOnlyUrlFrom(url);
-            assertThat(modifiedUri).hasToString("https://dev-jump-proxy-1.acme.com");
-        }
-
-        @ParameterizedTest
-        @ValueSource(strings = {
-                "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/eureka",
-                "https://dev-jump-proxy-1.acme.com:8443/proxy/registry2/eureka",
-                "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/consul",
-                "https://dev-jump-proxy-1.acme.com:8443/proxy/discovery"
-        })
-        void shouldRemovePaths_AndRetainPort(String urlSpec) {
-            var url = KiwiUrls.createUrlObject(urlSpec);
-            var modifiedUri = KiwiUrls2.authorityOnlyUrlFrom(url);
-            assertThat(modifiedUri).hasToString("https://dev-jump-proxy-1.acme.com:8443");
-        }
-
-        @ParameterizedTest
-        @ValueSource(strings = {
+                "https://dev-jump-proxy-1.acme.com/proxy/discovery",
                 "https://dev-jump-proxy-1.acme.com/proxy/registry1/eureka?param1=value1",
                 "https://dev-jump-proxy-1.acme.com/proxy/discovery/param1=value1&param2=value2"
         })
@@ -296,6 +255,10 @@ class KiwiUrls2Test {
 
         @ParameterizedTest
         @ValueSource(strings = {
+                "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/eureka",
+                "https://dev-jump-proxy-1.acme.com:8443/proxy/registry2/eureka",
+                "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/consul",
+                "https://dev-jump-proxy-1.acme.com:8443/proxy/discovery",
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/eureka?param1=value1",
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/discovery/param1=value1&param2=value2"
         })

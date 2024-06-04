@@ -1,6 +1,6 @@
 package org.kiwiproject.beta.net;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
@@ -61,7 +61,7 @@ public class KiwiUrls2 {
 
         return urls.stream()
                 .map(KiwiUrls2::hostOnlyUrlFrom)
-                .collect(toSet());
+                .collect(toUnmodifiableSet());
     }
 
     /*

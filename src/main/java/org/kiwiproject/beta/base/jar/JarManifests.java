@@ -1,7 +1,7 @@
 package org.kiwiproject.beta.base.jar;
 
 import static java.util.Objects.nonNull;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toUnmodifiableMap;
 import static org.kiwiproject.base.KiwiStrings.f;
 
 import com.google.common.annotations.Beta;
@@ -56,7 +56,7 @@ public class JarManifests {
         return manifest.getMainAttributes()
                 .entrySet()
                 .stream()
-                .collect(toMap(e -> String.valueOf(e.getKey()), e -> String.valueOf(e.getValue())));
+                .collect(toUnmodifiableMap(e -> String.valueOf(e.getKey()), e -> String.valueOf(e.getValue())));
     }
 
     public static Manifest getManifestOrThrow(Class<?> theClass) {

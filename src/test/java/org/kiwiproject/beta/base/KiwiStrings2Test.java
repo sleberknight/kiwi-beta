@@ -1,6 +1,6 @@
 package org.kiwiproject.beta.base;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
@@ -156,7 +156,7 @@ class KiwiStrings2Test {
             var strings = KiwiStrings2.randomCaseVariants(input);
             assertThat(strings).hasSize(3).doesNotHaveDuplicates();
 
-            var uniqueLowerCaseStrings = strings.stream().map(String::toLowerCase).collect(toSet());
+            var uniqueLowerCaseStrings = strings.stream().map(String::toLowerCase).collect(toUnmodifiableSet());
             assertThat(uniqueLowerCaseStrings).containsExactly(input);
         }
 
@@ -204,7 +204,7 @@ class KiwiStrings2Test {
             var strings = KiwiStrings2.randomCaseVariants(input, desiredSize);
             assertThat(strings).hasSize(desiredSize).doesNotHaveDuplicates();
 
-            var uniqueLowerCaseStrings = strings.stream().map(String::toLowerCase).collect(toSet());
+            var uniqueLowerCaseStrings = strings.stream().map(String::toLowerCase).collect(toUnmodifiableSet());
             assertThat(uniqueLowerCaseStrings).containsExactly(input);
         }
 
@@ -229,7 +229,7 @@ class KiwiStrings2Test {
 
             assertThat(strings).hasSize(maximumSize).doesNotHaveDuplicates();
 
-            var uniqueLowerCaseStrings = strings.stream().map(String::toLowerCase).collect(toSet());
+            var uniqueLowerCaseStrings = strings.stream().map(String::toLowerCase).collect(toUnmodifiableSet());
             assertThat(uniqueLowerCaseStrings).containsExactly(input);
         }
 
@@ -278,7 +278,7 @@ class KiwiStrings2Test {
             var strings = KiwiStrings2.randomCaseVariants(input, desiredSize);
             assertThat(strings).hasSize(desiredSize).doesNotHaveDuplicates();
 
-            var uniqueLowerCaseStrings = strings.stream().map(String::toLowerCase).collect(toSet());
+            var uniqueLowerCaseStrings = strings.stream().map(String::toLowerCase).collect(toUnmodifiableSet());
             assertThat(uniqueLowerCaseStrings).containsExactly(input.toLowerCase());
         }
     }

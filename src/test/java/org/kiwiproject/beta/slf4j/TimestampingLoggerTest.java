@@ -1,6 +1,5 @@
 package org.kiwiproject.beta.slf4j;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.Index.atIndex;
 import static org.kiwiproject.base.KiwiPreconditions.checkEvenItemCount;
@@ -142,7 +141,7 @@ class TimestampingLoggerTest {
 
         var timeSpentMessages = eventMessages.stream()
                 .filter(eventMessage -> eventMessage.startsWith("[elapsed time since previous:"))
-                .collect(toList());
+                .toList();
 
         assertThat(timeSpentMessages)
                 .describedAs("Should have five messages with elapsed time")
