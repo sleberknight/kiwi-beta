@@ -47,9 +47,9 @@ class AutoDrainingCounterTest {
     @Disabled
     void runExample() {
         var drainPeriod = Duration.ofSeconds(10);
-        var counter = AutoDrainingCounter.createAndStart(drainPeriod);
+        var startedCounter = AutoDrainingCounter.createAndStart(drainPeriod);
 
-        runCounter(counter);
+        runCounter(startedCounter);
     }
 
     /**
@@ -61,9 +61,9 @@ class AutoDrainingCounterTest {
     void runExampleWithCallback() {
         var drainPeriod = Duration.ofSeconds(10);
         var totalCount = new AtomicInteger();
-        var counter = AutoDrainingCounter.createAndStart(drainPeriod, totalCount::addAndGet);
+        var startedCounter = AutoDrainingCounter.createAndStart(drainPeriod, totalCount::addAndGet);
 
-        runCounter(counter);
+        runCounter(startedCounter);
 
         LOG.info("Total count: {}", totalCount.get());
     }
