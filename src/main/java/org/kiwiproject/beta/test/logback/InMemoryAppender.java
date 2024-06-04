@@ -20,11 +20,16 @@ import java.util.stream.Stream;
  * This is for testing purposes only, and is not at all intended for production use!
  *
  * @deprecated replaced by InMemoryAppender in
- * <a href="https://github.com/kiwiproject/kiwi-test/">kiwi-test</a> 3.2.0
+ * <a href="https://github.com/kiwiproject/kiwi-test/">kiwi-test</a> 3.2.0.
+ * Will be removed in version 2.0.0.
  */
 @Beta
 @Deprecated(since = "1.3.0", forRemoval = true)
-@KiwiDeprecated(replacedBy = "InMemoryAppender in kiwi-test 3.2.0")
+@KiwiDeprecated(
+    removeAt = "2.0.0",
+    replacedBy = "InMemoryAppender in kiwi-test 3.2.0",
+    reference = "https://github.com/sleberknight/kiwi-beta/issues/421"
+)
 @SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed"})
 public class InMemoryAppender extends AppenderBase<ILoggingEvent> {
 
