@@ -82,20 +82,6 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Get the string value of the given {@link jakarta.ws.rs.core.MediaType} with only the type/subtype.
-     *
-     * @implNote This method concatenates the type and subtype of the MediaType because the
-     * MediaType#toString requires a Jakarta RS implementation to create a RuntimeDelegate
-     * which is then used to convert to a String. Presumably if this method is used, the implementation
-     * is available. However, just in case it isn't, this method manually creates the media type string using
-     * the type and subtype, since they are just fields in MediaType and don't need a Jakarta RS
-     * implementation to be available.
-     */
-    public static String toStringWithoutParameters(jakarta.ws.rs.core.MediaType mediaType) {
-        return f("{}/{}", mediaType.getType(), mediaType.getSubtype());
-    }
-
-    /**
      * Checks if the media type is "application/json", ignoring parameters such that "application/json; charset=utf-8"
      * is considered JSON.
      *
@@ -108,6 +94,20 @@ public class KiwiMediaTypes {
         var type = parsedType.type();
         var subtype = parsedType.subtype();
         return APPLICATION_TYPE.equals(type) && JSON_SUBTYPE.equals(subtype);
+    }
+
+    /**
+     * Get the string value of the given {@link jakarta.ws.rs.core.MediaType} with only the type/subtype.
+     *
+     * @implNote This method concatenates the type and subtype of the MediaType because the
+     * MediaType#toString requires a Jakarta RS implementation to create a RuntimeDelegate
+     * which is then used to convert to a String. Presumably if this method is used, the implementation
+     * is available. However, just in case it isn't, this method manually creates the media type string using
+     * the type and subtype, since they are just fields in MediaType and don't need a Jakarta RS
+     * implementation to be available.
+     */
+    public static String toStringWithoutParameters(jakarta.ws.rs.core.MediaType mediaType) {
+        return f("{}/{}", mediaType.getType(), mediaType.getSubtype());
     }
 
     /**
