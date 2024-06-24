@@ -21,8 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.kiwiproject.beta.test.logback.InMemoryAppender;
 import org.kiwiproject.collect.KiwiLists;
+import org.kiwiproject.test.logback.InMemoryAppender;
 import org.kiwiproject.time.KiwiDurationFormatters;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("removal")
 @DisplayName("TimestampingLogger")
 class TimestampingLoggerTest {
 
@@ -84,7 +83,7 @@ class TimestampingLoggerTest {
         timestampingLogger.logElapsed(Level.DEBUG, "{} created with id {}", "User", 42);
         timestampingLogger.logElapsed(Level.DEBUG, "{} updated with id {}", "Order", 336);
 
-        List<String> eventMessages = appender.getOrderedEventMessages();
+        List<String> eventMessages = appender.orderedEventMessages();
 
         assertThat(eventMessages).hasSize(4);
         assertThat(first(eventMessages)).isEqualTo("User created with id 42");
@@ -100,7 +99,7 @@ class TimestampingLoggerTest {
         logbackLogger.setLevel(ch.qos.logback.classic.Level.WARN);
 
         timestampingLogger.logElapsed(Level.INFO, "Should not see this!");
-        assertThat(appender.getOrderedEventMessages()).isEmpty();
+        assertThat(appender.orderedEventMessages()).isEmpty();
     }
 
     @Test
@@ -122,14 +121,14 @@ class TimestampingLoggerTest {
     }
 
     private void assertElapsedEventMessages(Level expectedLevel) {
-        List<ILoggingEvent> orderedEvents = appender.getOrderedEvents();
+        List<ILoggingEvent> orderedEvents = appender.orderedEvents();
         var expectedLogbackLevel = ch.qos.logback.classic.Level.convertAnSLF4JLevel(expectedLevel);
         assertThat(orderedEvents)
                 .describedAs("All events should have level %s", expectedLevel)
                 .isNotEmpty()
                 .allMatch(event -> event.getLevel() == expectedLogbackLevel);
 
-        List<String> eventMessages = appender.getOrderedEventMessages();
+        List<String> eventMessages = appender.orderedEventMessages();
         assertThat(eventMessages)
                 .describedAs("Should have 10 messages; even indices should have actual log messages")
                 .hasSize(10)
@@ -164,7 +163,7 @@ class TimestampingLoggerTest {
         timestampingLogger.logAppendingElapsed(Level.TRACE, "{} created with id {}", "User", 24);
         timestampingLogger.logAppendingElapsed(Level.TRACE, "{} updated with id {}", "Order", 84);
 
-        List<String> eventMessages = appender.getOrderedEventMessages();
+        List<String> eventMessages = appender.orderedEventMessages();
 
         assertThat(eventMessages).hasSize(2);
         assertThat(first(eventMessages))
@@ -180,7 +179,7 @@ class TimestampingLoggerTest {
         logbackLogger.setLevel(ch.qos.logback.classic.Level.ERROR);
 
         timestampingLogger.logAppendingElapsed(Level.WARN, "Should not see this!");
-        assertThat(appender.getOrderedEventMessages()).isEmpty();
+        assertThat(appender.orderedEventMessages()).isEmpty();
     }
 
     @Test
@@ -202,14 +201,14 @@ class TimestampingLoggerTest {
     }
 
     private void assertAppendedElapsedEventMessages(Level expectedLevel) {
-        List<ILoggingEvent> orderedEvents = appender.getOrderedEvents();
+        List<ILoggingEvent> orderedEvents = appender.orderedEvents();
         var expectedLogbackLevel = ch.qos.logback.classic.Level.convertAnSLF4JLevel(expectedLevel);
         assertThat(orderedEvents)
                 .describedAs("All events should have level %s", expectedLevel)
                 .isNotEmpty()
                 .allMatch(event -> event.getLevel() == expectedLogbackLevel);
 
-        List<String> eventMessages = appender.getOrderedEventMessages();
+        List<String> eventMessages = appender.orderedEventMessages();
         assertThat(eventMessages)
                 .describedAs("Should have 5 messages")
                 .hasSize(5);
@@ -262,7 +261,7 @@ class TimestampingLoggerTest {
 
                 logElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
                 var loggedMessages = LoggedMessages.from(eventMessages);
 
                 assertThat(loggedMessages.logMessages).containsExactlyElementsOf(messages);
@@ -286,7 +285,7 @@ class TimestampingLoggerTest {
 
                 logElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
                 var loggedMessages = LoggedMessages.from(eventMessages);
 
                 assertThat(loggedMessages.logMessages).containsExactlyElementsOf(messages);
@@ -306,7 +305,7 @@ class TimestampingLoggerTest {
 
                 logElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
 
                 assertThat(eventMessages).hasSize(9);
                 assertThat(first(eventMessages)).isEqualTo("At time 0");
@@ -324,7 +323,7 @@ class TimestampingLoggerTest {
 
                 logElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
                 var loggedMessages = LoggedMessages.from(eventMessages);
 
                 assertThat(loggedMessages.logMessages).containsExactlyElementsOf(messages);
@@ -354,7 +353,7 @@ class TimestampingLoggerTest {
 
                 logElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
                 var loggedMessages = LoggedMessages.from(eventMessages);
 
                 assertThat(loggedMessages.logMessages).containsExactlyElementsOf(messages);
@@ -387,7 +386,7 @@ class TimestampingLoggerTest {
 
                 logAppendingElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
 
                 assertThat(eventMessages).hasSize(5);
                 assertThat(first(eventMessages)).isEqualTo("At time 0 [elapsed time since previous: N/A (no previous timestamp)]");
@@ -407,7 +406,7 @@ class TimestampingLoggerTest {
 
                 logAppendingElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
 
                 assertThat(eventMessages).hasSize(5);
                 assertThat(first(eventMessages)).isEqualTo("At time 0 [MARK]");
@@ -423,7 +422,7 @@ class TimestampingLoggerTest {
 
                 logAppendingElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
 
                 assertThat(eventMessages).hasSize(5);
                 assertThat(first(eventMessages)).isEqualTo("At time 0");
@@ -439,7 +438,7 @@ class TimestampingLoggerTest {
 
                 logAppendingElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
 
                 assertThat(eventMessages)
                         .hasSize(5)
@@ -465,7 +464,7 @@ class TimestampingLoggerTest {
 
                 logAppendingElapsedForAllMessagesUsing(customLogger);
 
-                List<String> eventMessages = appender.getOrderedEventMessages();
+                List<String> eventMessages = appender.orderedEventMessages();
 
                 assertThat(eventMessages).hasSize(5);
                 assertThat(first(eventMessages)).isEqualTo("At time 0 [MARK: T0]");

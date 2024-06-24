@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junitpioneer.jupiter.cartesian.CartesianTest
-import org.kiwiproject.beta.test.logback.InMemoryAppender
+import org.kiwiproject.test.logback.InMemoryAppender
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
@@ -60,11 +60,11 @@ internal class KiwiSlf4jExtensionsTest {
         val message = "a message"
 
         KiwiSlf4j.log(logger, logAtLevel, message)
-        val expectedMessages = appender.orderedEventMessages
+        val expectedMessages = appender.orderedEventMessages()
         appender.clearEvents()
 
         logger.log(logAtLevel, message)
-        val actualMessages = appender.orderedEventMessages
+        val actualMessages = appender.orderedEventMessages()
         assertThat(actualMessages).isEqualTo(expectedMessages)
     }
 
@@ -78,11 +78,11 @@ internal class KiwiSlf4jExtensionsTest {
         val format = "a message with one arg: {}"
         val arg = 42
         KiwiSlf4j.log(logger, logAtLevel, format, arg)
-        val expectedMessages = appender.orderedEventMessages
+        val expectedMessages = appender.orderedEventMessages()
         appender.clearEvents()
 
         logger.log(logAtLevel, format, arg)
-        val actualMessages = appender.orderedEventMessages
+        val actualMessages = appender.orderedEventMessages()
         assertThat(actualMessages).isEqualTo(expectedMessages)
     }
 
@@ -97,11 +97,11 @@ internal class KiwiSlf4jExtensionsTest {
         val arg1 = 42
         val arg2 = "foo"
         KiwiSlf4j.log(logger, logAtLevel, format, arg1, arg2)
-        val expectedMessages = appender.orderedEventMessages
+        val expectedMessages = appender.orderedEventMessages()
         appender.clearEvents()
 
         logger.log(logAtLevel, format, arg1, arg2)
-        val actualMessages = appender.orderedEventMessages
+        val actualMessages = appender.orderedEventMessages()
         assertThat(actualMessages).isEqualTo(expectedMessages)
     }
 
@@ -119,11 +119,11 @@ internal class KiwiSlf4jExtensionsTest {
         val arg4 = 84.0
         KiwiSlf4j.log(logger, logAtLevel, format, arg1, arg2, arg3, arg4)
 
-        val expectedMessages = appender.orderedEventMessages
+        val expectedMessages = appender.orderedEventMessages()
         appender.clearEvents()
 
         logger.log(logAtLevel, format, arg1, arg2, arg3, arg4)
-        val actualMessages = appender.orderedEventMessages
+        val actualMessages = appender.orderedEventMessages()
         assertThat(actualMessages).isEqualTo(expectedMessages)
     }
 
@@ -137,11 +137,11 @@ internal class KiwiSlf4jExtensionsTest {
         val message = "an error message"
         val t = IOException("I/O problem")
         KiwiSlf4j.log(logger, logAtLevel, message, t)
-        val expectedMessages = appender.orderedEventMessages
+        val expectedMessages = appender.orderedEventMessages()
         appender.clearEvents()
 
         logger.log(logAtLevel, message, t)
-        val actualMessages = appender.orderedEventMessages
+        val actualMessages = appender.orderedEventMessages()
         assertThat(actualMessages).isEqualTo(expectedMessages)
     }
 
@@ -178,7 +178,7 @@ internal class KiwiSlf4jExtensionsTest {
 
         logger.log(Level.DEBUG, "an error message", RuntimeException("oops again"))
 
-        assertThat(appender.orderedEventMessages).containsExactly(
+        assertThat(appender.orderedEventMessages()).containsExactly(
             "the message",
             "message with arg: 42",
             "message with arg: the arg",
@@ -192,7 +192,7 @@ internal class KiwiSlf4jExtensionsTest {
             "an error message"
         )
 
-        val throwableMessages = appender.orderedEvents
+        val throwableMessages = appender.orderedEvents()
             .filter { it.throwableProxy != null }
             .map { it.throwableProxy.message }
             .toList()

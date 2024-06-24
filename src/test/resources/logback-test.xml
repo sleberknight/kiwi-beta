@@ -12,12 +12,7 @@
 
     <logger name="org.kiwiproject.beta.base.process.ProcessOutputHandler" level="TRACE"/>
 
-    <appender name="MEMORY" class="org.kiwiproject.beta.test.logback.InMemoryAppender"/>
-
-    <!-- The following logger MUST exist for InMemoryAppenderTest to work -->
-    <logger name="org.kiwiproject.beta.test.logback.InMemoryAppenderTest" level="DEBUG">
-        <appender-ref ref="MEMORY"/>
-    </logger>
+    <appender name="MEMORY" class="org.kiwiproject.test.logback.InMemoryAppender"/>
 
     <!-- The following loggers MUST exist for KiwiSlf4jTest to work properly -->
     <logger name="org.kiwiproject.beta.slf4j.KiwiSlf4jTest.TRACE" level="TRACE">
