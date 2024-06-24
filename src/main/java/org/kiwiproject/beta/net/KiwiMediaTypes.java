@@ -11,8 +11,8 @@ import static org.kiwiproject.base.KiwiStrings.f;
 import com.google.common.annotations.Beta;
 import com.google.common.net.MediaType;
 import lombok.experimental.UtilityClass;
-
 import org.apache.commons.lang3.StringUtils;
+
 import java.util.Set;
 
 /**
@@ -121,7 +121,7 @@ public class KiwiMediaTypes {
      * that "text/plain; version=0.0.4; charset=utf-8" is considered plain text.
      *
      * @param mediaType the media type to check
-     * @return
+     * @return true if the media type is plain text ignoring any parameters, otherwise false
      */
     public static boolean isPlainText(String mediaType) {
         return matchesTypeAndSubtype(mediaType, TEXT_TYPE, PLAIN_SUBTYPE);
@@ -267,15 +267,15 @@ public class KiwiMediaTypes {
     /**
      * Checks if the given media type has type and subtype that matches the given values.
      * <p>
-     * This method lets you test for subtypes which can have more than one type, for example
-     * "application/xml" and "text/xml" are both considered valid XML types.
+     * This method lets you test for subtypes which can have more than one type.
+     * For example, "application/xml" and "text/xml" are both considered valid XML types.
      * <p>
      * To use this method,
      * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
      * dependency must be present.
      *
      * @param mediaType the Jakarta Rest media type to check
-     * @param typesToMatch the types to match (any one is considered a match)
+     * @param typesToMatch the types to match (any one of them is considered a match)
      * @param subtypeToMatch the subtype to match
      * @return true if the type is any of the acceptable types and subtype matches, otherwise false
      */
@@ -293,11 +293,11 @@ public class KiwiMediaTypes {
     /**
      * Checks if the given media type has type and subtype that matches the given values.
      * <p>
-     * This method lets you test for subtypes which can have more than one type, for example
-     * "application/xml" and "text/xml" are both considered valid XML types.
+     * This method lets you test for subtypes which can have more than one type.
+     * For example, "application/xml" and "text/xml" are both considered valid XML types.
      *
      * @param mediaType the media type to check
-     * @param typesToMatch the types to match (any one is considered a match)
+     * @param typesToMatch the types to match (any one of them is considered a match)
      * @param subtypeToMatch the subtype to match
      * @return true if the type is any of the acceptable types and subtype matches, otherwise false
      */

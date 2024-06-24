@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import com.google.common.collect.Sets;
-
 import jakarta.ws.rs.core.MediaType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -368,8 +367,8 @@ class KiwiMediaTypesTest {
             text/plain, application/json, false
             """,
             nullValues = "null")
-        void shouldBeTrue_WhenTypeAndSubtypeMatch(String mediaType, String mediaTypetoMatch, boolean expectMatch) {
-            assertThat(KiwiMediaTypes.matchesMediaType(mediaType, mediaTypetoMatch))
+        void shouldBeTrue_WhenTypeAndSubtypeMatch(String mediaType, String mediaTypeToMatch, boolean expectMatch) {
+            assertThat(KiwiMediaTypes.matchesMediaType(mediaType, mediaTypeToMatch))
                     .isEqualTo(expectMatch);
         }
     }
@@ -409,10 +408,10 @@ class KiwiMediaTypesTest {
             text/plain, application/json, false
             """,
             nullValues = "null")
-        void shouldBeTrue_WhenTypeAndSubtypeMatch(String mediaType, String mediaTypetoMatch, boolean expectMatch) {
+        void shouldBeTrue_WhenTypeAndSubtypeMatch(String mediaType, String mediaTypeToMatch, boolean expectMatch) {
             var jakartaMediaType = MediaType.valueOf(mediaType);
 
-            assertThat(KiwiMediaTypes.matchesMediaType(jakartaMediaType, mediaTypetoMatch))
+            assertThat(KiwiMediaTypes.matchesMediaType(jakartaMediaType, mediaTypeToMatch))
                     .isEqualTo(expectMatch);
         }
     }
