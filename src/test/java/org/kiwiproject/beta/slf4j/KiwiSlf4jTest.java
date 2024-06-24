@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
 import org.junitpioneer.jupiter.cartesian.CartesianTest.Enum;
-import org.kiwiproject.beta.test.logback.InMemoryAppender;
+import org.kiwiproject.test.logback.InMemoryAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -21,7 +21,6 @@ import java.io.IOException;
 /**
  * @implNote See the loggers defined for this test in {@code src/test/resources/logback-test.xml}.
  */
-@SuppressWarnings("removal")
 @DisplayName("KiwiSlf4j")
 class KiwiSlf4jTest {
 
@@ -145,13 +144,13 @@ class KiwiSlf4jTest {
         if (expectLogEvent(loggerLevel, logAtLevel)) {
             assertLoggingEvent(logAtLevel, expectedMessage, expectedThrowable);
         } else {
-            assertThat(appender.getOrderedEvents()).isEmpty();
+            assertThat(appender.orderedEvents()).isEmpty();
         }
     }
 
     private void assertLoggingEvent(Level logAtLevel, String expectedMessage, @Nullable Throwable expectedThrowable) {
-        assertThat(appender.getOrderedEvents()).hasSize(1);
-        var event = first(appender.getOrderedEvents());
+        assertThat(appender.orderedEvents()).hasSize(1);
+        var event = first(appender.orderedEvents());
 
         assertThat(event.getLevel()).hasToString(logAtLevel.toString());
         assertThat(event.getFormattedMessage()).isEqualTo(expectedMessage);

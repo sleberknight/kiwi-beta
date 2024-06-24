@@ -235,7 +235,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Requires compile (provided) scope since used in the InMemoryAppender -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
