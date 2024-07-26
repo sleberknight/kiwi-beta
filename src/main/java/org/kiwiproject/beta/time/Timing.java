@@ -180,7 +180,7 @@ public class Timing {
          * @return a new instance representing a successful operation
          */
         public static <R> TimedWithErrorOrResult<R> ofResult(long elapsedNanos, R result) {
-            return new TimedWithErrorOrResult<R>(elapsedNanos, result, null);
+            return new TimedWithErrorOrResult<>(elapsedNanos, result, null);
         }
 
         /**
@@ -193,7 +193,7 @@ public class Timing {
          */
         public static <R> TimedWithErrorOrResult<R> ofException(long elapsedNanos, RuntimeException exception) {
             checkArgumentNotNull(exception, "exception must not be null");
-            return new TimedWithErrorOrResult<R>(elapsedNanos, null, exception);
+            return new TimedWithErrorOrResult<>(elapsedNanos, null, exception);
         }
 
         /**
