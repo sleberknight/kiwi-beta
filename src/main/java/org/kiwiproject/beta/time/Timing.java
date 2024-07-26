@@ -20,8 +20,6 @@ import java.util.function.Supplier;
 @UtilityClass
 public class Timing {
 
-    // TODO Add nanos to original interfaces/methods. This is a public API change b/c of ctors!
-
     /**
      * Represents an operation that is timed.
      * <p>
