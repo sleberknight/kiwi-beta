@@ -213,7 +213,7 @@ public class Timing {
         }
 
         /**
-         * @return true if the operation succeeeded and contains a (possibly null) result
+         * @return true if the operation succeeded and contains a (possibly null) result
          */
         public boolean hasResult() {
             return operationSucceeded();
