@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
@@ -198,6 +200,7 @@ class ProcessHelpersTest {
             assertThat(output).isEqualTo("foo bar baz");
         }
 
+        @DisabledOnOs(value = OS.MAC)
         @Test
         void shouldLaunchPipelineCommands() {
             var process = ProcessHelpers.launchPipelineCommand("echo -e foo\nbar\nbaz | sort");
@@ -243,6 +246,7 @@ class ProcessHelpersTest {
     @Nested
     class LaunchPipeline {
 
+        @DisabledOnOs(value = OS.MAC)
         @Test
         void shouldLaunchPipeline() {
             var commands = List.of(
