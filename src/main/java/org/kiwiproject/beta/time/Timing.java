@@ -26,7 +26,7 @@ public class Timing {
      * Note this only provides millisecond precision. It may be changed in a future release.
      * The methods using this interface and its implementations require an explicit
      * {@link StopWatch}. If you need nanoseconds, you can call {@link StopWatch#getNanoTime()}
-     * on it since the timing methods is always stopped once the operation has completed.
+     * on it since the StopWatch is always stopped once the operation has completed.
      */
     public sealed interface Timed permits TimedWithResult, TimedNoResult {
         /**
@@ -174,7 +174,7 @@ public class Timing {
          *
          * @param <R> the result type
          * @param elapsedNanos the number of nanoseconds that elapsed during the operation
-         * @param result the result of the operation, may be null
+         * @param result the result of the operation; may be null
          * @return a new instance representing a successful operation
          */
         public static <R> TimedWithErrorOrResult<R> ofResult(long elapsedNanos, R result) {
@@ -198,7 +198,7 @@ public class Timing {
          * Create a new instance containing either a result or an exception.
          *
          * @param elapsedNanos the number of nanoseconds that elapsed during the operation
-         * @param result the result of the operation, may be null
+         * @param result the result of the operation; may be null
          * @param exception the exception thrown by the operation, may be null
          * @throws IllegalArgumentException if both result and exception are non-null
          */
