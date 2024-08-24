@@ -4,13 +4,22 @@ import static java.util.Objects.nonNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.annotations.CheckReturnValue;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.Value;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 
+import java.beans.ConstructorProperties;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 /**
@@ -18,21 +27,26 @@ import java.util.function.Supplier;
  */
 @Beta
 @UtilityClass
+@Slf4j
 public class Timing {
+
+    // The maximum number of times to log a warning about the constructor
+    // of TimedWithResult and TimedNoResult changing from millis to nanos.
+    private static final int MAX_WARNINGS_TO_LOG = 10;
 
     /**
      * Represents an operation that is timed.
-     * <p>
-     * Note this only provides millisecond precision. It may be changed in a future release.
-     * The methods using this interface and its implementations require an explicit
-     * {@link StopWatch}. If you need nanoseconds, you can call {@link StopWatch#getNanoTime()}
-     * on it since the StopWatch is always stopped once the operation has completed.
      */
     public sealed interface Timed permits TimedWithResult, TimedNoResult {
         /**
          * @return the number of milliseconds that elapsed during the operation
          */
         long getElapsedMillis();
+
+        /**
+         * @return the number of nanoseconds that elapsed during the operation
+         */
+        long getElapsedNanos();
     }
 
     /**
@@ -40,18 +54,113 @@ public class Timing {
      *
      * @param <R> the result type
      */
-    @Value
-    public static class TimedWithResult<R> implements Timed {
-        long elapsedMillis;
-        R result;
+    @Getter
+    @ToString
+    @EqualsAndHashCode
+    public static final class TimedWithResult<R> implements Timed {
+
+        private static final AtomicInteger LOG_COUNT = new AtomicInteger();
+
+        private final long elapsedMillis;
+        private final long elapsedNanos;
+        private final R result;
+
+        @ConstructorProperties({"elapsedMillis", "result"})
+        public TimedWithResult(long elapsedMillis, R result) {
+            logElapsedMillisChangeToNanosWarning(TimedWithResult.class, LOG_COUNT);
+            this.elapsedMillis = elapsedMillis;
+            this.elapsedNanos = TimeUnit.MILLISECONDS.toNanos(elapsedMillis);
+            this.result = result;
+        }
+
+        /**
+         * Create an instance having elapsed milliseconds and a result.
+         *
+         * @param elapsedMillis the elapsed milliseconds
+         * @param result        the result of the operation
+         * @param <R>           the type of result returned by the operation
+         * @return a new instance
+         */
+        public static <R> TimedWithResult<R> ofElapsedMillis(long elapsedMillis, R result) {
+            return new TimedWithResult<>(elapsedMillis, result);
+        }
+
+        /**
+         * Create an instance having elapsed nanoseconds and a result.
+         *
+         * @param elapsedNanos the elapsed nanoseconds
+         * @param result       the result of the operation
+         * @param <R>          the type of result returned by the operation
+         * @return a new instance
+         */
+        public static <R> TimedWithResult<R> ofElapsedNanos(long elapsedNanos, R result) {
+            return new TimedWithResult<>(TimeUnit.NANOSECONDS.toMillis(elapsedNanos), result);
+        }
+
+        @Override
+        public long getElapsedNanos() {
+            return elapsedNanos;
+        }
     }
 
     /**
      * Represents an operation that is timed and returns no result.
      */
-    @Value
-    public static class TimedNoResult implements Timed {
-        long elapsedMillis;
+    @Getter
+    @ToString
+    @EqualsAndHashCode
+    public static final class TimedNoResult implements Timed {
+
+        private static final AtomicInteger LOG_COUNT = new AtomicInteger();
+
+        private final long elapsedMillis;
+        private final long elapsedNanos;
+
+        @ConstructorProperties({"elapsedMillis"})
+        public TimedNoResult(long elapsedMillis) {
+            logElapsedMillisChangeToNanosWarning(TimedNoResult.class, LOG_COUNT);
+            this.elapsedMillis = elapsedMillis;
+            this.elapsedNanos = TimeUnit.MILLISECONDS.toNanos(elapsedMillis);
+        }
+
+        /**
+         * Create an instance having elapsed milliseconds.
+         *
+         * @param elapsedMillis the elapsed milliseconds
+         * @return a new instance
+         */
+        public static TimedNoResult ofElapsedMillis(long elapsedMillis) {
+            return new TimedNoResult(elapsedMillis);
+        }
+
+        /**
+         * Create an instance having elapsed nanoseconds.
+         *
+         * @param elapsedNanos the elapsed nanoseconds
+         * @return a new instance
+         */
+        public static TimedNoResult ofElapsedNanos(long elapsedNanos) {
+            return new TimedNoResult(TimeUnit.NANOSECONDS.toMillis(elapsedNanos));
+        }
+
+        @Override
+        public long getElapsedNanos() {
+            return elapsedNanos;
+        }
+    }
+
+    private static void logElapsedMillisChangeToNanosWarning(Class<?> clazz, AtomicInteger logCount) {
+        if (logCount.get() >= MAX_WARNINGS_TO_LOG) {
+            return;
+        }
+
+        logCount.incrementAndGet();
+
+        LOG.warn("In a future release, elapsedMillis in the {} constructor will change to elapsedNanos," +
+                " and the constructor may become private!" +
+                " Any custom code using this directly should be changed to use 'ofElapsedMillis' to ensure" +
+                " that it continues to report correct results after the constructor changes." +
+                " Or, use 'ofElapsedNanos' and pass nanoseconds as the argument.", clazz.getName());
     }
 
     /**
@@ -74,6 +183,7 @@ public class Timing {
      * @param operation the operation to time
      * @return a {@link TimedWithResult} containing the elapsed time and the result of the operation
      */
+    @CheckReturnValue
     public static <R> TimedWithResult<R> timeWithResult(StopWatch stopWatch, Supplier<R> operation) {
         stopWatch.reset();
         stopWatch.start();
@@ -83,7 +193,7 @@ public class Timing {
         } finally {
             stopWatch.stop();
         }
-        return new TimedWithResult<>(stopWatch.getTime(), result);
+        return TimedWithResult.ofElapsedNanos(stopWatch.getNanoTime(), result);
     }
 
     /**
@@ -105,6 +215,7 @@ public class Timing {
      * @param operation the operation to time
      * @return a {@link TimedNoResult} containing the elapsed time of the operation
      */
+    @CheckReturnValue
     public static TimedNoResult timeNoResult(StopWatch stopWatch, Runnable operation) {
         stopWatch.reset();
         stopWatch.start();
@@ -113,7 +224,7 @@ public class Timing {
         } finally {
             stopWatch.stop();
         }
-        return new TimedNoResult(stopWatch.getTime());
+        return TimedNoResult.ofElapsedNanos(stopWatch.getNanoTime());
     }
 
     /**
@@ -170,6 +281,25 @@ public class Timing {
         RuntimeException exception;
 
         /**
+         * Create a new instance containing either a result or an exception.
+         *
+         * @param elapsedNanos the number of nanoseconds that elapsed during the operation
+         * @param result the result of the operation; may be null
+         * @param exception the exception thrown by the operation, may be null
+         * @throws IllegalArgumentException if both result and exception are non-null
+         */
+        @VisibleForTesting
+        TimedWithErrorOrResult(long elapsedNanos, R result, RuntimeException exception) {
+            if (nonNull(result) && nonNull(exception)) {
+                throw new IllegalArgumentException("Cannot contain a result and an exception");
+            }
+
+            this.elapsedNanos = elapsedNanos;
+            this.result = result;
+            this.exception = exception;
+        }
+
+        /**
          * Create a new instance containing a result.
          *
          * @param <R> the result type
@@ -192,24 +322,6 @@ public class Timing {
         public static <R> TimedWithErrorOrResult<R> ofException(long elapsedNanos, RuntimeException exception) {
             checkArgumentNotNull(exception, "exception must not be null");
             return new TimedWithErrorOrResult<>(elapsedNanos, null, exception);
-        }
-
-        /**
-         * Create a new instance containing either a result or an exception.
-         *
-         * @param elapsedNanos the number of nanoseconds that elapsed during the operation
-         * @param result the result of the operation; may be null
-         * @param exception the exception thrown by the operation, may be null
-         * @throws IllegalArgumentException if both result and exception are non-null
-         */
-        public TimedWithErrorOrResult(long elapsedNanos, R result, RuntimeException exception) {
-            if (nonNull(result) && nonNull(exception)) {
-                throw new IllegalArgumentException("Cannot contain a result and an exception");
-            }
-
-            this.elapsedNanos = elapsedNanos;
-            this.result = result;
-            this.exception = exception;
         }
 
         /**
@@ -244,6 +356,7 @@ public class Timing {
      * Represents an operation that is timed and returns no result, but may throw an exception.
      */
     @Value
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     public static class TimedWithErrorNoResult implements TimedWithError {
         long elapsedNanos;
         RuntimeException exception;

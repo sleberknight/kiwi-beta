@@ -13,8 +13,10 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.kiwiproject.base.DefaultEnvironment;
 import org.kiwiproject.base.KiwiEnvironment;
-import org.kiwiproject.beta.time.Timing.TimedWithErrorOrResult;
+import org.kiwiproject.beta.time.Timing.TimedNoResult;
 import org.kiwiproject.beta.time.Timing.TimedWithErrorNoResult;
+import org.kiwiproject.beta.time.Timing.TimedWithErrorOrResult;
+import org.kiwiproject.beta.time.Timing.TimedWithResult;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -99,12 +101,82 @@ class TimingTest {
     }
 
     @Nested
+    class TimedWithResultClass {
+
+        @Test
+        void shouldCreateUsing_OfElapsedMillis() {
+            var millis = 840;
+            var result = TimedWithResult.ofElapsedMillis(millis, "the result");
+
+            assertAll(
+                    () -> assertThat(result.getResult()).isEqualTo("the result"),
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(millis),
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis))
+            );
+        }
+
+        @Test
+        void shouldCreateUsing_OfElapsedNanos() {
+            var millis = 420;
+            var nanos = TimeUnit.MILLISECONDS.toNanos(millis);
+            var result = TimedWithResult.ofElapsedNanos(nanos, "the result");
+
+            assertAll(
+                    () -> assertThat(result.getResult()).isEqualTo("the result"),
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(millis),
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis))
+            );
+        }
+
+        @RepeatedTest(25)
+        void shouldOnlyLogTenWarnings_RunManually_AndInspectOutput() {
+            var elapsedNanos = 84_000_000;
+            var result = TimedWithResult.ofElapsedNanos(elapsedNanos, "a result");
+            assertThat(result.getElapsedMillis()).isEqualTo(TimeUnit.NANOSECONDS.toMillis(elapsedNanos));
+        }
+    }
+
+    @Nested
+    class TimedNoResultClass {
+
+        @Test
+        void shouldCreateUsing_OfElapsedMillis() {
+            var millis = 840;
+            var result = TimedNoResult.ofElapsedMillis(millis);
+
+            assertAll(
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(millis),
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis))
+            );
+        }
+
+        @Test
+        void shouldCreateUsing_OfElapsedNanos() {
+            var millis = 420;
+            var nanos = TimeUnit.MILLISECONDS.toNanos(millis);
+            var result = TimedNoResult.ofElapsedNanos(nanos);
+
+            assertAll(
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(millis),
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis))
+            );
+        }
+
+        @RepeatedTest(25)
+        void shouldOnlyLogTenWarnings_RunManually_AndInspectOutput() {
+            var elapsedNanos = 42_000_000;
+            var result = TimedNoResult.ofElapsedNanos(elapsedNanos);
+            assertThat(result.getElapsedMillis()).isEqualTo(TimeUnit.NANOSECONDS.toMillis(elapsedNanos));
+        }
+    }
+
+    @Nested
     class TimedWithErrorOrResultClass {
 
         @Test
         void shouldThrowIllegalArgument_WhenBothConstructorArgsAreNotNull() {
             assertThatIllegalArgumentException()
-                    .isThrownBy(() -> new TimedWithErrorOrResult<String>(42_000_000L, "the result", new RuntimeException()))
+                    .isThrownBy(() -> new TimedWithErrorOrResult<>(42_000_000L, "the result", new RuntimeException()))
                     .withMessage("Cannot contain a result and an exception");
         }
 
