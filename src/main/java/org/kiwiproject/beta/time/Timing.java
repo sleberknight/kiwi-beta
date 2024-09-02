@@ -171,7 +171,7 @@ public class Timing {
      * throws an exception.
      * <p>
      * If you need the elapsed time when an exception is thrown, you can simply call
-     * {@link StopWatch#getTime()} or {@link StopWatch#getNanoTime()}.
+     * {@link StopWatch#getDuration()} or {@link StopWatch#getNanoTime()}.
      * <p>
      * Since {@link StopWatch} is not thread-safe, callers are responsible for ensuring
      * thread-safety. Passing it as an argument permits timing more than one sequential operation
@@ -204,7 +204,7 @@ public class Timing {
      * throws an exception.
      * <p>
      * If you need the elapsed time when an exception is thrown, you can simply call
-     * {@link StopWatch#getTime()} or {@link StopWatch#getNanoTime()}.
+     * {@link StopWatch#getDuration()} or {@link StopWatch#getNanoTime()}.
      * <p>
      * Since {@link StopWatch} is not thread-safe, callers are responsible for ensuring
      * thread-safety. Passing it as an argument permits timing more than one sequential operation

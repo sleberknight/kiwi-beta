@@ -51,7 +51,7 @@ class TimingTest {
                     () -> assertThat(result.getElapsedMillis()).isPositive(),
                     () -> assertThat(result.getResult()).isEqualTo(1764),
                     () -> assertThat(stopWatch.isStopped()).isTrue(),
-                    () -> assertThat(stopWatch.getTime()).isEqualTo(result.getElapsedMillis())
+                    () -> assertThat(stopWatch.getDuration().toMillis()).isEqualTo(result.getElapsedMillis())
             );
         }
 
@@ -67,7 +67,7 @@ class TimingTest {
                             .isExactlyInstanceOf(RuntimeException.class)
                             .hasMessage("oops"),
                     () -> assertThat(stopWatch.isStopped()).isTrue(),
-                    () -> assertThat(stopWatch.getTime()).isPositive()
+                    () -> assertThat(stopWatch.getDuration()).isPositive()
             );
         }
 
@@ -79,7 +79,7 @@ class TimingTest {
             assertAll(
                     () -> assertThat(result.getElapsedMillis()).isPositive(),
                     () -> assertThat(stopWatch.isStopped()).isTrue(),
-                    () -> assertThat(stopWatch.getTime()).isEqualTo(result.getElapsedMillis())
+                    () -> assertThat(stopWatch.getDuration().toMillis()).isEqualTo(result.getElapsedMillis())
             );
         }
 
@@ -95,7 +95,7 @@ class TimingTest {
                             .isExactlyInstanceOf(RuntimeException.class)
                             .hasMessage("ugh"),
                     () -> assertThat(stopWatch.isStopped()).isTrue(),
-                    () -> assertThat(stopWatch.getTime()).isPositive()
+                    () -> assertThat(stopWatch.getDuration()).isPositive()
             );
         }
     }
