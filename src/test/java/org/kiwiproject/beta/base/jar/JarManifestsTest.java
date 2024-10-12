@@ -2,6 +2,8 @@ package org.kiwiproject.beta.base.jar;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -67,7 +69,8 @@ class JarManifestsTest {
         void shouldThrow_WhenCannotFindIt() {
             assertThatIllegalStateException()
                     .isThrownBy(() -> JarManifests.getManifestOrThrow(String.class))
-                    .withMessage("Unable to get manifest for %s", String.class);
+                    .withMessage("Unable to get manifest for %s", String.class)
+                    .withNoCause();
         }
 
     }
@@ -107,8 +110,17 @@ class JarManifestsTest {
                 }
             };
 
-            var manifestOptional = JarManifests.getManifest(classHolder);
-            assertThat(manifestOptional).isEmpty();
+            var lookupResult = JarManifests.getManifest(classHolder);
+
+            assertAll(
+                    () -> assertThat(lookupResult.lookupStatus()).isEqualTo(ManifestLookupStatus.FAILURE),
+                    () -> assertThat(lookupResult.manifest()).isNull(),
+                    () -> assertThat(lookupResult.error()).isInstanceOf(SecurityException.class),
+                    () -> assertThat(lookupResult.errorMessage()).isNull(),
+                    () -> assertThat(lookupResult.error())
+                            .isInstanceOf(SecurityException.class)
+                            .hasMessage("Access Denied!")
+            );
         }
 
         @ClearBoxTest("Calls non-public getManifest(ClassHolder) to test null location in CodeSource")
@@ -122,8 +134,15 @@ class JarManifestsTest {
                 }
             };
 
-            var manifestOptional = JarManifests.getManifest(classHolder);
-            assertThat(manifestOptional).isEmpty();
+            var lookupResult = JarManifests.getManifest(classHolder);
+
+            assertAll(
+                    () -> assertThat(lookupResult.lookupStatus()).isEqualTo(ManifestLookupStatus.FAILURE),
+                    () -> assertThat(lookupResult.manifest()).isNull(),
+                    () -> assertThat(lookupResult.error()).isNull(),
+                    () -> assertThat(lookupResult.errorMessage())
+                            .isEqualTo("The Location of the CodeSource was null. CodeSource: " + codeSource)
+            );
         }
     }
 
