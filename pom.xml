@@ -34,7 +34,7 @@
 
         <!-- Versions for required/provided dependencies -->
 
-        <camel.version>4.8.0</camel.version>
+        <camel.version>4.8.1</camel.version>
         <jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
         <kiwi.version>4.5.2</kiwi.version>
