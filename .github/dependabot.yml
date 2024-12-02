@@ -4,6 +4,17 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      dev-deps:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      prod-deps:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
     assignees:
       - "sleberknight"
     reviewers:
@@ -12,6 +23,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      actions-deps:
+        patterns:
+          - "*"
     assignees:
       - "sleberknight"
     reviewers:
