@@ -251,7 +251,7 @@ class KiwiReflection2Test {
                 assertAll(
                         () -> assertThat(typeInfo.getRawType()).isEqualTo(Boolean.class),
                         () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
-                        () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                        () -> assertThatIllegalStateException().isThrownBy(typeInfo::getOnlyGenericType),
                         () -> assertThat(typeInfo.isCollection()).isFalse(),
                         () -> assertThat(typeInfo.isMap()).isFalse(),
                         () -> assertThat(typeInfo.hasExactRawType(Boolean.class)).isTrue());
@@ -266,7 +266,7 @@ class KiwiReflection2Test {
                 assertAll(
                         () -> assertThat(typeInfo.getRawType()).isEqualTo(String.class),
                         () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
-                        () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                        () -> assertThatIllegalStateException().isThrownBy(typeInfo::getOnlyGenericType),
                         () -> assertThat(typeInfo.isCollection()).isFalse(),
                         () -> assertThat(typeInfo.isMap()).isFalse(),
                         () -> assertThat(typeInfo.hasExactRawType(String.class)).isTrue());
@@ -300,7 +300,7 @@ class KiwiReflection2Test {
                 assertAll(
                         () -> assertThat(typeInfo.getRawType()).isEqualTo(List.class),
                         () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
-                        () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                        () -> assertThatIllegalStateException().isThrownBy(typeInfo::getOnlyGenericType),
                         () -> assertThat(typeInfo.isCollection()).isTrue(),
                         () -> assertThat(typeInfo.isMap()).isFalse(),
                         () -> assertThat(typeInfo.hasExactRawType(List.class)).isTrue());
@@ -315,7 +315,7 @@ class KiwiReflection2Test {
                 assertAll(
                     () -> assertThat(typeInfo.getRawType()).isEqualTo(Map.class),
                     () -> assertThat(typeInfo.getGenericTypes()).containsExactly(String.class, String.class),
-                    () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                    () -> assertThatIllegalStateException().isThrownBy(typeInfo::getOnlyGenericType),
                     () -> assertThat(typeInfo.isCollection()).isFalse(),
                     () -> assertThat(typeInfo.isMap()).isTrue(),
                     () -> assertThat(typeInfo.hasExactRawType(Map.class)).isTrue()
@@ -331,7 +331,7 @@ class KiwiReflection2Test {
                 assertAll(
                     () -> assertThat(typeInfo.getRawType()).isEqualTo(Map.class),
                     () -> assertThat(typeInfo.getGenericTypes()).isEmpty(),
-                    () -> assertThatIllegalStateException().isThrownBy(() -> typeInfo.getOnlyGenericType()),
+                    () -> assertThatIllegalStateException().isThrownBy(typeInfo::getOnlyGenericType),
                     () -> assertThat(typeInfo.isCollection()).isFalse(),
                     () -> assertThat(typeInfo.isMap()).isTrue(),
                     () -> assertThat(typeInfo.hasExactRawType(Map.class)).isTrue()
