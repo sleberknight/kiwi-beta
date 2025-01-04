@@ -218,7 +218,7 @@ public class KiwiStrings2 {
 
     /**
      * Returns the maximum number of variants containing unique capitalization for the given input string.
-     * This is 2 raised to the power of the length of the input string. For example, if the input string
+     * This is 2 raised to the power of the input string length. For example, if the input string
      * is 5 characters long, then the maximum unique variants are 2^5 = 32, while if the input string is
      * 10 characters long, the maximum unique variants are 2^10 = 1024.
      *

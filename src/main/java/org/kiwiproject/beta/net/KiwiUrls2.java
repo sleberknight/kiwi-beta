@@ -29,9 +29,9 @@ public class KiwiUrls2 {
      * <p>
      * <strong>Note:</strong> This method may perform DNS lookups when adding URL objects to the resulting Set.
      * This is because "URL's equals() and hashCode() methods can perform a DNS lookup to resolve the host name"
-     * according to IntelliJ's  "may contain URL objects" inspection. If you need to avoid this, use the
+     * according to IntelliJ's "may contain URL objects" inspection. If you need to avoid this, use the
      * {@link #uniqueAuthorityOnlyUrlsAsList(Collection)} method to get a List of unique URLs. However, note
-     * that any subsequent conversion to a Set will potentially incur the same DNS lookups.
+     * that any later conversion to a Set will potentially incur the same DNS lookups.
      *
      * @param urls the URLs to process
      * @return a set containing unique URLs containing only the host[:port] (the authority part) from the original URLs
@@ -42,22 +42,22 @@ public class KiwiUrls2 {
     }
 
     /**
-     * Given a collection of URLs, return a set containing URLs with only the authority ( host[:port] ).
+     * Given a collection of URLs, return a set containing URLs with only the authority ({@code host[:port]}).
      * <p>
      * <strong>Note:</strong> This method may perform DNS lookups when adding URL objects to the resulting Set.
      * This is because "URL's equals() and hashCode() methods can perform a DNS lookup to resolve the host name"
      * according to IntelliJ's  "may contain URL objects" inspection. If you need to avoid this, use the
      * {@link #uniqueAuthorityOnlyUrlsAsList(Collection)} method to get a List of unique URLs. However, note
-     * that any subsequent conversion to a Set will potentially incur the same DNS lookups.
+     * that any later conversion to a Set will potentially incur the same DNS lookups.
      *
      * @param urls the URLs to process
-     * @return a set containing unique URLs containing only the authority part ( host[:port] ) from the original URLs
+     * @return a set containing unique URLs containing only the authority part ({@code host[:port]}) from the original URLs
      * @see #uniqueAuthorityOnlyUrlsAsList(Collection)
      */
     public static Set<URL> uniqueAuthorityOnlyUrls(Collection<URL> urls) {
         checkArgumentNotNull(urls, "urls must not be null");
 
-        // see explanation below this method on DNS lookups when adding URL objects to maps and sets
+        // see the explanation below this method on DNS lookups when adding URL objects to maps and sets
 
         return urls.stream()
                 .map(KiwiUrls2::hostOnlyUrlFrom)
@@ -65,7 +65,7 @@ public class KiwiUrls2 {
     }
 
     /*
-        Background on DNS lookups performing when adding URL objects to maps and sets:
+        Background on DNS lookups performing when adding URL objects to Maps and Sets:
 
         On usages of the above methods, IntelliJ reports the "may contain URL objects" inspection, described as:
 
@@ -74,20 +74,20 @@ public class KiwiUrls2 {
         significant delays, depending on the availability and speed of the network and the DNS server. Using
         java.net.URI instead of java.net.URL will avoid the DNS lookup.
 
-        This is the reason for the warnings in the javadocs, and also why the method that returns a list
+        This is the reason for the warnings in the Javadocs, and also why the method that returns a list
         of unique authority-only URLs was added.
     */
 
     /**
-     * Given a collection of URLs, return a list containing unique URLs with only the authority ( host[:port] ).
+     * Given a collection of URLs, return a list containing unique URLs with only the authority ({@code host[:port]}).
      * <p>
      * <strong>Note:</strong> This method avoids DNS lookups performed by URL equals() and hashCode() methods
-     * that may occur when adding URL objects to sets and maps. Note also that any subsequent conversion to a
+     * that may occur when adding URL objects to sets and maps. Note also that any later conversion to a
      * Set will potentially incur the same DNS lookups, so it is best to work directly with the list of URLs
      * returned by this method.
      *
      * @param urls the URLs to process
-     * @return a list containing unique URLs containing only the authority part ( host[:port] ) from the original URLs
+     * @return a list containing unique URLs containing only the authority part ({@code host[:port]}) from the original URLs
      */
     public static List<URL> uniqueAuthorityOnlyUrlsAsList(Collection<URL> urls) {
         checkArgumentNotNull(urls, "urls must not be null");
@@ -117,7 +117,7 @@ public class KiwiUrls2 {
     }
 
     /**
-     * Strip any path or query parameters from the given URL, returning only the authority ( host[:port] ).
+     * Strip any path or query parameters from the given URL, returning only the authority ({@code host[:port]}).
      *
      * @param url the URL to process
      * @return a URL containing only the authority part of the original URL

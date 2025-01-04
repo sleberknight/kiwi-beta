@@ -21,7 +21,7 @@ public class JakartaRestTestHelpers {
      * Converts an <em>outbound</em> {@link Response} built as if from inside a Jakarta EE resource, e.g., something like
      * {@code Response.ok(entity).build()}, into an <em>inbound</em> Response on which {@link Response#readEntity(Class)}
      * can be called. Inbound responses are what Jakarta Clients return, and the {@code readEntity} methods are
-     * how client code obtains the response entity.
+     * how client code gets the response entity.
      * <p>
      * This is useful if you are testing client code, and you want to mock the response returned by an endpoint
      * to test how the client responds to various responses, e.g., different error conditions. If you don't do this

@@ -178,7 +178,7 @@ public class KiwiJdbc2 {
      * @param columnLabel the name of the array column in the ResultSet
      * @param type the data type (must be a reference type)
      * @param <T> type parameter for the data type
-     * @return an array of objects of type T containing the values from the array, or <em>an empty array if the database
+     * @return an array of objects having type T containing the values from the array, or <em>an empty array if the database
      * value is null or empty</em>
      * @throws SQLException if a database error occurred, e.g. the column doesn't exist
      * @see java.sql.Array

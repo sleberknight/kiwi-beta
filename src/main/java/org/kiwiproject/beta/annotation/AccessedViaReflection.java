@@ -35,7 +35,7 @@ public @interface AccessedViaReflection {
     /**
      * Optional description of when, where, why, how this annotated element is accessed via reflection.
      * <p>
-     * While this value is optional, it is recommended, since it can be difficult to track down when
+     * While this value is optional, it is recommended, since it can be challenging to track down when
      * and where reflective code invokes methods, constructors, etc.
      */
     String value() default "";

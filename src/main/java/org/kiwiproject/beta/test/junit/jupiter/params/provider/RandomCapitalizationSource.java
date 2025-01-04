@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@link RandomCapitalizationSource} is an {@link ArgumentsSource} that provides values having a random capitalization
+ * {@link RandomCapitalizationSource} is an {@link ArgumentsSource} that provides values having random capitalization
  * of a given input for use in parameterized tests.
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
