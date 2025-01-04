@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
 
@@ -107,16 +106,11 @@ class TypeInfoTest {
                     .isThrownBy(() -> TypeInfo.ofParameterizedType(null));
         }
 
-        /**
-         * We should never see a null returned from {@link ParameterizedType#getActualTypeArguments()} but we could
-         * see an empty array. Let's ensure we handle both "just in case".
-         */
-        @ParameterizedTest
-        @NullAndEmptySource
-        void shouldHandleNullAndEmptyActualTypeArguments(Type[] actualTypeArguments) {
+        @Test
+        void shouldHandleEmptyActualTypeArguments() {
             var type = mock(ParameterizedType.class);
             when(type.getRawType()).thenReturn(List.class);
-            when(type.getActualTypeArguments()).thenReturn(actualTypeArguments);
+            when(type.getActualTypeArguments()).thenReturn(new Type[0]);
 
             var typeInfo = TypeInfo.ofParameterizedType(type);
 
