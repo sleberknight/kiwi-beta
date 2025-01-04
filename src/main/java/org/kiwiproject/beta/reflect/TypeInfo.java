@@ -2,7 +2,6 @@ package org.kiwiproject.beta.reflect;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
-import static java.util.Objects.isNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 import static org.kiwiproject.base.KiwiPreconditions.requireNotNull;
 import static org.kiwiproject.collect.KiwiLists.first;
@@ -95,7 +94,7 @@ public class TypeInfo {
         checkTypeArgument(parameterizedType);
 
         var typeArgs = parameterizedType.getActualTypeArguments();
-        List<Type> genericTypes = isNull(typeArgs) ? List.of() : List.of(typeArgs);
+        List<Type> genericTypes = List.of(typeArgs);
 
         return new TypeInfo(parameterizedType.getRawType(), genericTypes);
     }
