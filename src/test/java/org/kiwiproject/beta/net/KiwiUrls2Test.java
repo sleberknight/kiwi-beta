@@ -223,7 +223,7 @@ class KiwiUrls2Test {
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/registry1/eureka?param1=value1",
                 "https://dev-jump-proxy-1.acme.com:8443/proxy/discovery/param1=value1&param2=value2"
         })
-        void shouldRemovePathsandQueryStrings_ButRetainPort(String urlSpec) {
+        void shouldRemovePathsAndQueryStrings_ButRetainPort(String urlSpec) {
             var url = KiwiUrls.createUrlObject(urlSpec);
             var modifiedUri = KiwiUrls2.hostOnlyUrlFrom(url);
             assertThat(modifiedUri).hasToString("https://dev-jump-proxy-1.acme.com:8443");

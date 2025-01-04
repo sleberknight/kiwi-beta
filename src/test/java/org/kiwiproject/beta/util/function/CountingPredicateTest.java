@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -35,6 +36,7 @@ class CountingPredicateTest {
     void shouldTrackCountsInCollections(Collection<Integer> collection) {
         var isEven = new CountingPredicate<Integer>(value -> value % 2 == 0);
 
+        //noinspection ResultOfMethodCallIgnored
         collection.stream().filter(isEven).toList();
 
         assertThat(isEven.trueCount()).isEqualTo(4);
@@ -47,14 +49,16 @@ class CountingPredicateTest {
 
         Integer[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
+        //noinspection ResultOfMethodCallIgnored
         Arrays.stream(numbers).filter(isOdd).toList();
 
         assertThat(isOdd.trueCount()).isEqualTo(5);
         assertThat(isOdd.falseCount()).isEqualTo(4);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
-    void shouldAccumulateCounts_WhenPredicateisUsedMultipleTimes() {
+    void shouldAccumulateCounts_WhenPredicateIsUsedMultipleTimes() {
         var ints1 = List.of(1, 2, 3, 4);
         var ints2 = Set.of(5, 6, 7, 8);
         var ints3 = List.of(9);
