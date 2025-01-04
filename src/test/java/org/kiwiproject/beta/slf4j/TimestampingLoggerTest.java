@@ -344,7 +344,7 @@ class TimestampingLoggerTest {
                             var nanoDuration = Duration.ofNanos(diffInNanos);
                             return new Object[] {
                                     logCount,
-                                    KiwiDurationFormatters.formatDurationWords(nanoDuration),
+                                    KiwiDurationFormatters.formatJavaDurationWords(nanoDuration),
                                     diffInNanos,
                                     nanoDuration.toMillis(),
                                     nanoDuration.toSeconds()};
@@ -455,7 +455,7 @@ class TimestampingLoggerTest {
                             var nanoDuration = Duration.ofNanos(diffInNanos);
                             return new Object[] {
                                     logCount,
-                                    KiwiDurationFormatters.formatDurationWords(nanoDuration),
+                                    KiwiDurationFormatters.formatJavaDurationWords(nanoDuration),
                                     diffInNanos,
                                     nanoDuration.toMillis(),
                                     nanoDuration.toSeconds()};
