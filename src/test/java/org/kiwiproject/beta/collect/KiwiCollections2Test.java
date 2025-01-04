@@ -85,7 +85,7 @@ class KiwiCollections2Test {
         }
 
         @Test
-        void shouldFindTheOnlyElementOfTheSpecfiedType() {
+        void shouldFindTheOnlyElementOfTheSpecifiedType() {
             var message = new BytesMessage();
             var messages = List.of(
                     new JsonMessage(),
@@ -100,7 +100,7 @@ class KiwiCollections2Test {
         }
 
         @Test
-        void shouldFindTheFirstElementOfTheSpecfiedType() {
+        void shouldFindTheFirstElementOfTheSpecifiedType() {
             var message = new TextMessage();
             var messages = List.of(
                     new JsonMessage(),
