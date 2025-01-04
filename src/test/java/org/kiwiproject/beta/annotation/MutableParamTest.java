@@ -31,7 +31,7 @@ class MutableParamTest {
         var method = Testing.class.getDeclaredMethod("put", Map.class, Object.class, Object.class);
         assertThat(method).isNotNull();
         var firstParam = first(method.getParameters());
-        assertThat(firstParam.getType()).isEqualTo(Map.class);  // sanity check
+        assertThat(firstParam.getType()).isEqualTo(Map.class);  // smoke test
         assertThat(firstParam.getAnnotations()).isEmpty();
     }
 

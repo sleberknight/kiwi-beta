@@ -44,7 +44,7 @@ import java.util.function.BiFunction;
  *         <td>0</td>
  *         <td>
  *             The nanoseconds to use as the starting point against which the next elapsed time should be
- *             measured, e.g. using {@link System#nanoTime()}. When this is zero, the first elapsed log message
+ *             measured, e.g., using {@link System#nanoTime()}. When this is zero, the first elapsed log message
  *             will be the {@code initialMessage} to indicate there is not a previous timestamp against which
  *             to measure. If you want to start measurement from the time a {@link TimestampingLogger} is
  *             created, set it to {@link System#nanoTime()}.

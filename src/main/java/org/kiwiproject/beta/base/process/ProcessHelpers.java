@@ -156,7 +156,7 @@ public class ProcessHelpers {
      *
      * @param command the command to execute
      * @return the new {@link Process}
-     * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
+     * @throws UncheckedIOException if anything goes wrong, for example, if the working directory does not exist
      */
     public static Process launchCommand(String command) {
         return launchCommand(null, command);
@@ -171,7 +171,7 @@ public class ProcessHelpers {
      * @param workingDirectory the working directory for the command
      * @param command the command to execute
      * @return the new {@link Process}
-     * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
+     * @throws UncheckedIOException if anything goes wrong, for example, if the working directory does not exist
      */
     public static Process launchCommand(@Nullable File workingDirectory, String command) {
         checkArgumentNotBlank(command, "command must not be blank");
@@ -182,15 +182,15 @@ public class ProcessHelpers {
 
     /**
      * Convenience method that splits a pipeline using "|" and then splits each
-     * individual command on spaces.
+     * command on spaces.
      * <p>
-     * <strong>Warning:</strong> The same caveats on command splitting on spaces
+     * <strong>Warning:</strong> The same limitations on command splitting on spaces
      * apply to this method, as described in {@link #launchCommand(String)}. For
      * similar reasons, nested pipelines won't work either.
      *
      * @param pipeline the pipeline command
      * @return the <strong>last</strong> {@link Process} in the pipeline
-     * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
+     * @throws UncheckedIOException if anything goes wrong, for example, if the working directory does not exist
      * @see ProcessBuilder#startPipeline
      */
     public static Process launchPipelineCommand(String pipeline) {
@@ -199,10 +199,9 @@ public class ProcessHelpers {
 
     /**
      * Convenience method that splits a pipeline using "|" and then splits each
-     * individual command on spaces. Each command in the pipeline uses the given
-     * working directory.
+     * command on spaces. Each command in the pipeline uses the given working directory.
      * <p>
-     * <strong>Warning:</strong> The same caveats on command splitting on spaces
+     * <strong>Warning:</strong> The same limitations on command splitting on spaces
      * apply to this method, as described in {@link #launchCommand(String)}. For
      * similar reasons, nested pipelines won't work either.
      *
@@ -243,7 +242,7 @@ public class ProcessHelpers {
      * @param workingDirectory the working directory for each command in the pipeline
      * @param commands the commands in the pipeline
      * @return the <strong>last</strong> {@link Process} in the pipeline
-     * @throws UncheckedIOException if anything goes wrong, for example if the working directory does not exist
+     * @throws UncheckedIOException if anything goes wrong, for example, if the working directory does not exist
      * @see ProcessBuilder#startPipeline
      */
     public static Process launchPipeline(@Nullable File workingDirectory,  List<List<String>> commands) {

@@ -147,7 +147,7 @@ public class KiwiArrays2 {
 
         // it should be a short[] since we've checked the other seven primitive types above; this should
         // never throw unless a new primitive type is added (exceedingly unlikely) or the above code is
-        // modified such that it doesn't properly check the component type, or doesn't handle all primtive
+        // modified such that it doesn't properly check the component type, or doesn't handle all primitive
         // types, etc. In short, only a programming error.
         checkState(primitiveArray instanceof short[],
                 "expected array to be short[] since it is not any other primitive type, but was: %s",

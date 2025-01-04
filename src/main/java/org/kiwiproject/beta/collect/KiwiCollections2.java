@@ -3,7 +3,6 @@ package org.kiwiproject.beta.collect;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
-
 import lombok.experimental.UtilityClass;
 
 import java.util.Collection;
@@ -29,7 +28,7 @@ public class KiwiCollections2 {
      * @param <U> the type of objects in the collection
      * @param theType the type to find
      * @param objects the collection to search
-     * @return the first object in collection of U objects having type T
+     * @return the first object in the collection of U objects having type T
      */
     public static <T extends U, U> Optional<T> findFirstOfType(Class<T> theType,
                                                                Collection<U> objects) {
