@@ -17,7 +17,8 @@ class RuntimeSQLExceptionTest {
 
         assertThat(runtimeSQLException)
                 .hasMessageContaining(sqlEx.getMessage())
-                .hasCauseReference(sqlEx);
+                .cause()
+                .isSameAs(sqlEx);
     }
 
     @Test
@@ -27,6 +28,7 @@ class RuntimeSQLExceptionTest {
 
         assertThat(runtimeSQLException)
                 .hasMessage("Wrapper")
-                .hasCauseReference(sqlEx);
+                .cause()
+                .isSameAs(sqlEx);
     }
 }
