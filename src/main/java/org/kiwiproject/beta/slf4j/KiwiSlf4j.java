@@ -1,9 +1,13 @@
 package org.kiwiproject.beta.slf4j;
 
+import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
+
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 import org.slf4j.Logger;
 import org.slf4j.event.Level;
+
+import java.util.Locale;
 
 /**
  * Utilities for SLF4J, mainly to allow logging a message at a specified level. Sometimes it is useful to be able
@@ -16,6 +20,10 @@ import org.slf4j.event.Level;
 @Beta
 public class KiwiSlf4j {
 
+    public static boolean isEnabled(Logger logger, String levelName) {
+        return isEnabled(logger, levelFromStringIgnoreCase(levelName));
+    }
+
     public static boolean isEnabled(Logger logger, Level level) {
         return switch (level) {
             case ERROR -> logger.isErrorEnabled();
@@ -26,6 +34,10 @@ public class KiwiSlf4j {
         };
     }
 
+    public static void log(Logger logger, String levelName, String message) {
+        log(logger, levelFromStringIgnoreCase(levelName), message);
+    }
+
     public static void log(Logger logger, Level level, String message) {
         switch (level) {
             case ERROR -> logger.error(message);
@@ -34,6 +46,10 @@ public class KiwiSlf4j {
             case DEBUG -> logger.debug(message);
             case TRACE -> logger.trace(message);
         }
+    }
+
+    public static void log(Logger logger, String levelName, String format, Object arg) {
+        log(logger, levelFromStringIgnoreCase(levelName), format, arg);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -47,6 +63,10 @@ public class KiwiSlf4j {
         }
     }
 
+    public static void log(Logger logger, String levelName, String format, Object arg1, Object arg2) {
+        log(logger, levelFromStringIgnoreCase(levelName), format, arg1, arg2);
+    }
+
     public static void log(Logger logger, Level level, String format, Object arg1, Object arg2) {
         switch (level) {
             case ERROR -> logger.error(format, arg1, arg2);
@@ -55,6 +75,10 @@ public class KiwiSlf4j {
             case DEBUG -> logger.debug(format, arg1, arg2);
             case TRACE -> logger.trace(format, arg1, arg2);
         }
+    }
+
+    public static void log(Logger logger, String levelName, String format, Object... arguments) {
+        log(logger, levelFromStringIgnoreCase(levelName), format, arguments);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -66,7 +90,10 @@ public class KiwiSlf4j {
             case DEBUG -> logger.debug(format, arguments);
             case TRACE -> logger.trace(format, arguments);
         }
+    }
 
+    public static void log(Logger logger, String levelName, String message, Throwable t) {
+        log(logger, levelFromStringIgnoreCase(levelName), message, t);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -78,5 +105,20 @@ public class KiwiSlf4j {
             case DEBUG -> logger.debug(message, t);
             case TRACE -> logger.trace(message, t);
         }
+    }
+
+    /**
+     * Matches the given {@code levelNameString} to a value in {@link Level},
+     * independent of the character case (lower or upper).
+     * <p>
+     * For example, the strings "WARN", "warn", and "Warn" all match {@link Level#WARN}.
+     * 
+     * @param levelNameString a String whose uppercased value maps to one of the values in {@code Level}
+     * @return the matching SLF4J {@code Level}
+     * @throws IllegalArgumentException if there is no matching {@code Level}
+     */
+    public static Level levelFromStringIgnoreCase(String levelNameString) {
+        checkArgumentNotBlank(levelNameString, "levelNameString must not be blank");
+        return Level.valueOf(levelNameString.toUpperCase(Locale.ENGLISH));
     }
 }

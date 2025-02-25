@@ -2,6 +2,7 @@ package org.kiwiproject.beta.slf4j;
 
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.kiwiproject.collect.KiwiLists.first;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -9,14 +10,19 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junitpioneer.jupiter.cartesian.CartesianTest;
 import org.junitpioneer.jupiter.cartesian.CartesianTest.Enum;
+import org.kiwiproject.test.junit.jupiter.params.provider.MinimalBlankStringSource;
 import org.kiwiproject.test.logback.InMemoryAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * @implNote See the loggers defined for this test in {@code src/test/resources/logback-test.xml}.
@@ -41,8 +47,18 @@ class KiwiSlf4jTest {
     }
 
     @CartesianTest(name = "[{index}] logger: {0} check: {1}")
-    void shouldCheckIsEnabled(@Enum(Level.class) Level loggerLevel,
-                              @Enum(Level.class) Level checkLevel) {
+    void shouldCheckIsEnabled_ForLevelName(@Enum(Level.class) Level loggerLevel,
+                                           @Enum(Level.class) Level checkLevel) {
+
+        var logger = getLoggerAtLevel(loggerLevel);
+        var enabled = KiwiSlf4j.isEnabled(logger, checkLevel.name());
+        var expected = expectLogEvent(loggerLevel, checkLevel);
+        assertThat(enabled).isEqualTo(expected);
+    }
+
+    @CartesianTest(name = "[{index}] logger: {0} check: {1}")
+    void shouldCheckIsEnabled_ForLevel(@Enum(Level.class) Level loggerLevel,
+                                       @Enum(Level.class) Level checkLevel) {
 
         var logger = getLoggerAtLevel(loggerLevel);
         var enabled = KiwiSlf4j.isEnabled(logger, checkLevel);
@@ -51,8 +67,20 @@ class KiwiSlf4jTest {
     }
 
     @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
-    void shouldLogMessage(@Enum(Level.class) Level loggerLevel,
-                          @Enum(Level.class) Level logAtLevel) {
+    void shouldLogMessage_ForLevelName(@Enum(Level.class) Level loggerLevel,
+                                       @Enum(Level.class) Level logAtLevel) {
+
+        var logger = getLoggerAtLevel(loggerLevel);
+
+        var message = "a message";
+        KiwiSlf4j.log(logger, logAtLevel.name(), message);
+
+        assertLoggingEvent(loggerLevel, logAtLevel, message);
+    }
+
+    @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
+    void shouldLogMessage_ForLevel(@Enum(Level.class) Level loggerLevel,
+                                   @Enum(Level.class) Level logAtLevel) {
 
         var logger = getLoggerAtLevel(loggerLevel);
 
@@ -63,8 +91,21 @@ class KiwiSlf4jTest {
     }
 
     @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
-    void shouldLogMessageWithArgument(@Enum(Level.class) Level loggerLevel,
-                                      @Enum(Level.class) Level logAtLevel) {
+    void shouldLogMessageWithArgument_ForLevelName(@Enum(Level.class) Level loggerLevel,
+                                                   @Enum(Level.class) Level logAtLevel) {
+
+        var logger = getLoggerAtLevel(loggerLevel);
+
+        KiwiSlf4j.log(logger, logAtLevel.name(), "a message with one arg: {}", 42);
+
+        var expectedMessage = "a message with one arg: 42";
+
+        assertLoggingEvent(loggerLevel, logAtLevel, expectedMessage);
+    }
+
+    @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
+    void shouldLogMessageWithArgument_ForLevel(@Enum(Level.class) Level loggerLevel,
+                                               @Enum(Level.class) Level logAtLevel) {
 
         var logger = getLoggerAtLevel(loggerLevel);
 
@@ -76,8 +117,21 @@ class KiwiSlf4jTest {
     }
 
     @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
-    void shouldLogMessageWithTwoArguments(@Enum(Level.class) Level loggerLevel,
-                                          @Enum(Level.class) Level logAtLevel) {
+    void shouldLogMessageWithTwoArguments_ForLevelName(@Enum(Level.class) Level loggerLevel,
+                                                       @Enum(Level.class) Level logAtLevel) {
+
+        var logger = getLoggerAtLevel(loggerLevel);
+
+        KiwiSlf4j.log(logger, logAtLevel.name(), "a message with two args: {}, {}", 42, "foo");
+
+        var expectedMessage = "a message with two args: 42, foo";
+
+        assertLoggingEvent(loggerLevel, logAtLevel, expectedMessage);
+    }
+
+    @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
+    void shouldLogMessageWithTwoArguments_ForLevel(@Enum(Level.class) Level loggerLevel,
+                                                   @Enum(Level.class) Level logAtLevel) {
 
         var logger = getLoggerAtLevel(loggerLevel);
 
@@ -89,8 +143,21 @@ class KiwiSlf4jTest {
     }
 
     @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
-    void shouldLogMessageWithVariableArguments(@Enum(Level.class) Level loggerLevel,
-                                               @Enum(Level.class) Level logAtLevel) {
+    void shouldLogMessageWithVariableArguments_ForLevelName(@Enum(Level.class) Level loggerLevel,
+                                                            @Enum(Level.class) Level logAtLevel) {
+
+        var logger = getLoggerAtLevel(loggerLevel);
+
+        KiwiSlf4j.log(logger, logAtLevel.name(), "a message with varargs: {}, {}, {}, and {}", 42, "foo", "bar", 84.0);
+
+        var expectedMessage = "a message with varargs: 42, foo, bar, and 84.0";
+
+        assertLoggingEvent(loggerLevel, logAtLevel, expectedMessage);
+    }
+
+    @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
+    void shouldLogMessageWithVariableArguments_ForLevel(@Enum(Level.class) Level loggerLevel,
+                                                        @Enum(Level.class) Level logAtLevel) {
 
         var logger = getLoggerAtLevel(loggerLevel);
 
@@ -116,8 +183,21 @@ class KiwiSlf4jTest {
     }
 
     @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
-    void shouldLogMessageWithThrowable(@Enum(Level.class) Level loggerLevel,
-                                       @Enum(Level.class) Level logAtLevel) {
+    void shouldLogMessageWithThrowable_ForLevelName(@Enum(Level.class) Level loggerLevel,
+                                                    @Enum(Level.class) Level logAtLevel) {
+
+        var logger = getLoggerAtLevel(loggerLevel);
+
+        var message = "an error message";
+        var t = new IOException("I/O problem");
+        KiwiSlf4j.log(logger, logAtLevel.name(), message, t);
+
+        assertLoggingEvent(loggerLevel, logAtLevel, message, t);
+    }
+
+    @CartesianTest(name = "[{index}] logger: {0} logAt: {1}")
+    void shouldLogMessageWithThrowable_ForLevel(@Enum(Level.class) Level loggerLevel,
+                                                @Enum(Level.class) Level logAtLevel) {
 
         var logger = getLoggerAtLevel(loggerLevel);
 
@@ -163,5 +243,57 @@ class KiwiSlf4jTest {
 
     private boolean expectLogEvent(Level loggerLevel, Level logAtLevel) {
         return loggerLevel.toInt() <= logAtLevel.toInt();
+    }
+
+    @ParameterizedTest
+    @MinimalBlankStringSource
+    void shouldRequireLevelName_WhenGettingLevel(String value) {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> KiwiSlf4j.levelFromStringIgnoreCase(value))
+                .withMessage("levelNameString must not be blank");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "DEBU",
+        "DEBUGGING",
+        "information",
+        "WARNING",
+        "warn_",
+        "_warn_",
+        "FATAL"
+    })
+    void shouldThrowIllegalArgumentException_WhenGettingLevel_ButNoneMatch(String value) {
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> KiwiSlf4j.levelFromStringIgnoreCase(value))
+                .withMessage("No enum constant org.slf4j.event.Level." + value.toUpperCase(Locale.ENGLISH));
+    }
+
+    @ParameterizedTest
+    @CsvSource(textBlock = """
+            TRACE, TRACE
+            trace, TRACE
+            Trace, TRACE
+            TrAcE, TRACE
+            DEBUG, DEBUG
+            debug, DEBUG
+            Debug, DEBUG
+            DeBuG, DEBUG
+            INFO, INFO
+            info, INFO
+            Info, INFO
+            InFO, INFO
+            WARN, WARN
+            warn, WARN
+            Warn, WARN
+            WArn, WARN
+            ERROR, ERROR
+            error, ERROR
+            Error, ERROR
+            ERRoR, ERROR
+            """)
+    void shouldGetLevelFromString_IgnoringCase(String levelName, Level expectedLevel) {
+        var level = KiwiSlf4j.levelFromStringIgnoreCase(levelName);
+        assertThat(level).isSameAs(expectedLevel);
     }
 }
