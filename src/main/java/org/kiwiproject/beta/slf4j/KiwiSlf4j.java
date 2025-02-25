@@ -21,7 +21,7 @@ import java.util.Locale;
 public class KiwiSlf4j {
 
     public static boolean isEnabled(Logger logger, String levelName) {
-        return isEnabled(logger, levelFromStringIgnoreCase(levelName));
+        return isEnabled(logger, toLevelIgnoreCase(levelName));
     }
 
     public static boolean isEnabled(Logger logger, Level level) {
@@ -35,7 +35,7 @@ public class KiwiSlf4j {
     }
 
     public static void log(Logger logger, String levelName, String message) {
-        log(logger, levelFromStringIgnoreCase(levelName), message);
+        log(logger, toLevelIgnoreCase(levelName), message);
     }
 
     public static void log(Logger logger, Level level, String message) {
@@ -49,7 +49,7 @@ public class KiwiSlf4j {
     }
 
     public static void log(Logger logger, String levelName, String format, Object arg) {
-        log(logger, levelFromStringIgnoreCase(levelName), format, arg);
+        log(logger, toLevelIgnoreCase(levelName), format, arg);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -64,7 +64,7 @@ public class KiwiSlf4j {
     }
 
     public static void log(Logger logger, String levelName, String format, Object arg1, Object arg2) {
-        log(logger, levelFromStringIgnoreCase(levelName), format, arg1, arg2);
+        log(logger, toLevelIgnoreCase(levelName), format, arg1, arg2);
     }
 
     public static void log(Logger logger, Level level, String format, Object arg1, Object arg2) {
@@ -78,7 +78,7 @@ public class KiwiSlf4j {
     }
 
     public static void log(Logger logger, String levelName, String format, Object... arguments) {
-        log(logger, levelFromStringIgnoreCase(levelName), format, arguments);
+        log(logger, toLevelIgnoreCase(levelName), format, arguments);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -93,7 +93,7 @@ public class KiwiSlf4j {
     }
 
     public static void log(Logger logger, String levelName, String message, Throwable t) {
-        log(logger, levelFromStringIgnoreCase(levelName), message, t);
+        log(logger, toLevelIgnoreCase(levelName), message, t);
     }
 
     @SuppressWarnings("DuplicatedCode")
@@ -117,7 +117,7 @@ public class KiwiSlf4j {
      * @return the matching SLF4J {@code Level}
      * @throws IllegalArgumentException if there is no matching {@code Level}
      */
-    public static Level levelFromStringIgnoreCase(String levelNameString) {
+    public static Level toLevelIgnoreCase(String levelNameString) {
         checkArgumentNotBlank(levelNameString, "levelNameString must not be blank");
         return Level.valueOf(levelNameString.toUpperCase(Locale.ENGLISH));
     }

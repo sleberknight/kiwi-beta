@@ -247,9 +247,9 @@ class KiwiSlf4jTest {
 
     @ParameterizedTest
     @MinimalBlankStringSource
-    void shouldRequireLevelName_WhenGettingLevel(String value) {
+    void toLevelIgnoreCase_shouldRequireLevelName(String value) {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> KiwiSlf4j.levelFromStringIgnoreCase(value))
+                .isThrownBy(() -> KiwiSlf4j.toLevelIgnoreCase(value))
                 .withMessage("levelNameString must not be blank");
     }
 
@@ -263,9 +263,9 @@ class KiwiSlf4jTest {
         "_warn_",
         "FATAL"
     })
-    void shouldThrowIllegalArgumentException_WhenGettingLevel_ButNoneMatch(String value) {
+    void toLevelIgnoreCase_shouldThrowIllegalArgumentException_WhenNoneMatch(String value) {
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> KiwiSlf4j.levelFromStringIgnoreCase(value))
+                .isThrownBy(() -> KiwiSlf4j.toLevelIgnoreCase(value))
                 .withMessage("No enum constant org.slf4j.event.Level." + value.toUpperCase(Locale.ENGLISH));
     }
 
@@ -292,8 +292,8 @@ class KiwiSlf4jTest {
             Error, ERROR
             ERRoR, ERROR
             """)
-    void shouldGetLevelFromString_IgnoringCase(String levelName, Level expectedLevel) {
-        var level = KiwiSlf4j.levelFromStringIgnoreCase(levelName);
+    void toLevelIgnoreCase_shouldGetLevel_IgnoringCase(String levelName, Level expectedLevel) {
+        var level = KiwiSlf4j.toLevelIgnoreCase(levelName);
         assertThat(level).isSameAs(expectedLevel);
     }
 }
