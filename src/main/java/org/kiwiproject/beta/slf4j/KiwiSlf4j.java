@@ -115,7 +115,7 @@ public class KiwiSlf4j {
      * 
      * @param levelNameString a String whose uppercased value maps to one of the values in {@code Level}
      * @return the matching SLF4J {@code Level}
-     * @throws IllegalArgumentException if there is no matching {@code Level}
+     * @throws IllegalArgumentException if {@code levelNameString} is blank or there is no matching {@code Level}
      */
     public static Level toLevelIgnoreCase(String levelNameString) {
         checkArgumentNotBlank(levelNameString, "levelNameString must not be blank");
