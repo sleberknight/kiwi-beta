@@ -98,7 +98,7 @@ public class AutoDrainingCounter implements Closeable {
 
     /**
      * Simply calls {@link #stop()}. Implementing {@link Closeable} lets this class participate
-     * in automatic resource management via th try-with-resources mechanism.
+     * in automatic resource management via the try-with-resources mechanism.
      */
     @Override
     public void close() {
