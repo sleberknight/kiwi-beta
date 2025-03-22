@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 @DisplayName("KiwiJdbc2")
-public class KiwiJdbc2Test {
+class KiwiJdbc2Test {
 
     private ResultSet resultSet;
 
