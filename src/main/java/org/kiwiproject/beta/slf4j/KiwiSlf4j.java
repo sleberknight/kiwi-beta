@@ -108,7 +108,7 @@ public class KiwiSlf4j {
     }
 
     /**
-     * Matches the given {@code levelNameString} to a value in {@link Level},
+     * Matches {@code levelNameString} to a value in {@link Level},
      * independent of the character case (lower or upper).
      * <p>
      * For example, the strings "WARN", "warn", and "Warn" all match {@link Level#WARN}.
