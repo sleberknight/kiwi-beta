@@ -78,7 +78,7 @@ class KiwiCloseablesTest {
     static class ThingCanBeClosed {
         boolean closed;
 
-        @SuppressWarnings({"unused", "RedundantThrows"})
+        @SuppressWarnings({"unused", "RedundantThrows", "java:S1130"})
         public void close() throws IOException {
             closed = true;
         }
