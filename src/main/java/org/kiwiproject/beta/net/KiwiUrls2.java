@@ -46,7 +46,7 @@ public class KiwiUrls2 {
      * <p>
      * <strong>Note:</strong> This method may perform DNS lookups when adding URL objects to the resulting Set.
      * This is because "URL's equals() and hashCode() methods can perform a DNS lookup to resolve the host name"
-     * according to IntelliJ's  "may contain URL objects" inspection. If you need to avoid this, use the
+     * according to IntelliJ's "may contain URL objects" inspection. If you need to avoid this, use the
      * {@link #uniqueAuthorityOnlyUrlsAsList(Collection)} method to get a List of unique URLs. However, note
      * that any later conversion to a Set will potentially incur the same DNS lookups.
      *
