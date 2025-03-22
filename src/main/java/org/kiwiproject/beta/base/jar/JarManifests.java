@@ -162,10 +162,10 @@ public class JarManifests {
                 errorMessage = "The CodeSource from the ProtectionDomain was null";
             }
 
-            LOG.warn("Unable to get manifest of JAR file for {}, cause: {}", theClass, errorMessage);
+            LOG.debug("Unable to get manifest of JAR file for {}, cause: {}", theClass, errorMessage);
             return new ManifestLookupResult(ManifestLookupStatus.FAILURE, null, null, errorMessage);
         } catch (Exception e) {
-            LOG.error("Error getting manifest of JAR for {}", theClass, e);
+            LOG.debug("Error getting manifest of JAR for {}", theClass, e);
             return new ManifestLookupResult(ManifestLookupStatus.FAILURE, null, e, null);
         }
     }
@@ -207,7 +207,7 @@ public class JarManifests {
             var manifest = jarFile.getManifest();
             return new ManifestLookupResult(ManifestLookupStatus.SUCCESS, manifest, null, null);
         } catch (IOException e) {
-            LOG.error("Error getting manifest of JAR for URI {}", jarFileURI, e);
+            LOG.debug("Error getting manifest of JAR for URI {}", jarFileURI, e);
             return new ManifestLookupResult(ManifestLookupStatus.FAILURE, null, e, null);
         }
     }
