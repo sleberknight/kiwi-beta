@@ -1,6 +1,6 @@
 ### Kiwi Beta
 
-[![Build](https://github.com/sleberknight/kiwi-beta/actions/workflows/maven.yml/badge.svg)](https://github.com/sleberknight/kiwi-beta/actions?query=workflow%3Abuild)
+[![Build](https://github.com/sleberknight/kiwi-beta/actions/workflows/maven.yml/badge.svg?branch=main)](https://github.com/sleberknight/kiwi-beta/actions/workflows/maven.yml?query=branch%3Amain)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sleberknight_kiwi-beta&metric=alert_status)](https://sonarcloud.io/project/overview?id=sleberknight_kiwi-beta)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=sleberknight_kiwi-beta&metric=coverage)](https://sonarcloud.io/summary/new_code?id=sleberknight_kiwi-beta)
 [![Qodana](https://github.com/sleberknight/kiwi-beta/actions/workflows/quality_qodana.yml/badge.svg)](https://github.com/sleberknight/kiwi-beta/actions/workflows/quality_qodana.yml)
