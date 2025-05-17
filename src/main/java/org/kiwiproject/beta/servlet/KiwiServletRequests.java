@@ -7,7 +7,7 @@ import static java.util.Objects.nonNull;
 import com.google.common.annotations.Beta;
 import jakarta.servlet.ServletRequest;
 import lombok.experimental.UtilityClass;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.kiwiproject.collect.KiwiArrays;
 
 import java.security.cert.X509Certificate;

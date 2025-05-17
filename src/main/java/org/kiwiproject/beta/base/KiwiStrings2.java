@@ -13,8 +13,8 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.Sets;
 import lombok.Synchronized;
 import lombok.experimental.UtilityClass;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Optional;
