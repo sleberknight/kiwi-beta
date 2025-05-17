@@ -14,7 +14,7 @@ import jakarta.xml.ws.soap.SOAPFaultException;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import javax.xml.namespace.QName;

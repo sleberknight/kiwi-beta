@@ -8,7 +8,7 @@ import com.google.common.annotations.Beta;
 import com.google.common.primitives.Ints;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.kiwiproject.base.KiwiStrings;
 import org.kiwiproject.base.process.ProcessHelper;
 import org.kiwiproject.base.process.Processes;

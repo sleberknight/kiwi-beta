@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.kiwiproject.base.CatchingRunnable;
 
 import java.util.Arrays;

@@ -10,7 +10,7 @@ import static org.kiwiproject.collect.KiwiLists.second;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.Value;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

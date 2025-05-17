@@ -9,7 +9,7 @@ import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.ArrayUtils;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Array;
 import java.util.Optional;
