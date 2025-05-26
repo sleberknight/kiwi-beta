@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.kiwiproject.collect.KiwiLists;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @DisplayName("KiwiCasts2")
 class KiwiCasts2Test {
@@ -158,38 +160,37 @@ class KiwiCasts2Test {
             @ParameterizedTest
             @NullAndEmptySource
             void shouldReturnList_WhenIsNullOrEmpty(List<?> coll) {
-                List<String> stringColl = KiwiCasts2.castToListAndCheckElements(String.class, coll);
-                assertThat(stringColl).isSameAs(coll);
+                List<String> stringList = KiwiCasts2.castToListAndCheckElements(String.class, coll);
+                assertThat(stringList).isSameAs(coll);
             }
 
             @Test
             void shouldReturnList_WhenAllElementsAreNull() {
                 Object o = Lists.newArrayList(null, null, null, null, null, null);
-                List<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
-                assertThat(coll).isSameAs(o);
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                assertThat(list).isSameAs(o);
             }
 
             @Test
             void shouldReturnList_WhenExceedMaxNulls() {
                 Object o = Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g");
-                List<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
-                assertThat(coll).isSameAs(o);
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                assertThat(list).isSameAs(o);
             }
 
             @Test
             void shouldReturnList_WhenContainsExpectedType() {
                 Object o = Lists.newArrayList("a", "b", "c", "d", "e");
-                List<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
-                assertThat(coll).isSameAs(o);
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                assertThat(list).isSameAs(o);
             }
 
             @Test
             void shouldReturnList_ThatThrowsClassCast_WhenExceedMaxNulls_ButDidNotDetectBadType() {
                 Object o = Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g", 42);
-                List<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o);
 
-                assertThat(coll).isSameAs(o);
-                var list = coll.stream().toList();
+                assertThat(list).isSameAs(o);
                 assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> {
                     // We must do the assignment to get the ClassCastException
                     @SuppressWarnings("unused") String last = KiwiLists.last(list);
@@ -212,6 +213,57 @@ class KiwiCasts2Test {
         @Nested
         class UsingDefaultSetCheckStrategy {
 
+            @ParameterizedTest
+            @NullAndEmptySource
+            void shouldReturnSet_WhenIsNullOrEmpty(Set<?> coll) {
+                Set<String> stringSet = KiwiCasts2.castToSetAndCheckElements(String.class, coll);
+                assertThat(stringSet).isSameAs(coll);
+            }
+
+            @Test
+            void shouldReturnSet_WhenAllElementsAreNull() {
+                Object o = Sets.newHashSet(null, null, null, null, null, null);
+                Set<String> set = KiwiCasts2.castToSetAndCheckElements(String.class, o);
+                assertThat(set).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnSet_WhenExceedMaxNulls() {
+                Object o = Sets.newHashSet(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g");
+                Set<String> coll = KiwiCasts2.castToSetAndCheckElements(String.class, o);
+                assertThat(coll).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnSet_WhenContainsExpectedType() {
+                Object o = Sets.newHashSet("a", "b", "c", "d", "e");
+                Set<String> coll = KiwiCasts2.castToSetAndCheckElements(String.class, o);
+                assertThat(coll).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnSet_ThatThrowsClassCast_WhenExceedMaxNulls_ButDidNotDetectBadType() {
+                // Note: LinkedHashSet is used here to preserve the order of elements
+                Object o = Sets.newLinkedHashSet(
+                        Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g", 42)
+                );
+                Set<String> coll = KiwiCasts2.castToSetAndCheckElements(String.class, o);
+
+                assertThat(coll).isSameAs(o);
+                var list = coll.stream().toList();
+                assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> {
+                    // We must do the assignment to get the ClassCastException
+                    @SuppressWarnings("unused") String last = KiwiLists.last(list);
+                });
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenFindBadType() {
+                Object o = Sets.newHashSet(null, null, null, null, null, null, 1, null, 2, 3, 4, 5, 6);
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToSetAndCheckElements(String.class, o))
+                        .withMessage("Expected java.util.Set to contain elements of type java.lang.String, but found element of type java.lang.Integer");
+            }
         }
     }
 
