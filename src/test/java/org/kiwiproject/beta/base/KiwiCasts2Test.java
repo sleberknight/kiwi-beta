@@ -141,6 +141,14 @@ class KiwiCasts2Test {
             }
 
             @Test
+            void shouldThrowTypeMismatchException_WhenIsNotCollection() {
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToCollectionAndCheckElements(String.class, "not a collection"))
+                        .withMessage("Cannot cast value to type java.util.Collection")
+                        .withCauseInstanceOf(ClassCastException.class);
+            }
+
+            @Test
             void shouldThrowTypeMismatchException_WhenFindBadType() {
                 Object o = Lists.newArrayList(null, null, 1, null, 2, 3, 4, 5, 6);
                 var strategy = KiwiCasts2.StandardCollectionCheckStrategy.ofDefaults();
@@ -195,6 +203,14 @@ class KiwiCasts2Test {
                     // We must do the assignment to get the ClassCastException
                     @SuppressWarnings("unused") String last = KiwiLists.last(list);
                 });
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenIsNotCollection() {
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToListAndCheckElements(String.class, "not a collection"))
+                        .withMessage("Cannot cast value to type java.util.List")
+                        .withCauseInstanceOf(ClassCastException.class);
             }
 
             @Test
@@ -255,6 +271,14 @@ class KiwiCasts2Test {
                     // We must do the assignment to get the ClassCastException
                     @SuppressWarnings("unused") String last = KiwiLists.last(list);
                 });
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenIsNotSet() {
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToSetAndCheckElements(String.class, "not a collection"))
+                        .withMessage("Cannot cast value to type java.util.Set")
+                        .withCauseInstanceOf(ClassCastException.class);
             }
 
             @Test
