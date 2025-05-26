@@ -5,11 +5,13 @@ import static java.util.Objects.nonNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
+import com.google.common.collect.Streams;
 import lombok.experimental.UtilityClass;
 import org.kiwiproject.collect.KiwiCollections;
 import org.kiwiproject.collect.KiwiMaps;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -97,39 +99,49 @@ public class KiwiCasts2 {
 
         @Override
         public <T> Collection<T> checkElements(Class<T> expectedType, Collection<T> coll) throws TypeMismatchException {
-            if (KiwiCollections.isNullOrEmpty(coll)) {
-                // We can't verify type information about a null or empty collection
+            var checkResult = checkElementsStandardStrategy(expectedType, coll, maxNonNullChecks, maxElementTypeChecks);
+
+            if (checkResult.ok()) {
                 return coll;
             }
 
-            var iterator = coll.iterator();
-            var nullCheckCount = 0;
-            var typeCheckCount = 0;
+            throw newCollectionTypeMismatch(Collection.class, expectedType, checkResult);
+        }
+    }
 
-            while (iterator.hasNext()) {
-                T value = iterator.next();
+    private static <T> ElementCheckResult checkElementsStandardStrategy(Class<?> expectedType,
+                                                                        Collection<T> coll,
+                                                                        int maxNonNullChecks,
+                                                                        int maxElementTypeChecks) {
 
-                if (isNull(value)) {
-                    nullCheckCount++;
-                    if (nullCheckCount > maxNonNullChecks) {
-                        return coll;
-                    }
-                } else if (isNotExpectedType(expectedType, value)) {
-                    throw TypeMismatchException.forCollectionTypeMismatch(
-                            Collection.class,
-                            expectedType,
-                            value.getClass()
-                    );
-                } else {
-                    typeCheckCount++;
-                    if (typeCheckCount >= maxElementTypeChecks) {
-                        break;
-                    }
+        if (KiwiCollections.isNullOrEmpty(coll)) {
+            // We can't verify type information about a null or empty collection
+            return ElementCheckResult.okCollection();
+        }
+
+        var iterator = coll.iterator();
+        var nullCheckCount = 0;
+        var typeCheckCount = 0;
+
+        while (iterator.hasNext()) {
+            T value = iterator.next();
+
+            if (isNull(value)) {
+                nullCheckCount++;
+                if (nullCheckCount > maxNonNullChecks) {
+                    return ElementCheckResult.okCollection();
+                }
+            } else if (isNotExpectedType(expectedType, value)) {
+                return ElementCheckResult.foundInvalidType(value);
+            } else {
+                typeCheckCount++;
+                if (typeCheckCount >= maxElementTypeChecks) {
+                    break;
                 }
             }
-
-            return coll;
         }
+
+        return ElementCheckResult.okCollection();
     }
 
     public static <T> Collection<T> castToCollectionAndCheckElements(Class<T> expectedType, Object object) {
@@ -257,6 +269,14 @@ public class KiwiCasts2 {
 
     private static <T> T findFirstNonNullValueOrNull(Collection<T> coll) {
         return coll.stream()
+                .filter(Objects::nonNull)
+                .limit(DEFAULT_MAX_NON_NULL_CHECKS)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static <T> T findFirstNonNullValueOrNull(Iterator<T> iterator) {
+        return Streams.stream(iterator)
                 .filter(Objects::nonNull)
                 .limit(DEFAULT_MAX_NON_NULL_CHECKS)
                 .findFirst()
