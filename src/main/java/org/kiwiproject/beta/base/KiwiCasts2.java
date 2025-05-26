@@ -281,26 +281,6 @@ public class KiwiCasts2 {
         }
     }
 
-//    private static <T> ElementCheckResult checkElementsDefaultStrategy(Class<?> expectedType, Collection<T> coll) {
-//        if (KiwiCollections.isNullOrEmpty(coll)) {
-//            // We can't verify type information about a null or empty collection
-//            return ElementCheckResult.okCollection();
-//        }
-//
-//        var maybeFirstNonNullValue = findFirstNonNullValueOrNull(coll);
-//        if (isNull(maybeFirstNonNullValue)) {
-//            // We didn't find a non-null value quickly, so give up
-//            return ElementCheckResult.okCollection();
-//        }
-//
-//        if (isNotExpectedType(expectedType, maybeFirstNonNullValue)) {
-//            // We found a non-null value, but it is not assignable to the expected type, so the collection is invalid
-//            return ElementCheckResult.foundInvalidType(maybeFirstNonNullValue);
-//        }
-//
-//        return ElementCheckResult.okCollection();
-//    }
-
     private static TypeMismatchException newCollectionTypeMismatch(Class<?> collectionType, Class<?> expectedType, ElementCheckResult checkResult) {
         return TypeMismatchException.forCollectionTypeMismatch(collectionType, expectedType, checkResult.invalidValue().getClass());
     }
@@ -324,22 +304,6 @@ public class KiwiCasts2 {
     private static <T> void checkExpectedTypeNotNull(Class<T> expectedType) {
         checkArgumentNotNull(expectedType, "expectedType must not be null");
     }
-
-//    private static <T> T findFirstNonNullValueOrNull(Collection<T> coll) {
-//        return coll.stream()
-//                .filter(Objects::nonNull)
-//                .limit(DEFAULT_MAX_NON_NULL_CHECKS)
-//                .findFirst()
-//                .orElse(null);
-//    }
-
-//    private static <T> T findFirstNonNullValueOrNull(Iterator<T> iterator) {
-//        return Streams.stream(iterator)
-//                .filter(Objects::nonNull)
-//                .limit(DEFAULT_MAX_NON_NULL_CHECKS)
-//                .findFirst()
-//                .orElse(null);
-//    }
 
     public interface MapCheckStrategy {
         <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) throws TypeMismatchException;
