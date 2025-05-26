@@ -198,11 +198,11 @@ public class KiwiCasts2 {
         }
 
         @Override
-        public <T> List<T> checkElements(Class<T> expectedType, List<T> coll) throws TypeMismatchException {
-            var checkResult = checkElementsStandardStrategy(expectedType, coll, maxNonNullChecks, maxElementTypeChecks);
+        public <T> List<T> checkElements(Class<T> expectedType, List<T> list) throws TypeMismatchException {
+            var checkResult = checkElementsStandardStrategy(expectedType, list, maxNonNullChecks, maxElementTypeChecks);
 
             if (checkResult.ok()) {
-                return coll;
+                return list;
             }
 
             throw newCollectionTypeMismatch(List.class, expectedType, checkResult);
