@@ -77,6 +77,17 @@ public class KiwiCasts2 {
         }
     }
 
+    record ElementCheckResult(boolean ok, Object invalidValue) {
+        static ElementCheckResult okCollection() {
+            return new ElementCheckResult(true, null);
+        }
+
+        static ElementCheckResult foundInvalidType(Object value) {
+            checkArgumentNotNull(value, "value must not be null");
+            return new ElementCheckResult(false, value);
+        }
+    }
+
     public static class StandardCollectionCheckStrategy implements CollectionCheckStrategy {
 
         private final int maxNonNullChecks;
@@ -105,41 +116,6 @@ public class KiwiCasts2 {
 
             throw newCollectionTypeMismatch(Collection.class, expectedType, checkResult);
         }
-    }
-
-    private static <T> ElementCheckResult checkElementsStandardStrategy(Class<?> expectedType,
-                                                                        Collection<T> coll,
-                                                                        int maxNonNullChecks,
-                                                                        int maxElementTypeChecks) {
-
-        if (KiwiCollections.isNullOrEmpty(coll)) {
-            // We can't verify type information about a null or empty collection
-            return ElementCheckResult.okCollection();
-        }
-
-        var iterator = coll.iterator();
-        var nullCheckCount = 0;
-        var typeCheckCount = 0;
-
-        while (iterator.hasNext()) {
-            T value = iterator.next();
-
-            if (isNull(value)) {
-                nullCheckCount++;
-                if (nullCheckCount > maxNonNullChecks) {
-                    return ElementCheckResult.okCollection();
-                }
-            } else if (isNotExpectedType(expectedType, value)) {
-                return ElementCheckResult.foundInvalidType(value);
-            } else {
-                typeCheckCount++;
-                if (typeCheckCount >= maxElementTypeChecks) {
-                    break;
-                }
-            }
-        }
-
-        return ElementCheckResult.okCollection();
     }
 
     public static <T> Collection<T> castToCollectionAndCheckElements(Class<T> expectedType, Object object) {
@@ -270,15 +246,39 @@ public class KiwiCasts2 {
         }
     }
 
-    record ElementCheckResult(boolean ok, Object invalidValue) {
-        static ElementCheckResult okCollection() {
-            return new ElementCheckResult(true, null);
+    private static <T> ElementCheckResult checkElementsStandardStrategy(Class<?> expectedType,
+                                                                        Collection<T> coll,
+                                                                        int maxNonNullChecks,
+                                                                        int maxElementTypeChecks) {
+
+        if (KiwiCollections.isNullOrEmpty(coll)) {
+            // We can't verify type information about a null or empty collection
+            return ElementCheckResult.okCollection();
         }
 
-        static ElementCheckResult foundInvalidType(Object value) {
-            checkArgumentNotNull(value, "value must not be null");
-            return new ElementCheckResult(false, value);
+        var iterator = coll.iterator();
+        var nullCheckCount = 0;
+        var typeCheckCount = 0;
+
+        while (iterator.hasNext()) {
+            T value = iterator.next();
+
+            if (isNull(value)) {
+                nullCheckCount++;
+                if (nullCheckCount > maxNonNullChecks) {
+                    return ElementCheckResult.okCollection();
+                }
+            } else if (isNotExpectedType(expectedType, value)) {
+                return ElementCheckResult.foundInvalidType(value);
+            } else {
+                typeCheckCount++;
+                if (typeCheckCount >= maxElementTypeChecks) {
+                    break;
+                }
+            }
         }
+
+        return ElementCheckResult.okCollection();
     }
 
     private static TypeMismatchException newCollectionTypeMismatch(Class<?> collectionType, Class<?> expectedType, ElementCheckResult checkResult) {
