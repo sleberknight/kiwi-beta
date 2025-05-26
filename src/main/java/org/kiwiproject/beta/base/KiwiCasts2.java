@@ -5,16 +5,13 @@ import static java.util.Objects.nonNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
-import com.google.common.collect.Streams;
 import lombok.experimental.UtilityClass;
 import org.kiwiproject.collect.KiwiCollections;
 import org.kiwiproject.collect.KiwiMaps;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -231,9 +228,39 @@ public class KiwiCasts2 {
 
     public static class DefaultSetCheckStrategy implements SetCheckStrategy {
 
+        private final StandardSetCheckStrategy strategy;
+
+        public DefaultSetCheckStrategy() {
+            strategy = StandardSetCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
+        }
+
         @Override
         public <T> Set<T> checkElements(Class<T> expectedType, Set<T> set) {
-            var checkResult = checkElementsDefaultStrategy(expectedType, set);
+            return strategy.checkElements(expectedType, set);
+        }
+    }
+
+    public static class StandardSetCheckStrategy implements SetCheckStrategy {
+
+        private final int maxNonNullChecks;
+        private final int maxElementTypeChecks;
+
+        private StandardSetCheckStrategy(int maxNonNullChecks, int maxElementTypeChecks) {
+            this.maxNonNullChecks = maxNonNullChecks;
+            this.maxElementTypeChecks = maxElementTypeChecks;
+        }
+
+        public static StandardSetCheckStrategy ofDefaults() {
+            return new StandardSetCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
+        }
+
+        public static StandardSetCheckStrategy of(int maxNonNullChecks, int maxElementTypeChecks) {
+            return new StandardSetCheckStrategy(maxNonNullChecks, maxElementTypeChecks);
+        }
+
+        @Override
+        public <T> Set<T> checkElements(Class<T> expectedType, Set<T> set) throws TypeMismatchException {
+            var checkResult = checkElementsStandardStrategy(expectedType, set, maxNonNullChecks, maxElementTypeChecks);
 
             if (checkResult.ok()) {
                 return set;
@@ -254,25 +281,25 @@ public class KiwiCasts2 {
         }
     }
 
-    private static <T> ElementCheckResult checkElementsDefaultStrategy(Class<?> expectedType, Collection<T> coll) {
-        if (KiwiCollections.isNullOrEmpty(coll)) {
-            // We can't verify type information about a null or empty collection
-            return ElementCheckResult.okCollection();
-        }
-
-        var maybeFirstNonNullValue = findFirstNonNullValueOrNull(coll);
-        if (isNull(maybeFirstNonNullValue)) {
-            // We didn't find a non-null value quickly, so give up
-            return ElementCheckResult.okCollection();
-        }
-
-        if (isNotExpectedType(expectedType, maybeFirstNonNullValue)) {
-            // We found a non-null value, but it is not assignable to the expected type, so the collection is invalid
-            return ElementCheckResult.foundInvalidType(maybeFirstNonNullValue);
-        }
-
-        return ElementCheckResult.okCollection();
-    }
+//    private static <T> ElementCheckResult checkElementsDefaultStrategy(Class<?> expectedType, Collection<T> coll) {
+//        if (KiwiCollections.isNullOrEmpty(coll)) {
+//            // We can't verify type information about a null or empty collection
+//            return ElementCheckResult.okCollection();
+//        }
+//
+//        var maybeFirstNonNullValue = findFirstNonNullValueOrNull(coll);
+//        if (isNull(maybeFirstNonNullValue)) {
+//            // We didn't find a non-null value quickly, so give up
+//            return ElementCheckResult.okCollection();
+//        }
+//
+//        if (isNotExpectedType(expectedType, maybeFirstNonNullValue)) {
+//            // We found a non-null value, but it is not assignable to the expected type, so the collection is invalid
+//            return ElementCheckResult.foundInvalidType(maybeFirstNonNullValue);
+//        }
+//
+//        return ElementCheckResult.okCollection();
+//    }
 
     private static TypeMismatchException newCollectionTypeMismatch(Class<?> collectionType, Class<?> expectedType, ElementCheckResult checkResult) {
         return TypeMismatchException.forCollectionTypeMismatch(collectionType, expectedType, checkResult.invalidValue().getClass());
@@ -298,21 +325,21 @@ public class KiwiCasts2 {
         checkArgumentNotNull(expectedType, "expectedType must not be null");
     }
 
-    private static <T> T findFirstNonNullValueOrNull(Collection<T> coll) {
-        return coll.stream()
-                .filter(Objects::nonNull)
-                .limit(DEFAULT_MAX_NON_NULL_CHECKS)
-                .findFirst()
-                .orElse(null);
-    }
+//    private static <T> T findFirstNonNullValueOrNull(Collection<T> coll) {
+//        return coll.stream()
+//                .filter(Objects::nonNull)
+//                .limit(DEFAULT_MAX_NON_NULL_CHECKS)
+//                .findFirst()
+//                .orElse(null);
+//    }
 
-    private static <T> T findFirstNonNullValueOrNull(Iterator<T> iterator) {
-        return Streams.stream(iterator)
-                .filter(Objects::nonNull)
-                .limit(DEFAULT_MAX_NON_NULL_CHECKS)
-                .findFirst()
-                .orElse(null);
-    }
+//    private static <T> T findFirstNonNullValueOrNull(Iterator<T> iterator) {
+//        return Streams.stream(iterator)
+//                .filter(Objects::nonNull)
+//                .limit(DEFAULT_MAX_NON_NULL_CHECKS)
+//                .findFirst()
+//                .orElse(null);
+//    }
 
     public interface MapCheckStrategy {
         <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) throws TypeMismatchException;

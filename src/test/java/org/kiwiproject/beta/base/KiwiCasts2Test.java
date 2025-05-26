@@ -371,6 +371,93 @@ class KiwiCasts2Test {
                         .withMessage("Expected java.util.Set to contain elements of type java.lang.String, but found element of type java.lang.Integer");
             }
         }
+
+        @Nested
+        class UsingStandardSetCheckStrategy {
+
+            @ParameterizedTest
+            @NullAndEmptySource
+            void shouldReturnList_WhenIsNullOrEmpty(Set<?> set) {
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.ofDefaults();
+                Set<String> stringSet = KiwiCasts2.castToSetAndCheckElements(String.class, set, strategy);
+                assertThat(stringSet).isSameAs(set);
+            }
+
+            @Test
+            void shouldReturnSet_WhenAllElementsAreNull() {
+                Object o = Sets.newHashSet(null, null, null, null, null, null);
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.ofDefaults();
+                Set<String> set = KiwiCasts2.castToSetAndCheckElements(String.class, o, strategy);
+                assertThat(set).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnSet_WhenExceedMaxNulls() {
+                Object o = Sets.newHashSet(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g");
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.ofDefaults();
+                Set<String> set = KiwiCasts2.castToSetAndCheckElements(String.class, o, strategy);
+                assertThat(set).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnSet_WhenContainsExpectedType() {
+                Object o = Sets.newHashSet("a", "b", "c", "d", "e");
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.ofDefaults();
+                Set<String> set = KiwiCasts2.castToSetAndCheckElements(String.class, o, strategy);
+                assertThat(set).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnSet_WhenFewerElementsThanMaxTypeChecks() {
+                Object o = Sets.newHashSet("a", "b", "c");
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.of(5, 20);
+                Set<String> set = KiwiCasts2.castToSetAndCheckElements(String.class, o, strategy);
+                assertThat(set).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnSet_WhenMoreElementsThanMaxTypeChecks() {
+                Object o = Sets.newHashSet("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.of(5, 15);
+                Set<String> set = KiwiCasts2.castToSetAndCheckElements(String.class, o, strategy);
+                assertThat(set).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnSet_ThatThrowsClassCast_WhenExceedMaxNulls_ButDidNotDetectBadType() {
+                // Note: LinkedHashSet is used here to preserve the order of elements
+                Object o = Sets.newLinkedHashSet(Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", 42));
+
+                // Note: Use zero for maxNonNullChecks since the Set will contain only one null value.
+                // This ensures we return immediately and don't check the rest of the elements.'
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.of(0, 5);
+                Set<String> set = KiwiCasts2.castToSetAndCheckElements(String.class, o, strategy);
+
+                assertThat(set).isSameAs(o);
+                var list = set.stream().toList();
+                assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> {
+                    // We must do the assignment to get the ClassCastException
+                    @SuppressWarnings("unused") String last = KiwiLists.last(list);
+                });
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenIsNotSet() {
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToSetAndCheckElements(String.class, "not a set"))
+                        .withMessage("Cannot cast value to type java.util.Set")
+                        .withCauseInstanceOf(ClassCastException.class);
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenFindBadType() {
+                Object o = Sets.newHashSet(null, null, 1, null, 2, 3, 4, 5, 6);
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.ofDefaults();
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToSetAndCheckElements(String.class, o, strategy))
+                        .withMessage("Expected java.util.Set to contain elements of type java.lang.String, but found element of type java.lang.Integer");
+            }
+        }
     }
 
     @Nested
