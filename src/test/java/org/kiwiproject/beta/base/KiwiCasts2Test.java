@@ -11,9 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.kiwiproject.collect.KiwiLists;
+import org.kiwiproject.collect.KiwiMaps;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @DisplayName("KiwiCasts2")
@@ -464,8 +466,117 @@ class KiwiCasts2Test {
     class CastToMapAndCheckElements {
 
         @Nested
-        class UsingDefaultMapCheckingStrategy {
+        class UsingDefaultMapCheckStrategy {
 
+            @ParameterizedTest
+            @NullAndEmptySource
+            void shouldReturnMap_WhenIsNullOrEmpty(Map<?, ?> map) {
+                Map<String, Integer> stringIntegerMap = KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, map);
+                assertThat(stringIntegerMap).isSameAs(map);
+            }
+
+            @Test
+            void shouldReturnMap_WhenAllEntriesContainNullKeysOrValues() {
+                Object o = KiwiMaps.newHashMap(
+                        "a", null,
+                        "b", null,
+                        null, 3
+                );
+                Map<String, Integer> map = KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, o);
+                assertThat(map).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnMap_WhenExceedsMaxNulls() {
+                Object o = KiwiMaps.newHashMap(
+                        "a", null,
+                        "b", null,
+                        "c", null,
+                        "d", null,
+                        "e", null,
+                        "f", null,
+                        "g", null,
+                        "h", null,
+                        "i", null,
+                        null, 42
+                );
+                Map<String, Integer> map = KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, o);
+                assertThat(map).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnMap_WhenContainsExpectedType() {
+                Object o = KiwiMaps.newHashMap(
+                        "a", 1,
+                        "b", 2,
+                        "c", 3,
+                        "d", 4,
+                        "e", 5
+                );
+                Map<String, Integer> map = KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, o);
+                assertThat(map).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnMap_ThatThrowsClassCast_WhenExceedsMaxNulls_ButDidNotDetecBadType() {
+                Object o = KiwiMaps.newHashMap(
+                        "a", null,
+                        "b", null,
+                        "c", null,
+                        "d", null,
+                        "e", null,
+                        "f", null,
+                        "g", null,
+                        "h", null,
+                        "i", null,
+                        "j", null,
+                        "k", 11,
+                        "l", "not an integer"
+                );
+                Map<String, Integer> map = KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, o);
+
+                assertThat(map).isSameAs(o);
+                assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> {
+                    // We must do the assignment to get the ClassCastException
+                    @SuppressWarnings("unused") Integer last = map.get("l");
+                });
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenIsNotMap() {
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, "not a map"))
+                        .withMessage("Cannot cast value to type java.util.Map")
+                        .withCauseInstanceOf(ClassCastException.class);
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenFindBadKeyType() {
+                Object o = KiwiMaps.newHashMap(
+                        1, "a",
+                        2, "b",
+                        3, "c"
+                );
+
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, o))
+                        .withMessage("Expected Map to contain keys of type java.lang.String, but found key of type java.lang.Integer");
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenFindBadValueType() {
+                Object o = KiwiMaps.newHashMap(
+                        "a", null,
+                        "b", "one",
+                        "c", "two",
+                        "d", "three",
+                        "e", "four"
+                );
+
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, o))
+                        .withMessage("Expected Map to contain values of type java.lang.Integer, but found value of type java.lang.String");
+            }
         }
     }
 }
