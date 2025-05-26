@@ -158,35 +158,35 @@ class KiwiCasts2Test {
             @ParameterizedTest
             @NullAndEmptySource
             void shouldReturnList_WhenIsNullOrEmpty(List<?> coll) {
-                Collection<String> stringColl = KiwiCasts2.castToListAndCheckElements(String.class, coll);
+                List<String> stringColl = KiwiCasts2.castToListAndCheckElements(String.class, coll);
                 assertThat(stringColl).isSameAs(coll);
             }
 
             @Test
             void shouldReturnList_WhenAllElementsAreNull() {
                 Object o = Lists.newArrayList(null, null, null, null, null, null);
-                Collection<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                List<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
                 assertThat(coll).isSameAs(o);
             }
 
             @Test
             void shouldReturnList_WhenExceedMaxNulls() {
                 Object o = Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g");
-                Collection<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                List<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
                 assertThat(coll).isSameAs(o);
             }
 
             @Test
             void shouldReturnList_WhenContainsExpectedType() {
                 Object o = Lists.newArrayList("a", "b", "c", "d", "e");
-                Collection<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                List<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
                 assertThat(coll).isSameAs(o);
             }
 
             @Test
             void shouldReturnList_ThatThrowsClassCast_WhenExceedMaxNulls_ButDidNotDetectBadType() {
                 Object o = Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g", 42);
-                Collection<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                List<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
 
                 assertThat(coll).isSameAs(o);
                 var list = coll.stream().toList();
