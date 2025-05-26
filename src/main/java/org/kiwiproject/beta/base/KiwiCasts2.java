@@ -73,13 +73,6 @@ public class KiwiCasts2 {
 
         @Override
         public <T> Collection<T> checkElements(Class<T> expectedType, Collection<T> coll) {
-//            var checkResult = checkElementsDefaultStrategy(expectedType, coll);
-//
-//            if (checkResult.ok()) {
-//                return coll;
-//            }
-//
-//            throw newCollectionTypeMismatch(Collection.class, expectedType, checkResult);
             return strategy.checkElements(expectedType, coll);
         }
     }
