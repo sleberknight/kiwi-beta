@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.kiwiproject.collect.KiwiLists;
 
 import java.util.Collection;
+import java.util.List;
 
 @DisplayName("KiwiCasts2")
 class KiwiCasts2Test {
@@ -154,6 +155,54 @@ class KiwiCasts2Test {
         @Nested
         class UsingDefaultListCheckStrategy {
 
+            @ParameterizedTest
+            @NullAndEmptySource
+            void shouldReturnList_WhenIsNullOrEmpty(List<?> coll) {
+                Collection<String> stringColl = KiwiCasts2.castToListAndCheckElements(String.class, coll);
+                assertThat(stringColl).isSameAs(coll);
+            }
+
+            @Test
+            void shouldReturnList_WhenAllElementsAreNull() {
+                Object o = Lists.newArrayList(null, null, null, null, null, null);
+                Collection<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                assertThat(coll).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnList_WhenExceedMaxNulls() {
+                Object o = Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g");
+                Collection<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                assertThat(coll).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnList_WhenContainsExpectedType() {
+                Object o = Lists.newArrayList("a", "b", "c", "d", "e");
+                Collection<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+                assertThat(coll).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnList_ThatThrowsClassCast_WhenExceedMaxNulls_ButDidNotDetectBadType() {
+                Object o = Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g", 42);
+                Collection<String> coll = KiwiCasts2.castToListAndCheckElements(String.class, o);
+
+                assertThat(coll).isSameAs(o);
+                var list = coll.stream().toList();
+                assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> {
+                    // We must do the assignment to get the ClassCastException
+                    @SuppressWarnings("unused") String last = KiwiLists.last(list);
+                });
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenFindBadType() {
+                Object o = Lists.newArrayList(null, null, null, null, null, null, 1, null, 2, 3, 4, 5, 6);
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToListAndCheckElements(String.class, o))
+                        .withMessage("Expected java.util.List to contain elements of type java.lang.String, but found element of type java.lang.Integer");
+            }
         }
     }
 
