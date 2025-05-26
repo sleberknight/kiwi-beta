@@ -221,6 +221,88 @@ class KiwiCasts2Test {
                         .withMessage("Expected java.util.List to contain elements of type java.lang.String, but found element of type java.lang.Integer");
             }
         }
+
+        @Nested
+        class UsingStandardListCheckStrategy {
+
+            @ParameterizedTest
+            @NullAndEmptySource
+            void shouldReturnList_WhenIsNullOrEmpty(List<?> coll) {
+                var strategy = KiwiCasts2.StandardListCheckStrategy.ofDefaults();
+                List<String> stringList = KiwiCasts2.castToListAndCheckElements(String.class, coll, strategy);
+                assertThat(stringList).isSameAs(coll);
+            }
+
+            @Test
+            void shouldReturnList_WhenAllElementsAreNull() {
+                Object o = Lists.newArrayList(null, null, null, null, null, null);
+                var strategy = KiwiCasts2.StandardListCheckStrategy.ofDefaults();
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o, strategy);
+                assertThat(list).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnList_WhenExceedMaxNulls() {
+                Object o = Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", null, null, null, "e", null, "f", "g");
+                var strategy = KiwiCasts2.StandardListCheckStrategy.ofDefaults();
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o, strategy);
+                assertThat(list).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnList_WhenContainsExpectedType() {
+                Object o = Lists.newArrayList("a", "b", "c", "d", "e");
+                var strategy = KiwiCasts2.StandardListCheckStrategy.ofDefaults();
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o, strategy);
+                assertThat(list).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnList_WhenFewerElementsThanMaxTypeChecks() {
+                Object o = Lists.newArrayList("a", "b", "c");
+                var strategy = KiwiCasts2.StandardListCheckStrategy.of(5, 20);
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o, strategy);
+                assertThat(list).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnCollection_WhenMoreElementsThanMaxTypeChecks() {
+                Object o = Lists.newArrayList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
+                var strategy = KiwiCasts2.StandardListCheckStrategy.of(5, 15);
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o, strategy);
+                assertThat(list).isSameAs(o);
+            }
+
+            @Test
+            void shouldReturnList_ThatThrowsClassCast_WhenExceedMaxNulls_ButDidNotDetectBadType() {
+                Object o = Lists.newArrayList(null, null, null, null, null, null, "a", null, "b", "c", "d", 42);
+                var strategy = KiwiCasts2.StandardListCheckStrategy.of(3, 5);
+                List<String> list = KiwiCasts2.castToListAndCheckElements(String.class, o, strategy);
+
+                assertThat(list).isSameAs(o);
+                assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> {
+                    // We must do the assignment to get the ClassCastException
+                    @SuppressWarnings("unused") String last = KiwiLists.last(list);
+                });
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenIsNotList() {
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToListAndCheckElements(String.class, "not a list"))
+                        .withMessage("Cannot cast value to type java.util.List")
+                        .withCauseInstanceOf(ClassCastException.class);
+            }
+
+            @Test
+            void shouldThrowTypeMismatchException_WhenFindBadType() {
+                Object o = Lists.newArrayList(null, null, 1, null, 2, 3, 4, 5, 6);
+                var strategy = KiwiCasts2.StandardListCheckStrategy.ofDefaults();
+                assertThatExceptionOfType(TypeMismatchException.class)
+                        .isThrownBy(() -> KiwiCasts2.castToListAndCheckElements(String.class, o, strategy))
+                        .withMessage("Expected java.util.List to contain elements of type java.lang.String, but found element of type java.lang.Integer");
+            }
+        }
     }
 
     @Nested

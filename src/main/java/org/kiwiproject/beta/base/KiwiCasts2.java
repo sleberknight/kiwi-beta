@@ -167,12 +167,42 @@ public class KiwiCasts2 {
 
     public static class DefaultListCheckStrategy implements ListCheckStrategy {
 
+        private final StandardListCheckStrategy strategy;
+
+        public DefaultListCheckStrategy() {
+            strategy = StandardListCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
+        }
+
         @Override
         public <T> List<T> checkElements(Class<T> expectedType, List<T> list) {
-            var checkResult = checkElementsDefaultStrategy(expectedType, list);
+            return strategy.checkElements(expectedType, list);
+        }
+    }
+
+    public static class StandardListCheckStrategy implements ListCheckStrategy {
+
+        private final int maxNonNullChecks;
+        private final int maxElementTypeChecks;
+
+        private StandardListCheckStrategy(int maxNonNullChecks, int maxElementTypeChecks) {
+            this.maxNonNullChecks = maxNonNullChecks;
+            this.maxElementTypeChecks = maxElementTypeChecks;
+        }
+
+        public static StandardListCheckStrategy ofDefaults() {
+            return new StandardListCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
+        }
+
+        public static StandardListCheckStrategy of(int maxNonNullChecks, int maxElementTypeChecks) {
+            return new StandardListCheckStrategy(maxNonNullChecks, maxElementTypeChecks);
+        }
+
+        @Override
+        public <T> List<T> checkElements(Class<T> expectedType, List<T> coll) throws TypeMismatchException {
+            var checkResult = checkElementsStandardStrategy(expectedType, coll, maxNonNullChecks, maxElementTypeChecks);
 
             if (checkResult.ok()) {
-                return list;
+                return coll;
             }
 
             throw newCollectionTypeMismatch(List.class, expectedType, checkResult);
