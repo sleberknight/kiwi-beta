@@ -161,7 +161,7 @@ class KiwiCasts2Test {
     class CastToSetAndCheckElements {
 
         @Nested
-        class UsingDefaultListElementCheckingStrategy {
+        class UsingDefaultSetCheckStrategy {
 
         }
     }
@@ -170,7 +170,7 @@ class KiwiCasts2Test {
     class CastToMapAndCheckElements {
 
         @Nested
-        class UsingDefaultListElementCheckingStrategy {
+        class UsingDefaultMapCheckingStrategy {
 
         }
     }

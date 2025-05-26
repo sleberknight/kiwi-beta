@@ -33,17 +33,18 @@ public class KiwiCasts2 {
     private static final int DEFAULT_MAX_NON_NULL_CHECKS = 10;
     private static final int DEFAULT_MAX_TYPE_CHECKS = 10;
 
-    private static final CollectionCheckStrategy DEFAULT_COLLECTION_ELEMENT_CHECKING_STRATEGY =
+    private static final CollectionCheckStrategy DEFAULT_COLLECTION_CHECK_STRATEGY =
             new DefaultCollectionCheckStrategy();
 
-    private static final DefaultListCheckStrategy DEFAULT_LIST_ELEMENT_CHECKING_STRATEGY =
+    private static final DefaultListCheckStrategy DEFAULT_LIST_CHECK_STRATEGY =
             new DefaultListCheckStrategy();
 
-    private static final MapCheckStrategy DEFAULT_MAP_ELEMENT_CHECKING_STRATEGY =
+    private static final SetCheckStrategy DEFAULT_SET_CHECK_STRATEGY =
+            new DefaultSetCheckStrategy();
+
+    private static final MapCheckStrategy DEFAULT_MAP_CHECK_STRATEGY =
             new DefaultMapCheckStrategy();
 
-    private static final SetCheckStrategy DEFAULT_SET_ELEMENT_CHECKING_STRATEGY =
-            new DefaultSetCheckStrategy();
 
     /**
      * Performs an unchecked cast of the given object to the specified type.
@@ -145,7 +146,7 @@ public class KiwiCasts2 {
     }
 
     public static <T> Collection<T> castToCollectionAndCheckElements(Class<T> expectedType, Object object) {
-        return castToCollectionAndCheckElements(expectedType, object, DEFAULT_COLLECTION_ELEMENT_CHECKING_STRATEGY);
+        return castToCollectionAndCheckElements(expectedType, object, DEFAULT_COLLECTION_CHECK_STRATEGY);
     }
 
     public static <T> Collection<T> castToCollectionAndCheckElements(Class<T> expectedType,
@@ -179,7 +180,7 @@ public class KiwiCasts2 {
     }
 
     public static <T> List<T> castToListAndCheckElements(Class<T> expectedType, Object object) {
-        return castToListAndCheckElements(expectedType, object, DEFAULT_LIST_ELEMENT_CHECKING_STRATEGY);
+        return castToListAndCheckElements(expectedType, object, DEFAULT_LIST_CHECK_STRATEGY);
     }
 
     public static <T> List<T> castToListAndCheckElements(Class<T> expectedType,
@@ -248,7 +249,7 @@ public class KiwiCasts2 {
     }
 
     public static <T> Set<T> castToSetAndCheckElements(Class<T> expectedType, Object object) {
-        return castToSetAndCheckElements(expectedType, object, DEFAULT_SET_ELEMENT_CHECKING_STRATEGY);
+        return castToSetAndCheckElements(expectedType, object, DEFAULT_SET_CHECK_STRATEGY);
     }
 
     public static <T> Set<T> castToSetAndCheckElements(Class<T> expectedType,
@@ -324,7 +325,7 @@ public class KiwiCasts2 {
     }
 
     public static <K, V> Map<K, V> castToMapAndCheckEntries(Class<K> keyType, Class<V> valueType, Object object) {
-        return castToMapAndCheckEntries(keyType, valueType, object, DEFAULT_MAP_ELEMENT_CHECKING_STRATEGY);
+        return castToMapAndCheckEntries(keyType, valueType, object, DEFAULT_MAP_CHECK_STRATEGY);
     }
 
     public static <K, V> Map<K, V> castToMapAndCheckEntries(Class<K> keyType,
