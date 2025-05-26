@@ -65,15 +65,22 @@ public class KiwiCasts2 {
 
     public static class DefaultCollectionCheckStrategy implements CollectionCheckStrategy {
 
+        private final StandardCollectionCheckStrategy strategy;
+
+        public DefaultCollectionCheckStrategy() {
+            strategy = StandardCollectionCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
+        }
+
         @Override
         public <T> Collection<T> checkElements(Class<T> expectedType, Collection<T> coll) {
-            var checkResult = checkElementsDefaultStrategy(expectedType, coll);
-
-            if (checkResult.ok()) {
-                return coll;
-            }
-
-            throw newCollectionTypeMismatch(Collection.class, expectedType, checkResult);
+//            var checkResult = checkElementsDefaultStrategy(expectedType, coll);
+//
+//            if (checkResult.ok()) {
+//                return coll;
+//            }
+//
+//            throw newCollectionTypeMismatch(Collection.class, expectedType, checkResult);
+            return strategy.checkElements(expectedType, coll);
         }
     }
 
