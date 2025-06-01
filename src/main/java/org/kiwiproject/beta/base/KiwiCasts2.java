@@ -1,10 +1,13 @@
 package org.kiwiproject.beta.base;
 
+import static com.google.common.base.Preconditions.checkState;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
+import com.google.common.annotations.VisibleForTesting;
 import lombok.experimental.UtilityClass;
 import org.kiwiproject.collect.KiwiCollections;
 import org.kiwiproject.collect.KiwiMaps;
@@ -342,6 +345,137 @@ public class KiwiCasts2 {
             }
 
             throw TypeMismatchException.forMapKeyTypeMismatch(keyType, key.getClass());
+        }
+    }
+
+    public static class StandardMapCheckStrategy implements MapCheckStrategy {
+
+        private final int maxNonNullChecks;
+        private final int maxElementTypeChecks;
+
+        private StandardMapCheckStrategy(int maxNonNullChecks, int maxElementTypeChecks) {
+            this.maxNonNullChecks = maxNonNullChecks;
+            this.maxElementTypeChecks = maxElementTypeChecks;
+        }
+
+        public static StandardMapCheckStrategy ofDefaults() {
+            return new StandardMapCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
+        }
+
+        public static StandardMapCheckStrategy of(int maxNonNullChecks, int maxElementTypeChecks) {
+            return new StandardMapCheckStrategy(maxNonNullChecks, maxElementTypeChecks);
+        }
+
+        @Override
+        public <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) {
+            var checkResult = checkEntries(keyType, valueType, map, maxNonNullChecks, maxElementTypeChecks);
+
+            if (checkResult.ok()) {
+                return map;
+            }
+
+            var entryType = requireNonNull(checkResult.entryType(),
+                    "entryType must not be null when result is not ok");
+
+            if (entryType == EntryType.KEY) {
+                throw TypeMismatchException.forMapKeyTypeMismatch(keyType, checkResult.invalidValue().getClass());
+            }
+
+            checkEntryTypeIsValue(checkResult);
+            throw TypeMismatchException.forMapValueTypeMismatch(valueType, checkResult.invalidValue().getClass());
+        }
+
+        @VisibleForTesting
+        static void checkEntryTypeIsValue(EntryCheckResult checkResult) {
+            checkState(checkResult.entryType() == EntryType.VALUE,
+                    "EntryCheckResult has unexpected entryType: %s", checkResult.entryType());
+        }
+
+        enum EntryType {
+            KEY, VALUE
+        }
+
+        record EntryCheckResult(boolean ok, EntryType entryType, Object invalidValue) {
+            static EntryCheckResult okMap() {
+                return new EntryCheckResult(true, null, null);
+            }
+
+            static EntryCheckResult foundInvalidType(EntryType entryType, Object value) {
+                checkArgumentNotNull(entryType, "entryType must not be null");
+                checkArgumentNotNull(value, "value must not be null");
+                return new EntryCheckResult(false, entryType, value);
+            }
+        }
+
+        private static <K, V> EntryCheckResult checkEntries(
+                Class<?> expectedKeyType,
+                Class<?> expectedValueType,
+                Map<K, V> map,
+                int maxNonNullChecks,
+                int maxElementTypeChecks) {
+
+            if (KiwiMaps.isNullOrEmpty(map)) {
+                // We can't verify type information about a null or empty map
+                return EntryCheckResult.okMap();
+            }
+
+            var iterator = map.entrySet().iterator();
+            var nullCheckCount = 0;
+            var typeCheckCount = 0;
+
+            while (iterator.hasNext()) {
+                Map.Entry<K, V> entry = iterator.next();
+                K key = entry.getKey();
+                V value = entry.getValue();
+
+                if (isNull(key) && nonNull(value)) {
+                    nullCheckCount++;
+                    if (nullCheckCount > maxNonNullChecks) {
+                        return EntryCheckResult.okMap();
+                    }
+
+                    typeCheckCount++;
+                    if (isNotExpectedType(expectedValueType, value)) {
+                        return EntryCheckResult.foundInvalidType(EntryType.VALUE, value);
+                    }
+                    if (typeCheckCount >= maxElementTypeChecks) {
+                        break;
+                    }
+
+                } else if (nonNull(key) && isNull(value)) {
+                    nullCheckCount++;
+                    if (nullCheckCount > maxNonNullChecks) {
+                        return EntryCheckResult.okMap();
+                    }
+
+                    typeCheckCount++;
+                    if (isNotExpectedType(expectedKeyType, key)) {
+                        return EntryCheckResult.foundInvalidType(EntryType.KEY, key);
+                    }
+                    if (typeCheckCount >= maxElementTypeChecks) {
+                        break;
+                    }
+
+                } else if (isNull(key)) {  // key and value are both null
+                    nullCheckCount++;
+                    if (nullCheckCount > maxNonNullChecks) {
+                        return EntryCheckResult.okMap();
+                    }
+
+                } else {
+                    typeCheckCount++;
+                    if (isNotExpectedType(expectedKeyType, key)) {
+                        return EntryCheckResult.foundInvalidType(EntryType.KEY, key);
+                    } else if (isNotExpectedType(expectedValueType, value)) {
+                        return EntryCheckResult.foundInvalidType(EntryType.VALUE, value);
+                    }
+                    if (typeCheckCount >= maxElementTypeChecks) {
+                        break;
+                    }
+                }
+            }
+
+            return EntryCheckResult.okMap();
         }
     }
 
