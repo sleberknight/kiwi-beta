@@ -428,29 +428,23 @@ public class KiwiCasts2 {
                 K key = entry.getKey();
                 V value = entry.getValue();
 
-                var keyIsNull = isNull(key);
-                var valueIsNull = isNull(value);
+                var keyIsNotNull = nonNull(key);
+                var valueIsNotNull = nonNull(value);
 
-                if (keyIsNull || valueIsNull) {
-                    nullCheckCount++;
-                    if (nullCheckCount > maxNonNullChecks) {
-                        return EntryCheckResult.okMap();
-                    }
+                if ((isNull(key) || isNull(value)) && ++nullCheckCount > maxNonNullChecks) {
+                    return EntryCheckResult.okMap();
                 }
 
-                if (!keyIsNull && isNotExpectedType(expectedKeyType, key)) {
+                if (keyIsNotNull && isNotExpectedType(expectedKeyType, key)) {
                     return EntryCheckResult.foundInvalidType(EntryType.KEY, key);
                 }
 
-                if (!valueIsNull && isNotExpectedType(expectedValueType, value)) {
+                if (valueIsNotNull && isNotExpectedType(expectedValueType, value)) {
                     return EntryCheckResult.foundInvalidType(EntryType.VALUE, value);
                 }
 
-                if (!keyIsNull || !valueIsNull) {
-                    typeCheckCount++;
-                    if (typeCheckCount >= maxEntryTypeChecks) {
-                        break;
-                    }
+                if ((keyIsNotNull || valueIsNotNull) && ++typeCheckCount >= maxEntryTypeChecks) {
+                    break;
                 }
             }
 
