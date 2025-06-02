@@ -430,47 +430,26 @@ public class KiwiCasts2 {
                 K key = entry.getKey();
                 V value = entry.getValue();
 
-                if (isNull(key) && nonNull(value)) {
+                var keyIsNull = isNull(key);
+                var valueIsNull = isNull(value);
+
+                if (keyIsNull || valueIsNull) {
                     nullCheckCount++;
                     if (nullCheckCount > maxNonNullChecks) {
                         return EntryCheckResult.okMap();
                     }
+                }
 
+                if (!keyIsNull && isNotExpectedType(expectedKeyType, key)) {
+                    return EntryCheckResult.foundInvalidType(EntryType.KEY, key);
+                }
+
+                if (!valueIsNull && isNotExpectedType(expectedValueType, value)) {
+                    return EntryCheckResult.foundInvalidType(EntryType.VALUE, value);
+                }
+
+                if (!keyIsNull || !valueIsNull) {
                     typeCheckCount++;
-                    if (isNotExpectedType(expectedValueType, value)) {
-                        return EntryCheckResult.foundInvalidType(EntryType.VALUE, value);
-                    }
-                    if (typeCheckCount >= maxElementTypeChecks) {
-                        break;
-                    }
-
-                } else if (nonNull(key) && isNull(value)) {
-                    nullCheckCount++;
-                    if (nullCheckCount > maxNonNullChecks) {
-                        return EntryCheckResult.okMap();
-                    }
-
-                    typeCheckCount++;
-                    if (isNotExpectedType(expectedKeyType, key)) {
-                        return EntryCheckResult.foundInvalidType(EntryType.KEY, key);
-                    }
-                    if (typeCheckCount >= maxElementTypeChecks) {
-                        break;
-                    }
-
-                } else if (isNull(key)) {  // key and value are both null
-                    nullCheckCount++;
-                    if (nullCheckCount > maxNonNullChecks) {
-                        return EntryCheckResult.okMap();
-                    }
-
-                } else {
-                    typeCheckCount++;
-                    if (isNotExpectedType(expectedKeyType, key)) {
-                        return EntryCheckResult.foundInvalidType(EntryType.KEY, key);
-                    } else if (isNotExpectedType(expectedValueType, value)) {
-                        return EntryCheckResult.foundInvalidType(EntryType.VALUE, value);
-                    }
                     if (typeCheckCount >= maxElementTypeChecks) {
                         break;
                     }
