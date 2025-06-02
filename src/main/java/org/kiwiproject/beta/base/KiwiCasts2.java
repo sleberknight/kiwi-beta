@@ -5,6 +5,8 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
+import static org.kiwiproject.base.KiwiPreconditions.requirePositive;
+import static org.kiwiproject.base.KiwiPreconditions.requirePositiveOrZero;
 
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
@@ -97,8 +99,8 @@ public class KiwiCasts2 {
         private final int maxElementTypeChecks;
 
         private StandardCollectionCheckStrategy(int maxNonNullChecks, int maxElementTypeChecks) {
-            this.maxNonNullChecks = maxNonNullChecks;
-            this.maxElementTypeChecks = maxElementTypeChecks;
+            this.maxNonNullChecks = requirePositiveOrZero(maxNonNullChecks);
+            this.maxElementTypeChecks = requirePositive(maxElementTypeChecks);
         }
 
         public static StandardCollectionCheckStrategy ofDefaults() {
@@ -161,8 +163,8 @@ public class KiwiCasts2 {
         private final int maxElementTypeChecks;
 
         private StandardListCheckStrategy(int maxNonNullChecks, int maxElementTypeChecks) {
-            this.maxNonNullChecks = maxNonNullChecks;
-            this.maxElementTypeChecks = maxElementTypeChecks;
+            this.maxNonNullChecks = requirePositiveOrZero(maxNonNullChecks);
+            this.maxElementTypeChecks = requirePositive(maxElementTypeChecks);
         }
 
         public static StandardListCheckStrategy ofDefaults() {
@@ -225,8 +227,8 @@ public class KiwiCasts2 {
         private final int maxElementTypeChecks;
 
         private StandardSetCheckStrategy(int maxNonNullChecks, int maxElementTypeChecks) {
-            this.maxNonNullChecks = maxNonNullChecks;
-            this.maxElementTypeChecks = maxElementTypeChecks;
+            this.maxNonNullChecks = requirePositiveOrZero(maxNonNullChecks);
+            this.maxElementTypeChecks = requirePositive(maxElementTypeChecks);
         }
 
         public static StandardSetCheckStrategy ofDefaults() {
@@ -351,11 +353,11 @@ public class KiwiCasts2 {
     public static class StandardMapCheckStrategy implements MapCheckStrategy {
 
         private final int maxNonNullChecks;
-        private final int maxElementTypeChecks;
+        private final int maxEntryTypeChecks;
 
-        private StandardMapCheckStrategy(int maxNonNullChecks, int maxElementTypeChecks) {
-            this.maxNonNullChecks = maxNonNullChecks;
-            this.maxElementTypeChecks = maxElementTypeChecks;
+        private StandardMapCheckStrategy(int maxNonNullChecks, int maxEntryTypeChecks) {
+            this.maxNonNullChecks = requirePositiveOrZero(maxNonNullChecks);
+            this.maxEntryTypeChecks = requirePositive(maxEntryTypeChecks);
         }
 
         public static StandardMapCheckStrategy ofDefaults() {
@@ -368,7 +370,7 @@ public class KiwiCasts2 {
 
         @Override
         public <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) {
-            var checkResult = checkEntries(keyType, valueType, map, maxNonNullChecks, maxElementTypeChecks);
+            var checkResult = checkEntries(keyType, valueType, map, maxNonNullChecks, maxEntryTypeChecks);
 
             if (checkResult.ok()) {
                 return map;
