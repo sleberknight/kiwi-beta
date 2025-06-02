@@ -571,11 +571,11 @@ class KiwiCasts2Test {
             @Test
             void shouldThrowTypeMismatchException_WhenFindBadValueType() {
                 Object o = KiwiMaps.newLinkedHashMap(
-                        "a", null,
-                        "b", "one",
-                        "c", "two",
-                        "d", "three",
-                        "e", "four"
+                        "a", "one",
+                        "b", "two",
+                        "c", "three",
+                        "d", "four",
+                        "e", "five"
                 );
 
                 assertThatExceptionOfType(TypeMismatchException.class)

@@ -316,37 +316,15 @@ public class KiwiCasts2 {
 
     public static class DefaultMapCheckStrategy implements MapCheckStrategy {
 
+        private final StandardMapCheckStrategy strategy;
+
+        public DefaultMapCheckStrategy() {
+            strategy = StandardMapCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
+        }
+
         @Override
         public <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) {
-            if (KiwiMaps.isNullOrEmpty(map)) {
-                // We can't verify type information about a null or empty map
-                return map;
-            }
-
-            // Find first non-null key with non-null value
-            Map.Entry<K, V> firstNonNullEntry = map.entrySet().stream()
-                    .filter(entry -> nonNull(entry.getKey()) && nonNull(entry.getValue()))
-                    .limit(DEFAULT_MAX_NON_NULL_CHECKS)
-                    .findFirst()
-                    .orElse(null);
-
-            if (isNull(firstNonNullEntry)) {
-                // We didn't find an entry with a non-null key and value quickly, so give up
-                return map;
-            }
-
-            var key = firstNonNullEntry.getKey();
-
-            if (isExpectedType(keyType, key)) {
-                var theValue = map.get(key);
-                if (isExpectedType(valueType, theValue)) {
-                    return map;
-                } else {
-                    throw TypeMismatchException.forMapValueTypeMismatch(valueType, theValue.getClass());
-                }
-            }
-
-            throw TypeMismatchException.forMapKeyTypeMismatch(keyType, key.getClass());
+            return strategy.checkEntries(keyType, valueType, map);
         }
     }
 
