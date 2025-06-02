@@ -370,7 +370,7 @@ public class KiwiCasts2 {
 
         @Override
         public <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) {
-            var checkResult = checkEntries(keyType, valueType, map, maxNonNullChecks, maxEntryTypeChecks);
+            var checkResult = checkEntriesInternal(keyType, valueType, map);
 
             if (checkResult.ok()) {
                 return map;
@@ -409,12 +409,10 @@ public class KiwiCasts2 {
             }
         }
 
-        private static <K, V> EntryCheckResult checkEntries(
+        private <K, V> EntryCheckResult checkEntriesInternal(
                 Class<?> expectedKeyType,
                 Class<?> expectedValueType,
-                Map<K, V> map,
-                int maxNonNullChecks,
-                int maxEntryTypeChecks) {
+                Map<K, V> map) {
 
             if (KiwiMaps.isNullOrEmpty(map)) {
                 // We can't verify type information about a null or empty map
