@@ -414,7 +414,7 @@ public class KiwiCasts2 {
                 Class<?> expectedValueType,
                 Map<K, V> map,
                 int maxNonNullChecks,
-                int maxElementTypeChecks) {
+                int maxEntryTypeChecks) {
 
             if (KiwiMaps.isNullOrEmpty(map)) {
                 // We can't verify type information about a null or empty map
@@ -450,7 +450,7 @@ public class KiwiCasts2 {
 
                 if (!keyIsNull || !valueIsNull) {
                     typeCheckCount++;
-                    if (typeCheckCount >= maxElementTypeChecks) {
+                    if (typeCheckCount >= maxEntryTypeChecks) {
                         break;
                     }
                 }
