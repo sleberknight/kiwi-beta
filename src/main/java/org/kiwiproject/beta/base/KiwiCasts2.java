@@ -82,7 +82,7 @@ public class KiwiCasts2 {
         }
     }
 
-    record ElementCheckResult(boolean ok, Object invalidValue) {
+    private record ElementCheckResult(boolean ok, Object invalidValue) {
         static ElementCheckResult okCollection() {
             return new ElementCheckResult(true, null);
         }
@@ -375,6 +375,7 @@ public class KiwiCasts2 {
             KEY, VALUE
         }
 
+        @VisibleForTesting
         record EntryCheckResult(boolean ok, EntryType entryType, Object invalidValue) {
             static EntryCheckResult okMap() {
                 return new EntryCheckResult(true, null, null);
