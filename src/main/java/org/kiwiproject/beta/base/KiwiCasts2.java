@@ -64,18 +64,40 @@ public class KiwiCasts2 {
         return (T) object;
     }
 
+    /**
+     * Strategy interface for checking elements in a collection.
+     */
     public interface CollectionCheckStrategy {
+        /**
+         * Checks that elements in the collection are of the expected type.
+         *
+         * @param expectedType the expected type of elements in the collection
+         * @param coll the collection to check
+         * @param <T> the expected element type
+         * @return the original collection if all elements match the expected type
+         * @throws TypeMismatchException if an element is found with an incompatible type
+         */
         <T> Collection<T> checkElements(Class<T> expectedType, Collection<T> coll) throws TypeMismatchException;
     }
 
+    /**
+     * Default implementation of {@link CollectionCheckStrategy} that uses a standard strategy
+     * with default non-null checks and a single type check.
+     */
     public static class DefaultCollectionCheckStrategy implements CollectionCheckStrategy {
 
         private final StandardCollectionCheckStrategy strategy;
 
+        /**
+         * Constructs a new instance with default settings.
+         */
         public DefaultCollectionCheckStrategy() {
             strategy = StandardCollectionCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <T> Collection<T> checkElements(Class<T> expectedType, Collection<T> coll) {
             return strategy.checkElements(expectedType, coll);
@@ -93,6 +115,10 @@ public class KiwiCasts2 {
         }
     }
 
+    /**
+     * Standard implementation of {@link CollectionCheckStrategy} that allows configuring
+     * the number of non-null and type checks to perform.
+     */
     public static class StandardCollectionCheckStrategy implements CollectionCheckStrategy {
 
         private final int maxNonNullChecks;
@@ -103,14 +129,29 @@ public class KiwiCasts2 {
             this.maxElementTypeChecks = requirePositive(maxElementTypeChecks);
         }
 
+        /**
+         * Creates a new instance with default settings for maximum non-null and type checks.
+         *
+         * @return a new instance with default settings
+         */
         public static StandardCollectionCheckStrategy ofDefaults() {
             return new StandardCollectionCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
         }
 
+        /**
+         * Creates a new instance with the specified maximum non-null and type checks.
+         *
+         * @param maxNonNullChecks the maximum number of non-null checks to perform
+         * @param maxElementTypeChecks the maximum number of element type checks to perform
+         * @return a new instance with the specified settings
+         */
         public static StandardCollectionCheckStrategy of(int maxNonNullChecks, int maxElementTypeChecks) {
             return new StandardCollectionCheckStrategy(maxNonNullChecks, maxElementTypeChecks);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <T> Collection<T> checkElements(Class<T> expectedType, Collection<T> coll) throws TypeMismatchException {
             var checkResult = checkElementsStandardStrategy(expectedType, coll, maxNonNullChecks, maxElementTypeChecks);
@@ -123,10 +164,31 @@ public class KiwiCasts2 {
         }
     }
 
+    /**
+     * Casts the given object to a Collection and checks that its elements are of the expected type.
+     * Uses the default collection check strategy.
+     *
+     * @param expectedType the expected type of elements in the collection
+     * @param object the object to cast to a Collection
+     * @param <T> the expected element type
+     * @return the object cast to a Collection with elements of the expected type
+     * @throws TypeMismatchException if the object is not a Collection or contains elements of incompatible types
+     */
     public static <T> Collection<T> castToCollectionAndCheckElements(Class<T> expectedType, Object object) {
         return castToCollectionAndCheckElements(expectedType, object, DEFAULT_COLLECTION_CHECK_STRATEGY);
     }
 
+    /**
+     * Casts the given object to a Collection and checks that its elements are of the expected type
+     * using the specified check strategy.
+     *
+     * @param expectedType the expected type of elements in the collection
+     * @param object the object to cast to a Collection
+     * @param strategy the strategy to use for checking elements
+     * @param <T> the expected element type
+     * @return the object cast to a Collection with elements of the expected type
+     * @throws TypeMismatchException if the object is not a Collection or contains elements of incompatible types
+     */
     public static <T> Collection<T> castToCollectionAndCheckElements(Class<T> expectedType,
                                                                      Object object,
                                                                      CollectionCheckStrategy strategy) {
@@ -139,24 +201,50 @@ public class KiwiCasts2 {
         }
     }
 
+    /**
+     * Strategy interface for checking elements in a list.
+     */
     public interface ListCheckStrategy {
+        /**
+         * Checks that elements in the list are of the expected type.
+         *
+         * @param expectedType the expected type of elements in the list
+         * @param list the list to check
+         * @param <T> the expected element type
+         * @return the original list if all elements match the expected type
+         * @throws TypeMismatchException if an element is found with an incompatible type
+         */
         <T> List<T> checkElements(Class<T> expectedType, List<T> list) throws TypeMismatchException;
     }
 
+    /**
+     * Default implementation of {@link ListCheckStrategy} that uses a standard strategy
+     * with default non-null checks and a single type check.
+     */
     public static class DefaultListCheckStrategy implements ListCheckStrategy {
 
         private final StandardListCheckStrategy strategy;
 
+        /**
+         * Constructs a new instance with default settings.
+         */
         public DefaultListCheckStrategy() {
             strategy = StandardListCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <T> List<T> checkElements(Class<T> expectedType, List<T> list) {
             return strategy.checkElements(expectedType, list);
         }
     }
 
+    /**
+     * Standard implementation of {@link ListCheckStrategy} that allows configuring
+     * the number of non-null and type checks to perform.
+     */
     public static class StandardListCheckStrategy implements ListCheckStrategy {
 
         private final int maxNonNullChecks;
@@ -167,14 +255,29 @@ public class KiwiCasts2 {
             this.maxElementTypeChecks = requirePositive(maxElementTypeChecks);
         }
 
+        /**
+         * Creates a new instance with default settings for maximum non-null and type checks.
+         *
+         * @return a new instance with default settings
+         */
         public static StandardListCheckStrategy ofDefaults() {
             return new StandardListCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
         }
 
+        /**
+         * Creates a new instance with the specified maximum non-null and type checks.
+         *
+         * @param maxNonNullChecks the maximum number of non-null checks to perform
+         * @param maxElementTypeChecks the maximum number of element type checks to perform
+         * @return a new instance with the specified settings
+         */
         public static StandardListCheckStrategy of(int maxNonNullChecks, int maxElementTypeChecks) {
             return new StandardListCheckStrategy(maxNonNullChecks, maxElementTypeChecks);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <T> List<T> checkElements(Class<T> expectedType, List<T> list) throws TypeMismatchException {
             var checkResult = checkElementsStandardStrategy(expectedType, list, maxNonNullChecks, maxElementTypeChecks);
@@ -187,10 +290,31 @@ public class KiwiCasts2 {
         }
     }
 
+    /**
+     * Casts the given object to a List and checks that its elements are of the expected type.
+     * Uses the default list check strategy.
+     *
+     * @param expectedType the expected type of elements in the list
+     * @param object the object to cast to a List
+     * @param <T> the expected element type
+     * @return the object cast to a List with elements of the expected type
+     * @throws TypeMismatchException if the object is not a List or contains elements of incompatible types
+     */
     public static <T> List<T> castToListAndCheckElements(Class<T> expectedType, Object object) {
         return castToListAndCheckElements(expectedType, object, DEFAULT_LIST_CHECK_STRATEGY);
     }
 
+    /**
+     * Casts the given object to a List and checks that its elements are of the expected type
+     * using the specified check strategy.
+     *
+     * @param expectedType the expected type of elements in the list
+     * @param object the object to cast to a List
+     * @param strategy the strategy to use for checking elements
+     * @param <T> the expected element type
+     * @return the object cast to a List with elements of the expected type
+     * @throws TypeMismatchException if the object is not a List or contains elements of incompatible types
+     */
     public static <T> List<T> castToListAndCheckElements(Class<T> expectedType,
                                                          Object object,
                                                          ListCheckStrategy strategy) {
@@ -203,24 +327,50 @@ public class KiwiCasts2 {
         }
     }
 
+    /**
+     * Strategy interface for checking elements in a set.
+     */
     public interface SetCheckStrategy {
+        /**
+         * Checks that elements in the set are of the expected type.
+         *
+         * @param expectedType the expected type of elements in the set
+         * @param set the set to check
+         * @param <T> the expected element type
+         * @return the original set if all elements match the expected type
+         * @throws TypeMismatchException if an element is found with an incompatible type
+         */
         <T> Set<T> checkElements(Class<T> expectedType, Set<T> set) throws TypeMismatchException;
     }
 
+    /**
+     * Default implementation of {@link SetCheckStrategy} that uses a standard strategy
+     * with default non-null checks and a single type check.
+     */
     public static class DefaultSetCheckStrategy implements SetCheckStrategy {
 
         private final StandardSetCheckStrategy strategy;
 
+        /**
+         * Constructs a new instance with default settings.
+         */
         public DefaultSetCheckStrategy() {
             strategy = StandardSetCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <T> Set<T> checkElements(Class<T> expectedType, Set<T> set) {
             return strategy.checkElements(expectedType, set);
         }
     }
 
+    /**
+     * Standard implementation of {@link SetCheckStrategy} that allows configuring
+     * the number of non-null and type checks to perform.
+     */
     public static class StandardSetCheckStrategy implements SetCheckStrategy {
 
         private final int maxNonNullChecks;
@@ -231,14 +381,29 @@ public class KiwiCasts2 {
             this.maxElementTypeChecks = requirePositive(maxElementTypeChecks);
         }
 
+        /**
+         * Creates a new instance with default settings for maximum non-null and type checks.
+         *
+         * @return a new instance with default settings
+         */
         public static StandardSetCheckStrategy ofDefaults() {
             return new StandardSetCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
         }
 
+        /**
+         * Creates a new instance with the specified maximum non-null and type checks.
+         *
+         * @param maxNonNullChecks the maximum number of non-null checks to perform
+         * @param maxElementTypeChecks the maximum number of element type checks to perform
+         * @return a new instance with the specified settings
+         */
         public static StandardSetCheckStrategy of(int maxNonNullChecks, int maxElementTypeChecks) {
             return new StandardSetCheckStrategy(maxNonNullChecks, maxElementTypeChecks);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <T> Set<T> checkElements(Class<T> expectedType, Set<T> set) throws TypeMismatchException {
             var checkResult = checkElementsStandardStrategy(expectedType, set, maxNonNullChecks, maxElementTypeChecks);
@@ -290,10 +455,31 @@ public class KiwiCasts2 {
         return TypeMismatchException.forCollectionTypeMismatch(collectionType, expectedType, checkResult.invalidValue().getClass());
     }
 
+    /**
+     * Casts the given object to a Set and checks that its elements are of the expected type.
+     * Uses the default set check strategy.
+     *
+     * @param expectedType the expected type of elements in the set
+     * @param object the object to cast to a Set
+     * @param <T> the expected element type
+     * @return the object cast to a Set with elements of the expected type
+     * @throws TypeMismatchException if the object is not a Set or contains elements of incompatible types
+     */
     public static <T> Set<T> castToSetAndCheckElements(Class<T> expectedType, Object object) {
         return castToSetAndCheckElements(expectedType, object, DEFAULT_SET_CHECK_STRATEGY);
     }
 
+    /**
+     * Casts the given object to a Set and checks that its elements are of the expected type
+     * using the specified check strategy.
+     *
+     * @param expectedType the expected type of elements in the set
+     * @param object the object to cast to a Set
+     * @param strategy the strategy to use for checking elements
+     * @param <T> the expected element type
+     * @return the object cast to a Set with elements of the expected type
+     * @throws TypeMismatchException if the object is not a Set or contains elements of incompatible types
+     */
     public static <T> Set<T> castToSetAndCheckElements(Class<T> expectedType,
                                                        Object object,
                                                        SetCheckStrategy strategy) {
@@ -310,24 +496,52 @@ public class KiwiCasts2 {
         checkArgumentNotNull(expectedType, "expectedType must not be null");
     }
 
+    /**
+     * Strategy interface for checking entries in a map.
+     */
     public interface MapCheckStrategy {
+        /**
+         * Checks that keys and values in the map are of the expected types.
+         *
+         * @param keyType the expected type of keys in the map
+         * @param valueType the expected type of values in the map
+         * @param map the map to check
+         * @param <K> the expected key type
+         * @param <V> the expected value type
+         * @return the original map if all keys and values match the expected types
+         * @throws TypeMismatchException if a key or value is found with an incompatible type
+         */
         <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) throws TypeMismatchException;
     }
 
+    /**
+     * Default implementation of {@link MapCheckStrategy} that uses a standard strategy
+     * with default non-null checks and a single type check.
+     */
     public static class DefaultMapCheckStrategy implements MapCheckStrategy {
 
         private final StandardMapCheckStrategy strategy;
 
+        /**
+         * Constructs a new instance with default settings.
+         */
         public DefaultMapCheckStrategy() {
             strategy = StandardMapCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) {
             return strategy.checkEntries(keyType, valueType, map);
         }
     }
 
+    /**
+     * Standard implementation of {@link MapCheckStrategy} that allows configuring
+     * the number of non-null and type checks to perform.
+     */
     public static class StandardMapCheckStrategy implements MapCheckStrategy {
 
         private final int maxNonNullChecks;
@@ -338,14 +552,29 @@ public class KiwiCasts2 {
             this.maxEntryTypeChecks = requirePositive(maxEntryTypeChecks);
         }
 
+        /**
+         * Creates a new instance with default settings for maximum non-null and type checks.
+         *
+         * @return a new instance with default settings
+         */
         public static StandardMapCheckStrategy ofDefaults() {
             return new StandardMapCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
         }
 
+        /**
+         * Creates a new instance with the specified maximum non-null and type checks.
+         *
+         * @param maxNonNullChecks the maximum number of non-null checks to perform
+         * @param maxElementTypeChecks the maximum number of entry type checks to perform
+         * @return a new instance with the specified settings
+         */
         public static StandardMapCheckStrategy of(int maxNonNullChecks, int maxElementTypeChecks) {
             return new StandardMapCheckStrategy(maxNonNullChecks, maxElementTypeChecks);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public <K, V> Map<K, V> checkEntries(Class<K> keyType, Class<V> valueType, Map<K, V> map) {
             var checkResult = checkEntriesInternal(keyType, valueType, map);
@@ -431,10 +660,35 @@ public class KiwiCasts2 {
         }
     }
 
+    /**
+     * Casts the given object to a Map and checks that its keys and values are of the expected types.
+     * Uses the default map check strategy.
+     *
+     * @param keyType the expected type of keys in the map
+     * @param valueType the expected type of values in the map
+     * @param object the object to cast to a Map
+     * @param <K> the expected key type
+     * @param <V> the expected value type
+     * @return the object cast to a Map with keys and values of the expected types
+     * @throws TypeMismatchException if the object is not a Map or contains keys or values of incompatible types
+     */
     public static <K, V> Map<K, V> castToMapAndCheckEntries(Class<K> keyType, Class<V> valueType, Object object) {
         return castToMapAndCheckEntries(keyType, valueType, object, DEFAULT_MAP_CHECK_STRATEGY);
     }
 
+    /**
+     * Casts the given object to a Map and checks that its keys and values are of the expected types
+     * using the specified check strategy.
+     *
+     * @param keyType the expected type of keys in the map
+     * @param valueType the expected type of values in the map
+     * @param object the object to cast to a Map
+     * @param strategy the strategy to use for checking entries
+     * @param <K> the expected key type
+     * @param <V> the expected value type
+     * @return the object cast to a Map with keys and values of the expected types
+     * @throws TypeMismatchException if the object is not a Map or contains keys or values of incompatible types
+     */
     public static <K, V> Map<K, V> castToMapAndCheckEntries(Class<K> keyType,
                                                             Class<V> valueType,
                                                             Object object,
