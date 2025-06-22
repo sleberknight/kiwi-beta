@@ -675,7 +675,7 @@ class KiwiCasts2Test {
             }
 
             @Test
-            void shouldReturnMap_WhenEntriesContainExpectedTypes_AndFewerElementsThanMaxTypeChecks() {
+            void shouldReturnMap_WhenEntriesContainExpectedTypes_AndFewerEntriesThanMaxTypeChecks() {
                 Object o = KiwiMaps.newLinkedHashMap("a", 1, "b", 2, "c", 3, "d", 4);
                 var strategy = KiwiCasts2.StandardMapCheckStrategy.of(0, 5);
                 Map<String, Integer> map = KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, o, strategy);
@@ -683,7 +683,7 @@ class KiwiCasts2Test {
             }
 
             @Test
-            void shouldReturnMap_WhenEntriesContainExpectedTypes_AndMoreElementsThanMaxTypeChecks() {
+            void shouldReturnMap_WhenEntriesContainExpectedTypes_AndMoreEntriesThanMaxTypeChecks() {
                 Object o = KiwiMaps.newLinkedHashMap("a", 1, "b", 2, "c", 3, "d", 4);
                 var strategy = KiwiCasts2.StandardMapCheckStrategy.of(0, 3);
                 Map<String, Integer> map = KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, o, strategy);
