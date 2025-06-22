@@ -32,8 +32,15 @@ import java.util.Set;
 @UtilityClass
 public class KiwiCasts2 {
 
-    private static final int DEFAULT_MAX_NON_NULL_CHECKS = 10;
-    private static final int DEFAULT_MAX_TYPE_CHECKS = 10;
+    /**
+     * The default maximum number of non-null checks to perform when checking elements in a collection.
+     */
+    public static final int DEFAULT_MAX_NON_NULL_CHECKS = 10;
+
+    /**
+     * The default maximum number of type checks to perform when checking elements in a collection.
+     */
+    public static final int DEFAULT_MAX_TYPE_CHECKS = 10;
 
     private static final CollectionCheckStrategy DEFAULT_COLLECTION_CHECK_STRATEGY =
             new DefaultCollectionCheckStrategy();
@@ -81,15 +88,16 @@ public class KiwiCasts2 {
     }
 
     /**
-     * Default implementation of {@link CollectionCheckStrategy} that uses a standard strategy
-     * with default non-null checks and a single type check.
+     * Default implementation of {@link CollectionCheckStrategy} that uses
+     * {@link #DEFAULT_MAX_NON_NULL_CHECKS} as the maximum non-null checks
+     * and checks only one (non-null) element in the collection.
      */
     public static class DefaultCollectionCheckStrategy implements CollectionCheckStrategy {
 
         private final StandardCollectionCheckStrategy strategy;
 
         /**
-         * Constructs a new instance with default settings.
+         * Constructs a new instance.
          */
         public DefaultCollectionCheckStrategy() {
             strategy = StandardCollectionCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
@@ -131,8 +139,11 @@ public class KiwiCasts2 {
 
         /**
          * Creates a new instance with default settings for maximum non-null and type checks.
+         * <p>
+         * Uses {@link #DEFAULT_MAX_NON_NULL_CHECKS} and {@link #DEFAULT_MAX_TYPE_CHECKS} as the
+         * values for {@code maxNonNullChecks} and {@code maxElementTypeChecks}, respectively.
          *
-         * @return a new instance with default settings
+         * @return a new instance
          */
         public static StandardCollectionCheckStrategy ofDefaults() {
             return new StandardCollectionCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
@@ -166,7 +177,7 @@ public class KiwiCasts2 {
 
     /**
      * Casts the given object to a Collection and checks that its elements are of the expected type.
-     * Uses the default collection check strategy.
+     * Uses {@link DefaultCollectionCheckStrategy} as the collection check strategy.
      *
      * @param expectedType the expected type of elements in the collection
      * @param object the object to cast to a Collection
@@ -180,7 +191,7 @@ public class KiwiCasts2 {
 
     /**
      * Casts the given object to a Collection and checks that its elements are of the expected type
-     * using the specified check strategy.
+     * using the specified strategy.
      *
      * @param expectedType the expected type of elements in the collection
      * @param object the object to cast to a Collection
