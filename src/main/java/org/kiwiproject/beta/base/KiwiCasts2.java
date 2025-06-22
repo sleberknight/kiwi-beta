@@ -662,7 +662,7 @@ public class KiwiCasts2 {
                 var keyIsNotNull = nonNull(key);
                 var valueIsNotNull = nonNull(value);
 
-                if ((isNull(key) || isNull(value)) && ++nullCheckCount > maxNonNullChecks) {
+                if (eitherIsNull(key, value) && ++nullCheckCount > maxNonNullChecks) {
                     return EntryCheckResult.okMap();
                 }
 
@@ -680,6 +680,10 @@ public class KiwiCasts2 {
             }
 
             return EntryCheckResult.okMap();
+        }
+
+        private static boolean eitherIsNull(Object o1, Object o2) {
+            return isNull(o1) || isNull(o2);
         }
     }
 
