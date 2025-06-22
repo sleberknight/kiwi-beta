@@ -229,15 +229,16 @@ public class KiwiCasts2 {
     }
 
     /**
-     * Default implementation of {@link ListCheckStrategy} that uses a standard strategy
-     * with default non-null checks and a single type check.
+     * Default implementation of {@link ListCheckStrategy} that uses
+     * {@link #DEFAULT_MAX_NON_NULL_CHECKS} as the maximum non-null checks
+     * and checks only one (non-null) element in the collection.
      */
     public static class DefaultListCheckStrategy implements ListCheckStrategy {
 
         private final StandardListCheckStrategy strategy;
 
         /**
-         * Constructs a new instance with default settings.
+         * Constructs a new instance.
          */
         public DefaultListCheckStrategy() {
             strategy = StandardListCheckStrategy.of(DEFAULT_MAX_NON_NULL_CHECKS, 1);
@@ -268,8 +269,11 @@ public class KiwiCasts2 {
 
         /**
          * Creates a new instance with default settings for maximum non-null and type checks.
+         * <p>
+         * Uses {@link #DEFAULT_MAX_NON_NULL_CHECKS} and {@link #DEFAULT_MAX_TYPE_CHECKS} as the
+         * values for {@code maxNonNullChecks} and {@code maxElementTypeChecks}, respectively.
          *
-         * @return a new instance with default settings
+         * @return a new instance
          */
         public static StandardListCheckStrategy ofDefaults() {
             return new StandardListCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
@@ -303,7 +307,7 @@ public class KiwiCasts2 {
 
     /**
      * Casts the given object to a List and checks that its elements are of the expected type.
-     * Uses the default list check strategy.
+     * Uses {@link DefaultListCheckStrategy} as the list check strategy.
      *
      * @param expectedType the expected type of elements in the list
      * @param object the object to cast to a List
