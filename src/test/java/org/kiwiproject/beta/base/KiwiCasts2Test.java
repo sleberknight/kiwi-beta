@@ -523,7 +523,7 @@ class KiwiCasts2Test {
             }
 
             @Test
-            void shouldReturnMap_ThatThrowsClassCast_WhenExceedsMaxNulls_ButDidNotDetecBadType() {
+            void shouldReturnMap_ThatThrowsClassCast_WhenExceedsMaxNulls_ButDidNotDetectBadType() {
                 Object o = KiwiMaps.newLinkedHashMap(
                         "a", null,
                         "b", null,
