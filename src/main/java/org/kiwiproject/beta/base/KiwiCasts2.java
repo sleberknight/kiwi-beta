@@ -573,7 +573,7 @@ public class KiwiCasts2 {
         }
 
         /**
-         * Creates a new instance with default settings for maximum non-null and type checks..
+         * Creates a new instance with default settings for maximum non-null and type checks.
          * <p>
          * Uses {@link #DEFAULT_MAX_NON_NULL_CHECKS} and {@link #DEFAULT_MAX_TYPE_CHECKS} as the
          * values for {@code maxNonNullChecks} and {@code maxElementTypeChecks}, respectively.
