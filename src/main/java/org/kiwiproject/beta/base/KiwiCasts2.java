@@ -476,7 +476,7 @@ public class KiwiCasts2 {
 
     /**
      * Casts the given object to a Set and checks that its elements are of the expected type.
-     * Uses the default set check strategy.
+     * Uses {@link DefaultSetCheckStrategy} as the set check strategy.
      *
      * @param expectedType the expected type of elements in the set
      * @param object the object to cast to a Set
@@ -534,8 +534,9 @@ public class KiwiCasts2 {
     }
 
     /**
-     * Default implementation of {@link MapCheckStrategy} that uses a standard strategy
-     * with default non-null checks and a single type check.
+     * Default implementation of {@link MapCheckStrategy} that uses
+     * {@link #DEFAULT_MAX_NON_NULL_CHECKS} as the maximum non-null checks
+     * and checks only one (non-null) entry in the map.
      */
     public static class DefaultMapCheckStrategy implements MapCheckStrategy {
 
@@ -572,9 +573,12 @@ public class KiwiCasts2 {
         }
 
         /**
-         * Creates a new instance with default settings for maximum non-null and type checks.
+         * Creates a new instance with default settings for maximum non-null and type checks..
+         * <p>
+         * Uses {@link #DEFAULT_MAX_NON_NULL_CHECKS} and {@link #DEFAULT_MAX_TYPE_CHECKS} as the
+         * values for {@code maxNonNullChecks} and {@code maxElementTypeChecks}, respectively.
          *
-         * @return a new instance with default settings
+         * @return a new instance
          */
         public static StandardMapCheckStrategy ofDefaults() {
             return new StandardMapCheckStrategy(DEFAULT_MAX_NON_NULL_CHECKS, DEFAULT_MAX_TYPE_CHECKS);
@@ -681,7 +685,7 @@ public class KiwiCasts2 {
 
     /**
      * Casts the given object to a Map and checks that its keys and values are of the expected types.
-     * Uses the default map check strategy.
+     * Uses {@link DefaultMapCheckStrategy} as the map check strategy.
      *
      * @param keyType the expected type of keys in the map
      * @param valueType the expected type of values in the map
