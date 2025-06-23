@@ -208,7 +208,7 @@ public class KiwiCasts2 {
             Collection<T> coll = uncheckedCast(object);
             return strategy.checkElements(expectedType, coll);
         } catch (ClassCastException e) {
-            throw TypeMismatchException.forExpectedTypeWithCause(Collection.class, e);
+            throw typeMismatchExceptionForUnexpectedType(Collection.class, object, e);
         }
     }
 
@@ -338,7 +338,7 @@ public class KiwiCasts2 {
             List<T> list = uncheckedCast(object);
             return strategy.checkElements(expectedType, list);
         } catch (ClassCastException e) {
-            throw TypeMismatchException.forExpectedTypeWithCause(List.class, e);
+            throw typeMismatchExceptionForUnexpectedType(List.class, object, e);
         }
     }
 
@@ -507,7 +507,7 @@ public class KiwiCasts2 {
             Set<T> set = uncheckedCast(object);
             return strategy.checkElements(expectedType, set);
         } catch (ClassCastException e) {
-            throw TypeMismatchException.forExpectedTypeWithCause(Set.class, e);
+           throw typeMismatchExceptionForUnexpectedType(Set.class, object, e);
         }
     }
 
@@ -727,7 +727,7 @@ public class KiwiCasts2 {
             Map<K, V> map = uncheckedCast(object);
             return strategy.checkEntries(keyType, valueType, map);
         } catch (ClassCastException e) {
-            throw TypeMismatchException.forExpectedTypeWithCause(Map.class, e);
+            throw typeMismatchExceptionForUnexpectedType(Map.class, object, e);
         }
     }
 
@@ -737,5 +737,17 @@ public class KiwiCasts2 {
 
     private static boolean isExpectedType(Class<?> expectedType, Object object) {
         return expectedType.isAssignableFrom(object.getClass());
+    }
+
+    private static <T> TypeMismatchException typeMismatchExceptionForUnexpectedType(
+            Class<T> expectedType, 
+            Object object,
+            ClassCastException e) {
+
+        if (isNull(object)) {
+            return TypeMismatchException.forExpectedTypeWithCause(expectedType, e);
+        }
+
+        return TypeMismatchException.forUnexpectedTypeWithCause(expectedType, object.getClass(), e);
     }
 }

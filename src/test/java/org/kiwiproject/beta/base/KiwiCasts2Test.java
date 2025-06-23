@@ -149,7 +149,7 @@ class KiwiCasts2Test {
                 var strategy = KiwiCasts2.StandardCollectionCheckStrategy.ofDefaults();
                 assertThatExceptionOfType(TypeMismatchException.class)
                         .isThrownBy(() -> KiwiCasts2.castToCollectionAndCheckElements(String.class, "not a collection", strategy))
-                        .withMessage("Cannot cast value to type java.util.Collection")
+                        .withMessage("Cannot cast value of type java.lang.String to type java.util.Collection")
                         .withCauseInstanceOf(ClassCastException.class);
             }
 
@@ -214,7 +214,7 @@ class KiwiCasts2Test {
             void shouldThrowTypeMismatchException_WhenIsNotCollection() {
                 assertThatExceptionOfType(TypeMismatchException.class)
                         .isThrownBy(() -> KiwiCasts2.castToListAndCheckElements(String.class, "not a collection"))
-                        .withMessage("Cannot cast value to type java.util.List")
+                        .withMessage("Cannot cast value of type java.lang.String to type java.util.List")
                         .withCauseInstanceOf(ClassCastException.class);
             }
 
@@ -296,7 +296,7 @@ class KiwiCasts2Test {
                 var strategy = KiwiCasts2.StandardListCheckStrategy.ofDefaults();
                 assertThatExceptionOfType(TypeMismatchException.class)
                         .isThrownBy(() -> KiwiCasts2.castToListAndCheckElements(String.class, "not a list", strategy))
-                        .withMessage("Cannot cast value to type java.util.List")
+                        .withMessage("Cannot cast value of type java.lang.String to type java.util.List")
                         .withCauseInstanceOf(ClassCastException.class);
             }
 
@@ -365,7 +365,7 @@ class KiwiCasts2Test {
             void shouldThrowTypeMismatchException_WhenIsNotSet() {
                 assertThatExceptionOfType(TypeMismatchException.class)
                         .isThrownBy(() -> KiwiCasts2.castToSetAndCheckElements(String.class, "not a collection"))
-                        .withMessage("Cannot cast value to type java.util.Set")
+                        .withMessage("Cannot cast value of type java.lang.String to type java.util.Set")
                         .withCauseInstanceOf(ClassCastException.class);
             }
 
@@ -452,7 +452,7 @@ class KiwiCasts2Test {
                 var strategy = KiwiCasts2.StandardSetCheckStrategy.ofDefaults();
                 assertThatExceptionOfType(TypeMismatchException.class)
                         .isThrownBy(() -> KiwiCasts2.castToSetAndCheckElements(String.class, "not a set", strategy))
-                        .withMessage("Cannot cast value to type java.util.Set")
+                        .withMessage("Cannot cast value of type java.lang.String to type java.util.Set")
                         .withCauseInstanceOf(ClassCastException.class);
             }
 
@@ -551,7 +551,7 @@ class KiwiCasts2Test {
             void shouldThrowTypeMismatchException_WhenIsNotMap() {
                 assertThatExceptionOfType(TypeMismatchException.class)
                         .isThrownBy(() -> KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, "not a map"))
-                        .withMessage("Cannot cast value to type java.util.Map")
+                        .withMessage("Cannot cast value of type java.lang.String to type java.util.Map")
                         .withCauseInstanceOf(ClassCastException.class);
             }
 
@@ -724,7 +724,7 @@ class KiwiCasts2Test {
                 var strategy = KiwiCasts2.StandardMapCheckStrategy.ofDefaults();
                 assertThatExceptionOfType(TypeMismatchException.class)
                         .isThrownBy(() -> KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, "not a map", strategy))
-                        .withMessage("Cannot cast value to type java.util.Map")
+                        .withMessage("Cannot cast value of type java.lang.String to type java.util.Map")
                         .withCauseInstanceOf(ClassCastException.class);
             }
 
