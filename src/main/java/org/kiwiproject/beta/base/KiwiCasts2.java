@@ -744,10 +744,6 @@ public class KiwiCasts2 {
             Object object,
             ClassCastException e) {
 
-        if (isNull(object)) {
-            return TypeMismatchException.forExpectedTypeWithCause(expectedType, e);
-        }
-
         return TypeMismatchException.forUnexpectedTypeWithCause(expectedType, object.getClass(), e);
     }
 }
