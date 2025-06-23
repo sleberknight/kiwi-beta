@@ -57,39 +57,39 @@ public class TypeMismatchException extends RuntimeException {
     /**
      * Factory method to create a new instance with a standardized message for a type mismatch.
      *
-     * @param valueType the expected type of the value
-     * @param cause     the ClassCastException that occurred during the cast attempt
+     * @param expectedType the expected type of the value
+     * @param cause        the ClassCastException that occurred during the cast attempt
      * @return a new instance with a descriptive message
      */
-    public static TypeMismatchException forTypeMismatch(Class<?> valueType, ClassCastException cause) {
-        return new TypeMismatchException(f("Cannot cast value to type {}", valueType.getName()), cause);
+    public static TypeMismatchException forExpectedTypeWithCause(Class<?> expectedType, ClassCastException cause) {
+        return new TypeMismatchException(f("Cannot cast value to type {}", expectedType.getName()), cause);
     }
 
     /**
      * Factory method to create a new instance with a standardized message for a type mismatch.
      *
-     * @param valueType      the expected type of the value
+     * @param expectedType   the expected type of the value
      * @param unexpectedType the actual type of the value
      * @return a new instance with a descriptive message
      */
-    public static TypeMismatchException forTypeMismatch(Class<?> valueType, Class<?> unexpectedType) {
+    public static TypeMismatchException forUnexpectedType(Class<?> expectedType, Class<?> unexpectedType) {
         return new TypeMismatchException(f("Cannot cast value of type {} to type {}",
-                unexpectedType.getName(), valueType.getName()));
+                unexpectedType.getName(), expectedType.getName()));
     }
 
      /**
      * Factory method to create a new instance with a standardized message for a type mismatch.
      *
-     * @param valueType      the expected type of the value
+     * @param expectedType   the expected type of the value
      * @param unexpectedType the actual type of the value
      * @param cause          the ClassCastException that occurred during the cast attempt
      * @return a new instance with a descriptive message
      */
-    public static TypeMismatchException forTypeMismatch(Class<?> valueType,
-                                                        Class<?> unexpectedType,
-                                                        ClassCastException cause) {
+    public static TypeMismatchException forUnexpectedTypeWithCause(Class<?> expectedType,
+                                                                   Class<?> unexpectedType,
+                                                                   ClassCastException cause) {
         var message = f("Cannot cast value of type {} to type {}",
-                unexpectedType.getName(), valueType.getName());
+                unexpectedType.getName(), expectedType.getName());
         return new TypeMismatchException(message, cause);
     }
 
@@ -98,43 +98,43 @@ public class TypeMismatchException extends RuntimeException {
      * on a collection element.
      * 
      * @param collectionType the type of collection, such as Collection, List, or Set
-     * @param valueType      the expected type of the collection elements
-     * @param unexpectedType the unexpected type found in the collection
+     * @param expectedType   the expected type of the collection elements
+     * @param unexpectedType the actual type found in the collection
      * @return a new instance with a descriptive message
      */
-    public static TypeMismatchException forCollectionTypeMismatch(Class<?> collectionType,
-                                                                  Class<?> valueType,
-                                                                  Class<?> unexpectedType) {
+    public static TypeMismatchException forUnexpectedCollectionElementType(Class<?> collectionType,
+                                                                           Class<?> expectedType,
+                                                                           Class<?> unexpectedType) {
         var message = f("Expected {} to contain elements of type {}, but found element of type {}",
-                collectionType.getName(), valueType.getName(), unexpectedType.getName());
+                collectionType.getName(), expectedType.getName(), unexpectedType.getName());
         return new TypeMismatchException(message);
     }
 
     /**
      * Factory method to create a new instance with a standardized message for a map key type mismatch.
      * 
-     * @param keyType           the expected type of keys in the map
-     * @param unexpectedKeyType the unexpected type of key found in the map
+     * @param expectedKeyType   the expected type of keys in the map
+     * @param unexpectedKeyType the actual type of key found in the map
      * @return a new instance with a descriptive message
      */
-    public static TypeMismatchException forMapKeyTypeMismatch(Class<?> keyType,
-                                                              Class<?> unexpectedKeyType) {
+    public static TypeMismatchException forUnexpectedMapKeyType(Class<?> expectedKeyType,
+                                                                Class<?> unexpectedKeyType) {
         var message = f("Expected Map to contain keys of type {}, but found key of type {}",
-                keyType.getName(), unexpectedKeyType.getName());
+                expectedKeyType.getName(), unexpectedKeyType.getName());
         return new TypeMismatchException(message);
     }
 
     /**
      * Factory method to create a new instance with a standardized message for a map value type mismatch.
      * 
-     * @param valueType           the expected type of values in the map
-     * @param unexpectedValueType the unexpected type of value found in the map
+     * @param expectedValueType   the expected type of values in the map
+     * @param unexpectedValueType the actual type of value found in the map
      * @return a new instance with a descriptive message
      */
-    public static TypeMismatchException forMapValueTypeMismatch(Class<?> valueType,
-                                                                Class<?> unexpectedValueType) {
+    public static TypeMismatchException forUnexpectedMapValueType(Class<?> expectedValueType,
+                                                                  Class<?> unexpectedValueType) {
         var message = f("Expected Map to contain values of type {}, but found value of type {}",
-                valueType.getName(), unexpectedValueType.getName());
+                expectedValueType.getName(), unexpectedValueType.getName());
         return new TypeMismatchException(message);
     }
 }

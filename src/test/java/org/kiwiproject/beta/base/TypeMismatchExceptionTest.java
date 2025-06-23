@@ -19,9 +19,9 @@ class TypeMismatchExceptionTest {
     }
 
     @Test
-    void shouldCreate_forTypeMismatch_AndClassCastExceptionAsCause() {
+    void shouldCreate_forExpectedTypeWithCause() {
         var cause = new ClassCastException();
-        var ex = TypeMismatchException.forTypeMismatch(Double.class, cause);
+        var ex = TypeMismatchException.forExpectedTypeWithCause(Double.class, cause);
 
         assertAll(
             () -> assertThat(ex).hasMessage("Cannot cast value to type java.lang.Double"),
@@ -31,7 +31,7 @@ class TypeMismatchExceptionTest {
 
     @Test
     void shouldCreate_forTypeMismatch_WithValueType_AndUnexpectedType() {
-        var ex = TypeMismatchException.forTypeMismatch(Double.class, Integer.class);
+        var ex = TypeMismatchException.forUnexpectedType(Double.class, Integer.class);
 
          assertAll(
             () -> assertThat(ex).hasMessage("Cannot cast value of type java.lang.Integer to type java.lang.Double"),
@@ -42,7 +42,7 @@ class TypeMismatchExceptionTest {
     @Test
     void shouldCreate_forTypeMismatch_WithValueType_AndUnexpectedTypeh_AndClassCastExceptionAsCause() {
         var cause = new ClassCastException();
-        var ex = TypeMismatchException.forTypeMismatch(Double.class, Integer.class, cause);
+        var ex = TypeMismatchException.forUnexpectedTypeWithCause(Double.class, Integer.class, cause);
 
          assertAll(
             () -> assertThat(ex).hasMessage("Cannot cast value of type java.lang.Integer to type java.lang.Double"),
@@ -51,8 +51,8 @@ class TypeMismatchExceptionTest {
     }
 
     @Test
-    void shouldCreate_forCollectionTypeMismatch() {
-        var ex = TypeMismatchException.forCollectionTypeMismatch(Set.class, Integer.class, Double.class);
+    void shouldCreate_forUnexpectedCollectionElementType() {
+        var ex = TypeMismatchException.forUnexpectedCollectionElementType(Set.class, Integer.class, Double.class);
 
         assertAll(
             () -> assertThat(ex).hasMessage("Expected java.util.Set to contain elements of type java.lang.Integer, but found element of type java.lang.Double"),
@@ -61,8 +61,8 @@ class TypeMismatchExceptionTest {
     }
 
     @Test
-    void shouldCreate_forMapKeyTypeMismatch() {
-        var ex = TypeMismatchException.forMapKeyTypeMismatch(String.class, Integer.class);
+    void shouldCreate_forUnexpectedMapKeyType() {
+        var ex = TypeMismatchException.forUnexpectedMapKeyType(String.class, Integer.class);
 
         assertAll(
             () -> assertThat(ex).hasMessage("Expected Map to contain keys of type java.lang.String, but found key of type java.lang.Integer"),
@@ -71,8 +71,8 @@ class TypeMismatchExceptionTest {
     }
 
     @Test
-    void shouldCreate_forMapValueTypeMismatch() {
-        var ex = TypeMismatchException.forMapValueTypeMismatch(Integer.class, Long.class);
+    void shouldCreate_forUnexpectedMapValueType() {
+        var ex = TypeMismatchException.forUnexpectedMapValueType(Integer.class, Long.class);
 
         assertAll(
             () -> assertThat(ex).hasMessage("Expected Map to contain values of type java.lang.Integer, but found value of type java.lang.Long"),

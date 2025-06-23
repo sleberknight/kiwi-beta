@@ -208,7 +208,7 @@ public class KiwiCasts2 {
             Collection<T> coll = uncheckedCast(object);
             return strategy.checkElements(expectedType, coll);
         } catch (ClassCastException e) {
-            throw TypeMismatchException.forTypeMismatch(Collection.class, e);
+            throw TypeMismatchException.forExpectedTypeWithCause(Collection.class, e);
         }
     }
 
@@ -338,7 +338,7 @@ public class KiwiCasts2 {
             List<T> list = uncheckedCast(object);
             return strategy.checkElements(expectedType, list);
         } catch (ClassCastException e) {
-            throw TypeMismatchException.forTypeMismatch(List.class, e);
+            throw TypeMismatchException.forExpectedTypeWithCause(List.class, e);
         }
     }
 
@@ -471,7 +471,7 @@ public class KiwiCasts2 {
     }
 
     private static TypeMismatchException newCollectionTypeMismatch(Class<?> collectionType, Class<?> expectedType, ElementCheckResult checkResult) {
-        return TypeMismatchException.forCollectionTypeMismatch(collectionType, expectedType, checkResult.invalidValue().getClass());
+        return TypeMismatchException.forUnexpectedCollectionElementType(collectionType, expectedType, checkResult.invalidValue().getClass());
     }
 
     /**
@@ -507,7 +507,7 @@ public class KiwiCasts2 {
             Set<T> set = uncheckedCast(object);
             return strategy.checkElements(expectedType, set);
         } catch (ClassCastException e) {
-            throw TypeMismatchException.forTypeMismatch(Set.class, e);
+            throw TypeMismatchException.forExpectedTypeWithCause(Set.class, e);
         }
     }
 
@@ -610,11 +610,11 @@ public class KiwiCasts2 {
                     "entryType must not be null when result is not ok");
 
             if (entryType == EntryType.KEY) {
-                throw TypeMismatchException.forMapKeyTypeMismatch(keyType, checkResult.invalidValue().getClass());
+                throw TypeMismatchException.forUnexpectedMapKeyType(keyType, checkResult.invalidValue().getClass());
             }
 
             checkEntryTypeIsValue(checkResult);
-            throw TypeMismatchException.forMapValueTypeMismatch(valueType, checkResult.invalidValue().getClass());
+            throw TypeMismatchException.forUnexpectedMapValueType(valueType, checkResult.invalidValue().getClass());
         }
 
         @VisibleForTesting
@@ -727,7 +727,7 @@ public class KiwiCasts2 {
             Map<K, V> map = uncheckedCast(object);
             return strategy.checkEntries(keyType, valueType, map);
         } catch (ClassCastException e) {
-            throw TypeMismatchException.forTypeMismatch(Map.class, e);
+            throw TypeMismatchException.forExpectedTypeWithCause(Map.class, e);
         }
     }
 
