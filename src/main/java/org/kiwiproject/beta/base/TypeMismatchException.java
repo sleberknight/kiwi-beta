@@ -9,7 +9,8 @@ import com.google.common.annotations.Beta;
  * <p>
  * This exists mainly to provide more information in certain situations
  * than {@link ClassCastException} does. For example, when checking that
- * a List contains only Integer values but a Double is found.
+ * a List contains only Integer values but a Double is found. Or when
+ * checking that a Map contains the expected key and value types.
  * <p>
  * While you can construct an instance using the "standard" constructors,
  * it is preferable to create instances the factory methods which can
