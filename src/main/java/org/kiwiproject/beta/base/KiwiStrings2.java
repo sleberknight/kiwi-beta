@@ -149,6 +149,9 @@ public class KiwiStrings2 {
      * such as extremely long run times, out of memory errors, etc. Why? Because if the input string is very
      * long, and the strings are generated using random capitalization, it could take a prohibitively long
      * time (i.e., near infinity) to generate the desired number of unique variants.
+     * <p>
+     * Note that <em>changing this affects every caller</em>, i.e., all code that calls the {@code randomCaseVariants}
+     * methods will use the limit set when calling this method.
      *
      * @param limit the maximum number of random strings
      * @implNote This is expected to be called rarely, but it still uses an internal lock to
@@ -162,6 +165,9 @@ public class KiwiStrings2 {
     /**
      * Reset the maximum number of random strings that can be generated using {@link #randomCaseVariants(String, int)}
      * to the default value ({@link #DEFAULT_RANDOM_CASE_GENERATION_LIMIT}).
+     * <p>
+     * Note that <em>changing this affects every caller</em>, i.e., all code that calls the {@code randomCaseVariants}
+     * methods will use the limit set when calling this method.
      *
      * @implNote This is expected to be called rarely, but it still uses an internal lock to
      * provide thread-safe access.
