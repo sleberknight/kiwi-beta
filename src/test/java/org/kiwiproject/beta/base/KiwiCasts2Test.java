@@ -2,6 +2,7 @@ package org.kiwiproject.beta.base;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 import com.google.common.collect.Lists;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.kiwiproject.collect.KiwiLists;
 import org.kiwiproject.collect.KiwiMaps;
@@ -29,9 +31,16 @@ class KiwiCasts2Test {
         @Nested
         class UsingDefaultCollectionCheckStrategy {
 
+            @Test
+            void shouldThrowIllegalArgument_WhenCollectionIsNull() {
+                assertThatIllegalArgumentException()
+                        .isThrownBy(() -> KiwiCasts2.castToCollectionAndCheckElements(String.class, null))
+                        .withMessage("object must not be null");
+            }
+
             @ParameterizedTest
-            @NullAndEmptySource
-            void shouldReturnCollection_WhenIsNullOrEmpty(Collection<?> coll) {
+            @EmptySource
+            void shouldReturnCollection_WhenIsEmpty(Collection<?> coll) {
                 Collection<String> stringColl = KiwiCasts2.castToCollectionAndCheckElements(String.class, coll);
                 assertThat(stringColl).isSameAs(coll);
             }
@@ -82,9 +91,17 @@ class KiwiCasts2Test {
         @Nested
         class UsingStandardCollectionCheckStrategy {
 
+            @Test
+            void shouldThrowIllegalArgument_WhenCollectionIsNull() {
+                var strategy = KiwiCasts2.StandardCollectionCheckStrategy.ofDefaults();
+                assertThatIllegalArgumentException()
+                        .isThrownBy(() -> KiwiCasts2.castToCollectionAndCheckElements(String.class, null, strategy))
+                        .withMessage("object must not be null");
+            }
+
             @ParameterizedTest
-            @NullAndEmptySource
-            void shouldReturnCollection_WhenIsNullOrEmpty(Collection<?> coll) {
+            @EmptySource
+            void shouldReturnCollection_WhenIsEmpty(Collection<?> coll) {
                 var strategy = KiwiCasts2.StandardCollectionCheckStrategy.ofDefaults();
                 Collection<String> stringColl = KiwiCasts2.castToCollectionAndCheckElements(String.class, coll, strategy);
                 assertThat(stringColl).isSameAs(coll);

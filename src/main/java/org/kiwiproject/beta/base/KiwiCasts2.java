@@ -203,6 +203,7 @@ public class KiwiCasts2 {
     public static <T> Collection<T> castToCollectionAndCheckElements(Class<T> expectedType,
                                                                      Object object,
                                                                      CollectionCheckStrategy strategy) {
+        checkArgumentNotNull(object, "object must not be null");
         checkExpectedTypeNotNull(expectedType);
         try {
             Collection<T> coll = uncheckedCast(object);
