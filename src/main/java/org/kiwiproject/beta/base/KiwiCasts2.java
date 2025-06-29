@@ -203,7 +203,7 @@ public class KiwiCasts2 {
     public static <T> Collection<T> castToCollectionAndCheckElements(Class<T> expectedType,
                                                                      Object object,
                                                                      CollectionCheckStrategy strategy) {
-        checkArgumentNotNull(object, "object must not be null");
+        checkObjectNotNull(object);
         checkExpectedTypeNotNull(expectedType);
         try {
             Collection<T> coll = uncheckedCast(object);
@@ -334,7 +334,7 @@ public class KiwiCasts2 {
     public static <T> List<T> castToListAndCheckElements(Class<T> expectedType,
                                                          Object object,
                                                          ListCheckStrategy strategy) {
-        checkArgumentNotNull(object, "object must not be null");
+        checkObjectNotNull(object);
         checkExpectedTypeNotNull(expectedType);
         try {
             List<T> list = uncheckedCast(object);
@@ -504,7 +504,7 @@ public class KiwiCasts2 {
     public static <T> Set<T> castToSetAndCheckElements(Class<T> expectedType,
                                                        Object object,
                                                        SetCheckStrategy strategy) {
-        checkArgumentNotNull(object, "object must not be null");
+        checkObjectNotNull(object);
         checkExpectedTypeNotNull(expectedType);
         try {
             Set<T> set = uncheckedCast(object);
@@ -724,7 +724,7 @@ public class KiwiCasts2 {
                                                             Object object,
                                                             MapCheckStrategy strategy) {
 
-        checkArgumentNotNull(object, "object must not be null");
+        checkObjectNotNull(object);
         checkArgumentNotNull(keyType, "keyType must not be null");
         checkArgumentNotNull(valueType, "valueType must not be null");
         try {
@@ -749,5 +749,9 @@ public class KiwiCasts2 {
             ClassCastException e) {
 
         return TypeMismatchException.forUnexpectedTypeWithCause(expectedType, object.getClass(), e);
+    }
+
+    private static void checkObjectNotNull(Object object) {
+        checkArgumentNotNull(object, "object must not be null");
     }
 }
