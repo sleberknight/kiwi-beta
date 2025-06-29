@@ -54,7 +54,7 @@ public class ProcessHelpers {
     //  that accept ProcessBuilder instead of ProcessHelper.
 
     /**
-     * Execute command with timeout of 5 seconds.
+     * Execute command with a timeout of 5 seconds.
      *
      * @implNote See the implementation note in {@link #execute(ProcessHelper, List, long, TimeUnit)}.
      */

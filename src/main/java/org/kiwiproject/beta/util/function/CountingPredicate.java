@@ -11,7 +11,7 @@ import java.util.function.Predicate;
  * A {@link Predicate} that wraps a Predicate and tracks the number of
  * true and false results.
  * <p>
- * This should be used only on one stream, unless you want to
+ * This should be used only on one {@link java.util.stream.Stream Stream}, unless you want to
  * continue to accumulate the number of true and false results
  * over multiple streams.
  * <p>

@@ -28,7 +28,7 @@ public @interface RandomCapitalizationSource {
     /**
      * The desired number of randomly capitalized values to provide.
      * <p>
-     * The actual number provided may be less than this value if it is more than 2^N, where N is the length of
+     * The actual number provided may be lower than this value if it is more than 2^N, where N is the length of
      * the input value. See {@link org.kiwiproject.beta.base.KiwiStrings2#randomCaseVariants(String, int)} for
      * details on this mathematical limit.
      *

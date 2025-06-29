@@ -34,7 +34,7 @@ import java.util.TimeZone;
  * To use this in a Dropwizard application, the FQCN must be listed in a {@code META-INF/services/io.dropwizard.logging.common.AppenderFactory}
  * file. Dropwizard already provides this file with its own implementations (in the {@code dropwizard-logging} JAR).
  * This library also provides the same file with our implementation. These two files (and any others from other providers)
- * must all be combined so the resulting file contains all implementations. We generally use the
+ * must all be combined so that the resulting file contains all implementations. We generally use the
  * <a href="https://maven.apache.org/plugins/maven-shade-plugin/">Maven Shade Plugin</a> with the
  * <a href="https://maven.apache.org/plugins/maven-shade-plugin/examples/resource-transformers.html#ServicesResourceTransformer">ServicesResourceTransformer</a>
  * to combine these service files.

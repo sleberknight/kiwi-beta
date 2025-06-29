@@ -137,7 +137,7 @@ public class KiwiMediaTypes {
      * @param mediaType the Jakarta Rest media type to strip parameters from
      * @implNote This method concatenates the type and subtype of the MediaType because the
      * MediaType#toString requires a Jakarta RS implementation to create a RuntimeDelegate
-     * which is then used to convert to a String. Presumably if this method is used, the implementation
+     * which is then used to convert to a String. Presumably, if this method is used, the implementation
      * is available. However, just in case it isn't, this method manually creates the media type string using
      * the type and subtype, since they are just fields in MediaType and don't need a Jakarta RS
      * implementation to be available.
@@ -233,7 +233,7 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has type and subtype that matches the given values.
+     * Checks if the given media type has a type and subtype that matches the given values.
      * <p>
      * To use this method,
      * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
@@ -252,7 +252,7 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has type and subtype that matches the given values.
+     * Checks if the given media type has a type and subtype that matches the given values.
      *
      * @param mediaType the media type to check
      * @param typeToMatch the type to match
@@ -265,7 +265,7 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has type and subtype that matches the given values.
+     * Checks if the given media type has a type and subtype that matches the given values.
      * <p>
      * This method lets you test for subtypes which can have more than one type.
      * For example, "application/xml" and "text/xml" are both considered valid XML types.
@@ -291,7 +291,7 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has type and subtype that matches the given values.
+     * Checks if the given media type has a type and subtype that matches the given values.
      * <p>
      * This method lets you test for subtypes which can have more than one type.
      * For example, "application/xml" and "text/xml" are both considered valid XML types.

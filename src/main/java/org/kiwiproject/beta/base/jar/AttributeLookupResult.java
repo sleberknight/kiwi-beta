@@ -14,7 +14,7 @@ import java.util.Optional;
  *
  * @param lookupStatus the lookup status
  * @param value        the value, or null if the lookup did not succeed for any reason
- * @param error        the Exception that occurred during a failed lookup, or null if the cause was not an exception
+ * @param error        the {@code Exception} that occurred during a failed lookup, or null if the cause was not an exception
  */
 public record AttributeLookupResult(AttributeLookupStatus lookupStatus,
                                     @Nullable String value,

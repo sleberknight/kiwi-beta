@@ -39,7 +39,7 @@ public class DaoHelpers {
     /**
      * Defines/restricts the values that can be used when generating the ordering clause.
      *
-     * @implNote Currently this is very restrictive and will only work in certain languages
+     * @implNote Currently, this is very restrictive and will only work in certain languages
      * such as SQL or HQL.
      */
     private enum Connector {

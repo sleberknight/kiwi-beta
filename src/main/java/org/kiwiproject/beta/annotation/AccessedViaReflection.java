@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 
 /**
  * When placed on a method or constructor, indicates that the member is called via
- * reflection, and is this used and should not be considered for removal. When placed
+ * reflection and is therefore used and should not be considered for removal. When placed
  * on a field, it indicates that the field is accessed via reflection to get or set it.
  * When placed on a type (class, interface, annotation, enum, or record), indicates that
  * the type may be loaded via reflection using {@link Class#forName(String)} or a similar
@@ -35,7 +35,7 @@ public @interface AccessedViaReflection {
     /**
      * Optional description of when, where, why, how this annotated element is accessed via reflection.
      * <p>
-     * While this value is optional, it is recommended, since it can be challenging to track down when
+     * While this value is optional, it is recommended since it can be challenging to track down when
      * and where reflective code invokes methods, constructors, etc.
      */
     String value() default "";

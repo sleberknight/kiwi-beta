@@ -51,7 +51,7 @@ public class KiwiStrings2 {
      *
      * @param value the camelCase value; must not be blank
      * @return the converted snake_case value
-     * @throws IllegalArgumentException if value is blank
+     * @throws IllegalArgumentException if the value is blank
      */
     public static String camelToSnakeCase(String value) {
         return camelToSnakeCaseOrEmpty(value)
@@ -146,7 +146,7 @@ public class KiwiStrings2 {
      * and {@link #randomCaseVariants(String, int, Locale)} to the given limit.
      * <p>
      * Setting this too high (e.g., to {@link Integer#MAX_VALUE}) will probably result in bad things happening
-     * such as extremely long run times, out of memory errors, etc. Why? Because if the input string is very
+     * such as extremely long run times, out-of-memory errors, etc. Why? Because if the input string is very
      * long, and the strings are generated using random capitalization, it could take a prohibitively long
      * time (i.e., near infinity) to generate the desired number of unique variants.
      * <p>
@@ -230,8 +230,8 @@ public class KiwiStrings2 {
      *
      * @implNote If input is longer than 32 characters, 2^32 is greater than {@link Integer#MAX_VALUE}, but
      * casting the result of {@link Math#pow(double, double)} to {@code int} results in {@link Integer#MAX_VALUE}.
-     * Rather than rely on this behavior, explicitly check the input length and return the maximum value of
-     * an int directly when the input string length is more than 32, which (hopefully) makes it clear in the code
+     * Rather than relying on this behavior, explicitly check the input length and return the maximum value of
+     * an int directly when the input string length is more than 32. This (hopefully) makes it clear in the code
      * that 32 is the maximum value that 2 can be raised without exceeding the maximum value of an int.
      */
     private static int maxVariantsOf(@NonNull String input) {

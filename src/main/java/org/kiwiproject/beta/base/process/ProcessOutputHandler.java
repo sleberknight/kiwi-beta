@@ -45,7 +45,7 @@ public class ProcessOutputHandler implements Closeable {
     private final long sleepTimeMillis;
 
     /**
-     * Create new instance.
+     * Create a new instance.
      *
      * @param config the configuration to use
      * @see #ProcessOutputHandler(int, int, long)
@@ -55,7 +55,7 @@ public class ProcessOutputHandler implements Closeable {
     }
 
     /**
-     * Create new instance.
+     * Create a new instance.
      *
      * @param threadPoolSize      the number of threads to use when handling process output
      * @param bufferCapacityBytes the size of the buffer that will be used when reading process output (in bytes)
@@ -243,8 +243,8 @@ public class ProcessOutputHandler implements Closeable {
             }
 
             @Override
-            public void onFailure(@NonNull Throwable error) {
-                LOG.error("Handler for process {} had an error", processId, error);
+            public void onFailure(@NonNull Throwable t) {
+                LOG.error("Handler for process {} had an error", processId, t);
             }
         };
 

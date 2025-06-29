@@ -195,7 +195,7 @@ public class TypeInfo {
      * Check if the raw type is assignable to the {@code testType}, for example, a raw type of ArrayList
      * is assignable to List, and a String is assignable to a CharSequence.
      *
-     * @param testType the type to test against, e.g. Collection, Map, CharSequence
+     * @param testType the type to test against, e.g., Collection, Map, CharSequence
      * @return true if assignable to the given test type, otherwise false
      */
     public boolean hasRawTypeAssignableTo(@NonNull Class<?> testType) {
