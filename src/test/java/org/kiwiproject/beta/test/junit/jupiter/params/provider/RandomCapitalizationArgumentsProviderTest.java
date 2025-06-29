@@ -63,7 +63,7 @@ class RandomCapitalizationArgumentsProviderTest {
         var provider = newRandomCapitalizationArgumentsProvider(annotation);
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> provider.provideArguments(null))
+                .isThrownBy(() -> provider.provideArguments(null, null))
                 .withMessage("value must not be blank");
     }
 
@@ -75,7 +75,7 @@ class RandomCapitalizationArgumentsProviderTest {
         var provider = newRandomCapitalizationArgumentsProvider(annotation);
 
         assertThatIllegalArgumentException()
-                .isThrownBy(() -> provider.provideArguments(null))
+                .isThrownBy(() -> provider.provideArguments(null, null))
                 .withMessage("count must be greater than zero");
     }
 
@@ -88,7 +88,7 @@ class RandomCapitalizationArgumentsProviderTest {
     }
 
     private static String[] getProviderArguments(RandomCapitalizationArgumentsProvider provider) {
-        return provider.provideArguments(null)
+        return provider.provideArguments(null, null)
                 .map(Arguments::get)
                 .flatMap(Arrays::stream)
                 .map(String.class::cast)
