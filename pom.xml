@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.kiwiproject</groupId>
         <artifactId>kiwi-parent</artifactId>
-        <version>3.0.25</version>
+        <version>3.0.26</version>
     </parent>
 
     <artifactId>kiwi-beta</artifactId>
@@ -26,10 +26,10 @@
     </scm>
 
     <properties>
-        <kiwi-bom.version>2.0.25</kiwi-bom.version>
+        <kiwi-bom.version>2.0.26</kiwi-bom.version>
 
         <!-- Kotlin properties -->
-        <kotlin.version>2.1.21</kotlin.version>
+        <kotlin.version>2.2.0</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
         <!-- Versions for required/provided dependencies -->
@@ -37,7 +37,7 @@
         <camel.version>4.12.0</camel.version>
         <jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
-        <kiwi.version>4.10.0</kiwi.version>
+        <kiwi.version>4.11.0</kiwi.version>
         <metrics-healthchecks-severity.version>2.1.1</metrics-healthchecks-severity.version>
 
         <!-- Versions for optional dependencies -->
