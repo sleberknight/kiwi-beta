@@ -54,6 +54,8 @@ public class KiwiCasts2 {
     private static final MapCheckStrategy DEFAULT_MAP_CHECK_STRATEGY =
             new DefaultMapCheckStrategy();
 
+    private static final String STRATEGY_MUST_NOT_BE_NULL = "strategy must not be null";
+
 
     /**
      * Performs an unchecked cast of the given object to the specified type.
@@ -205,6 +207,7 @@ public class KiwiCasts2 {
                                                                      CollectionCheckStrategy strategy) {
         checkObjectNotNull(object);
         checkExpectedTypeNotNull(expectedType);
+        checkArgumentNotNull(strategy, STRATEGY_MUST_NOT_BE_NULL);
         try {
             Collection<T> coll = uncheckedCast(object);
             return strategy.checkElements(expectedType, coll);
@@ -336,6 +339,7 @@ public class KiwiCasts2 {
                                                          ListCheckStrategy strategy) {
         checkObjectNotNull(object);
         checkExpectedTypeNotNull(expectedType);
+        checkArgumentNotNull(strategy, STRATEGY_MUST_NOT_BE_NULL);
         try {
             List<T> list = uncheckedCast(object);
             return strategy.checkElements(expectedType, list);
@@ -506,6 +510,7 @@ public class KiwiCasts2 {
                                                        SetCheckStrategy strategy) {
         checkObjectNotNull(object);
         checkExpectedTypeNotNull(expectedType);
+        checkArgumentNotNull(strategy, STRATEGY_MUST_NOT_BE_NULL);
         try {
             Set<T> set = uncheckedCast(object);
             return strategy.checkElements(expectedType, set);
@@ -690,6 +695,14 @@ public class KiwiCasts2 {
         }
     }
 
+    private static boolean isNotExpectedType(Class<?> expectedType, Object object) {
+        return !isExpectedType(expectedType, object);
+    }
+
+    private static boolean isExpectedType(Class<?> expectedType, Object object) {
+        return expectedType.isAssignableFrom(object.getClass());
+    }
+
     /**
      * Casts the given object to a Map and checks that its keys and values are of the expected types.
      * Uses {@link DefaultMapCheckStrategy} as the map check strategy.
@@ -727,6 +740,7 @@ public class KiwiCasts2 {
         checkObjectNotNull(object);
         checkArgumentNotNull(keyType, "keyType must not be null");
         checkArgumentNotNull(valueType, "valueType must not be null");
+        checkArgumentNotNull(strategy, STRATEGY_MUST_NOT_BE_NULL);
         try {
             Map<K, V> map = uncheckedCast(object);
             return strategy.checkEntries(keyType, valueType, map);
@@ -735,12 +749,8 @@ public class KiwiCasts2 {
         }
     }
 
-    private static boolean isNotExpectedType(Class<?> expectedType, Object object) {
-        return !isExpectedType(expectedType, object);
-    }
-
-    private static boolean isExpectedType(Class<?> expectedType, Object object) {
-        return expectedType.isAssignableFrom(object.getClass());
+    private static void checkObjectNotNull(Object object) {
+        checkArgumentNotNull(object, "object must not be null");
     }
 
     private static <T> TypeMismatchException typeMismatchExceptionForUnexpectedType(
@@ -749,9 +759,5 @@ public class KiwiCasts2 {
             ClassCastException e) {
 
         return TypeMismatchException.forUnexpectedTypeWithCause(expectedType, object.getClass(), e);
-    }
-
-    private static void checkObjectNotNull(Object object) {
-        checkArgumentNotNull(object, "object must not be null");
     }
 }
