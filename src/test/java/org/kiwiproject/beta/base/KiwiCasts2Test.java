@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EmptySource;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.kiwiproject.collect.KiwiLists;
 import org.kiwiproject.collect.KiwiMaps;
 import org.kiwiproject.test.junit.jupiter.ClearBoxTest;
@@ -187,9 +186,16 @@ class KiwiCasts2Test {
         @Nested
         class UsingDefaultListCheckStrategy {
 
+            @Test
+            void shouldThrowIllegalArgument_WhenListIsNull() {
+                assertThatIllegalArgumentException()
+                        .isThrownBy(() -> KiwiCasts2.castToListAndCheckElements(String.class, null))
+                        .withMessage("object must not be null");
+            }
+
             @ParameterizedTest
-            @NullAndEmptySource
-            void shouldReturnList_WhenIsNullOrEmpty(List<?> coll) {
+            @EmptySource
+            void shouldReturnList_WhenIsEmpty(List<?> coll) {
                 List<String> stringList = KiwiCasts2.castToListAndCheckElements(String.class, coll);
                 assertThat(stringList).isSameAs(coll);
             }
@@ -247,9 +253,17 @@ class KiwiCasts2Test {
         @Nested
         class UsingStandardListCheckStrategy {
 
+            @Test
+            void shouldThrowIllegalArgument_WhenListIsNull() {
+                var strategy = KiwiCasts2.StandardListCheckStrategy.ofDefaults();
+                assertThatIllegalArgumentException()
+                        .isThrownBy(() -> KiwiCasts2.castToListAndCheckElements(String.class, null, strategy))
+                        .withMessage("object must not be null");
+            }
+
             @ParameterizedTest
-            @NullAndEmptySource
-            void shouldReturnList_WhenIsNullOrEmpty(List<?> coll) {
+            @EmptySource
+            void shouldReturnList_WhenIsEmpty(List<?> coll) {
                 var strategy = KiwiCasts2.StandardListCheckStrategy.ofDefaults();
                 List<String> stringList = KiwiCasts2.castToListAndCheckElements(String.class, coll, strategy);
                 assertThat(stringList).isSameAs(coll);
@@ -334,9 +348,16 @@ class KiwiCasts2Test {
         @Nested
         class UsingDefaultSetCheckStrategy {
 
+            @Test
+            void shouldThrowIllegalArgument_WhenSetIsNull() {
+                assertThatIllegalArgumentException()
+                        .isThrownBy(() -> KiwiCasts2.castToSetAndCheckElements(String.class, null))
+                        .withMessage("object must not be null");
+            }
+
             @ParameterizedTest
-            @NullAndEmptySource
-            void shouldReturnSet_WhenIsNullOrEmpty(Set<?> coll) {
+            @EmptySource
+            void shouldReturnSet_WhenIsEmpty(Set<?> coll) {
                 Set<String> stringSet = KiwiCasts2.castToSetAndCheckElements(String.class, coll);
                 assertThat(stringSet).isSameAs(coll);
             }
@@ -398,9 +419,17 @@ class KiwiCasts2Test {
         @Nested
         class UsingStandardSetCheckStrategy {
 
+            @Test
+            void shouldThrowIllegalArgument_WhenSetIsNull() {
+                var strategy = KiwiCasts2.StandardSetCheckStrategy.ofDefaults();
+                assertThatIllegalArgumentException()
+                        .isThrownBy(() -> KiwiCasts2.castToSetAndCheckElements(String.class, null, strategy))
+                        .withMessage("object must not be null");
+            }
+
             @ParameterizedTest
-            @NullAndEmptySource
-            void shouldReturnList_WhenIsNullOrEmpty(Set<?> set) {
+            @EmptySource
+            void shouldReturnSet_WhenIsEmpty(Set<?> set) {
                 var strategy = KiwiCasts2.StandardSetCheckStrategy.ofDefaults();
                 Set<String> stringSet = KiwiCasts2.castToSetAndCheckElements(String.class, set, strategy);
                 assertThat(stringSet).isSameAs(set);
@@ -490,9 +519,16 @@ class KiwiCasts2Test {
         @Nested
         class UsingDefaultMapCheckStrategy {
 
+            @Test
+            void shouldThrowIllegalArgument_WhenMapIsNull() {
+                assertThatIllegalArgumentException()
+                        .isThrownBy(() -> KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, null))
+                        .withMessage("object must not be null");
+            }
+
             @ParameterizedTest
-            @NullAndEmptySource
-            void shouldReturnMap_WhenIsNullOrEmpty(Map<?, ?> map) {
+            @EmptySource
+            void shouldReturnMap_WhenIsEmpty(Map<?, ?> map) {
                 Map<String, Integer> stringIntegerMap = KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, map);
                 assertThat(stringIntegerMap).isSameAs(map);
             }
@@ -614,9 +650,17 @@ class KiwiCasts2Test {
                         .withMessage("EntryCheckResult has unexpected entryType: KEY");
             }
 
+            @Test
+            void shouldThrowIllegalArgument_WhenMapIsNull() {
+                var strategy = KiwiCasts2.StandardMapCheckStrategy.ofDefaults();
+                assertThatIllegalArgumentException()
+                        .isThrownBy(() -> KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, null, strategy))
+                        .withMessage("object must not be null");
+            }
+
             @ParameterizedTest
-            @NullAndEmptySource
-            void shouldReturnMap_WhenIsNullOrEmpty(Map<?, ?> map) {
+            @EmptySource
+            void shouldReturnMap_WhenIsEmpty(Map<?, ?> map) {
                 var strategy = KiwiCasts2.StandardMapCheckStrategy.ofDefaults();
                 Map<String, Integer> stringIntegerMap =
                         KiwiCasts2.castToMapAndCheckEntries(String.class, Integer.class, map, strategy);

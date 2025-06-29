@@ -334,6 +334,7 @@ public class KiwiCasts2 {
     public static <T> List<T> castToListAndCheckElements(Class<T> expectedType,
                                                          Object object,
                                                          ListCheckStrategy strategy) {
+        checkArgumentNotNull(object, "object must not be null");
         checkExpectedTypeNotNull(expectedType);
         try {
             List<T> list = uncheckedCast(object);
@@ -503,6 +504,7 @@ public class KiwiCasts2 {
     public static <T> Set<T> castToSetAndCheckElements(Class<T> expectedType,
                                                        Object object,
                                                        SetCheckStrategy strategy) {
+        checkArgumentNotNull(object, "object must not be null");
         checkExpectedTypeNotNull(expectedType);
         try {
             Set<T> set = uncheckedCast(object);
@@ -722,6 +724,7 @@ public class KiwiCasts2 {
                                                             Object object,
                                                             MapCheckStrategy strategy) {
 
+        checkArgumentNotNull(object, "object must not be null");
         checkArgumentNotNull(keyType, "keyType must not be null");
         checkArgumentNotNull(valueType, "valueType must not be null");
         try {
