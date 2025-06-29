@@ -3,7 +3,6 @@ package org.kiwiproject.beta.base;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
-
 import org.kiwiproject.util.function.KiwiConsumers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +51,7 @@ public interface CatchingRunnable2 extends Runnable {
     }
 
     /**
-     * Create a new named instance wrapping the given Runnable. Uses the given Consumer to handle
+     * Create a new named-instance wrapping the given Runnable. Uses the given Consumer to handle
      * unexpected exceptions thrown by the Runnable.
      */
     static CatchingRunnable2 of(String name, Runnable runnable, Consumer<Exception> exceptionHandler) {

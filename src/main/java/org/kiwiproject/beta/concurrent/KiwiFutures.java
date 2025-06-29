@@ -32,13 +32,13 @@ public class KiwiFutures {
 
     /**
      * This is the handler for InterruptedException. This exists to facilitate testing the case when a Future throws
-     * an InterruptedException, by allowing tests to replace it, so that test threads are not interrupted.
+     * an InterruptedException, by allowing tests to replace it so that test threads are not interrupted.
      */
     @VisibleForTesting
     static Function<InterruptedException, IllegalStateException> interruptedExceptionHandler = DEFAULT_INTERRUPTED_EXCEPTION_HANDLER;
 
     /**
-     * This can be used in test code to reset the InterruptedException handler. The easiest thing to do is call this
+     * This can be used in test code to reset the InterruptedException handler. The easiest thing to do is to call this
      * method after each test.
      */
     @VisibleForTesting
@@ -81,7 +81,7 @@ public class KiwiFutures {
     }
 
     /**
-     * Returns the computed result, without waiting.
+     * Returns the computed result without waiting.
      *
      * @param <V> the result type of the future
      * @param future the Future that should have completed with a result
@@ -123,7 +123,7 @@ public class KiwiFutures {
     }
 
     /**
-     * Returns the exception thrown by the task, without waiting.
+     * Returns the exception thrown by the task without waiting.
      *
      * @param <V> the result type of the future
      * @param future the Future that should have completed with an Exception

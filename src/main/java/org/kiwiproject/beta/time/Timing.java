@@ -270,7 +270,7 @@ public class Timing {
     }
 
     /**
-     * Represents an operation that is timed and returns a (possibly null) result, but may throw an exception.
+     * Represents an operation that is timed and returns a (possibly null) result but may throw an exception.
      *
      * @param <R> the result type
      */
@@ -285,7 +285,7 @@ public class Timing {
          *
          * @param elapsedNanos the number of nanoseconds that elapsed during the operation
          * @param result the result of the operation; may be null
-         * @param exception the exception thrown by the operation, may be null
+         * @param exception the exception thrown by the operation; may be null
          * @throws IllegalArgumentException if both result and exception are non-null
          */
         @VisibleForTesting
@@ -353,7 +353,7 @@ public class Timing {
     }
 
     /**
-     * Represents an operation that is timed and returns no result, but may throw an exception.
+     * Represents an operation that is timed and returns no result but may throw an exception.
      */
     @Value
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -413,7 +413,7 @@ public class Timing {
     }
 
     /**
-     * Time an operation that does not return a result, but may throw an exception.
+     * Time an operation that does not return a result but may throw an exception.
      * The return value should be inspected to determine whether the
      * operation succeeded or failed.
      *

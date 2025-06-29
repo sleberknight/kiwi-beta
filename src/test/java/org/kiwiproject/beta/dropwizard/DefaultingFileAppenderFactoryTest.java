@@ -94,6 +94,7 @@ class DefaultingFileAppenderFactoryTest {
     private void assertExactlyOneRollingFileAppender(AsyncAppenderBase<ILoggingEvent> appender) {
         var appenderIterator = appender.iteratorForAppenders();
         var fileAppender = Iterators.getOnlyElement(appenderIterator);
+        assertThat(fileAppender).isNotNull();
         assertThat(fileAppender).isExactlyInstanceOf(RollingFileAppender.class);
         assertThat(fileAppender.isStarted()).isTrue();
     }

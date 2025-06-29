@@ -19,7 +19,7 @@ import java.util.function.IntConsumer;
 /**
  * Trying out an idea for a self-contained thread-safe counter that drains itself on a recurring basis.
  * <p>
- * Client code determines the "drain period" after which the count is reset to zero, and can increment as often
+ * Client code determines the "drain period" after which the count is reset to zero and can increment as often
  * as it needs to. Clients can get the current count at any time. Clients should ensure the counter is "started"
  * before using it; otherwise it won't drain. No checks are done on this in this first implementation.
  * <p>

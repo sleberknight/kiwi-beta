@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Extremely simply way to "allowlist" fields, e.g., from a web form.
+ * Extremely simple way to "allowlist" fields, e.g., from a web form.
  */
 @Beta
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

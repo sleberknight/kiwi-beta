@@ -14,7 +14,7 @@ public class KiwiGit {
     /**
      * Check whether the given input value looks like it is a short Git hash.
      * <p>
-     * This method considers a short Git hash to be a 7-12 character long String containing only valid
+     * This method considers a short Git hash to be a 7 to 12-character long String containing only valid
      * hexadecimal characters. Specifically, valid hexadecimal characters include digits {@code 0-9}
      * and <em>lowercase</em> letters {@code a-f}. We only look for lowercase letters because we have
      * never once seen git display a commit hash with uppercase letters.

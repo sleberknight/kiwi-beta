@@ -13,8 +13,8 @@ import java.util.Optional;
  * A record that contains a lookup status and, if the lookup succeeded, a map of all the attributes.
  *
  * @param lookupStatus the lookup status
- * @param attributes   a map containing the attributes, or null if the lookup failed for any reason
- * @param error        the Exception that occurred during a failed lookup, or null if the cause was not an exception
+ * @param attributes   a map containing the attributes or null if the lookup failed for any reason
+ * @param error        the {@code Exception} that occurred during a failed lookup, or null if the cause was not an exception
  */
 public record AttributesLookupResult(AttributesLookupStatus lookupStatus,
                                      @Nullable Map<String, String> attributes,
@@ -44,7 +44,7 @@ public record AttributesLookupResult(AttributesLookupStatus lookupStatus,
     }
 
     /**
-     * @return true if, and only if, attributes is not null
+     * @return true if, and only if, {@code attributes} is not null
      */
     public boolean hasAttributes() {
         return nonNull(attributes);

@@ -3,16 +3,14 @@ package org.kiwiproject.beta.base.process;
 import static java.util.Objects.nonNull;
 
 import com.google.common.annotations.Beta;
-
-import org.kiwiproject.base.process.Processes;
-
-import java.util.List;
-import java.util.Optional;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
+import org.kiwiproject.base.process.Processes;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents the result of running a command line process. May include data written
@@ -43,7 +41,7 @@ public class ProcessResult {
     private final Throwable error;
 
     /**
-     * Return true if exit code is zero, and false for any other value.
+     * Return true if the exit code is zero, and false for any other value.
      */
     public static boolean isSuccessfulExitCode(int exitCode) {
         return Processes.isSuccessfulExitCode(exitCode);

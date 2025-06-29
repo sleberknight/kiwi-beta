@@ -177,7 +177,7 @@ public class TimestampingLogger {
     }
 
     /**
-     * Logs the given message, and then logs the elapsed time since the previous log.
+     * Logs the given message and then logs the elapsed time since the previous log.
      * This results in two separate log messages.
      *
      * @param level   the level at which to log the message and elapsed time message

@@ -53,7 +53,7 @@ class AutoDrainingCounterTest {
     }
 
     /**
-     * Same as above "test".
+     * Same as the above "test".
      */
     @SuppressWarnings({"java:S2699", "java:S1607"})
     @Test

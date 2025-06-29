@@ -27,7 +27,7 @@ public class NamedMeter extends Meter {
     /**
      * Allows access to the decorated {@link Meter} instance. Normally this won't be necessary since calls to
      * {@link Metered} methods are delegated to and because this class extends {@link Meter}, which allows it
-     * to be passed directly to any methods that accept a {@link Meter}, e.g. a {@link com.codahale.metrics.Timer}
+     * to be passed directly to any methods that accept a {@link Meter}, e.g., a {@link com.codahale.metrics.Timer}
      * requires a {@link Meter} in one of its constructors.
      */
     @Getter
@@ -51,7 +51,7 @@ public class NamedMeter extends Meter {
     /**
      * @return the name of this Meter
      * @implNote This does not include any additional information from the Meter, because calling the methods
-     * in a Meter cause changes to occur internally (since it is time-dependent) and a {@code toString()} should
+     * in a Meter causes changes to occur internally (since it is time-dependent) and a {@code toString()} should
      * not cause any internal state changes in an object.
      */
     @Override
