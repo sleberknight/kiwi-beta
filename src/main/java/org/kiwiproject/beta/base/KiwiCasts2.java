@@ -11,6 +11,7 @@ import static org.kiwiproject.base.KiwiPreconditions.requirePositiveOrZero;
 import com.google.common.annotations.Beta;
 import com.google.common.annotations.VisibleForTesting;
 import lombok.experimental.UtilityClass;
+import org.kiwiproject.base.KiwiCasts;
 import org.kiwiproject.collect.KiwiCollections;
 import org.kiwiproject.collect.KiwiMaps;
 
@@ -23,10 +24,7 @@ import java.util.Set;
  * Utilities related to casting.
  * <p>
  * Some of these methods may be moved into {@code org.kiwiproject.base.KiwiCasts}
- * in <a href="https://github.com/kiwiproject/kiwi">kiwi</a>. As of this writing,
- * {@code KiwiCasts} is not released in kiwi. It is scheduled for the 4.11.0
- * release. It was added to kiwi in
- * <a href="https://github.com/kiwiproject/kiwi/commit/c67493352932985a61db68b839fca1566592efc0">this commit</a>.
+ * in <a href="https://github.com/kiwiproject/kiwi">kiwi</a>.
  */
 @Beta
 @UtilityClass
@@ -59,18 +57,13 @@ public class KiwiCasts2 {
 
     /**
      * Performs an unchecked cast of the given object to the specified type.
-     * <p>
-     * <strong>NOTE:</strong> This method is copied directly from {@code KiwiCasts}
-     * in kiwi, since it is not currently in a released version of kiwi, and because
-     * it is necessary here.
      *
      * @param object the object to cast
      * @param <T>    the type to cast to
      * @return the object cast to the specified type
      */
-    @SuppressWarnings("unchecked")
     public static <T> T uncheckedCast(Object object) {
-        return (T) object;
+        return KiwiCasts.uncheckedCast(object);
     }
 
     /**
