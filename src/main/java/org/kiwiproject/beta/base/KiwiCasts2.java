@@ -57,6 +57,9 @@ public class KiwiCasts2 {
 
     /**
      * Performs an unchecked cast of the given object to the specified type.
+     * <p>
+     * Note that this method simply delegates to {@link KiwiCasts#uncheckedCast(Object)}
+     * and may be removed in a future version.
      *
      * @param object the object to cast
      * @param <T>    the type to cast to
