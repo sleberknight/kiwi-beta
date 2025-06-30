@@ -200,7 +200,7 @@ public class KiwiMediaTypes {
      */
     public static boolean matchesType(String mediaType, String typeToMatch) {
         checkMediaTypeNotBlank(mediaType);
-        checkArgumentNotBlank(typeToMatch, "typeToMatch must not be blank");
+        checkMediaTypeNotBlank(typeToMatch, "typeToMatch");
         var parsedType = MediaType.parse(mediaType);
         var type = parsedType.type();
         return typeToMatch.equals(type);
@@ -215,7 +215,7 @@ public class KiwiMediaTypes {
      */
     public static boolean matchesSubtype(String mediaType, String subtypeToMatch) {
         checkMediaTypeNotBlank(mediaType);
-        checkArgumentNotBlank(subtypeToMatch, "subtypeToMatch must not be blank");
+        checkMediaTypeNotBlank(subtypeToMatch, "subtypeToMatch");
         var parsedType = MediaType.parse(mediaType);
         var subtype = parsedType.subtype();
         return subtypeToMatch.equals(subtype);
@@ -243,6 +243,25 @@ public class KiwiMediaTypes {
      * Checks if the given media type has a type and subtype that matches the given {@code type/subtype} media type.
      * Ignores parameters in {@code mediaType} such as "version" and "charset" in
      * {@code text/plain; version=0.0.4; charset=utf-8}.
+     * <p>
+     * To use this method,
+     * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
+     * dependency must be present.
+     *
+     * @param mediaType the Jakarta Rest media type to check
+     * @param mediaTypeToMatch the Jakarta Rest media type to match (must contain only {@code type} and {@code subtype})
+     * @return true if the type and subtype both match ignoring parameters, otherwise false
+     */
+    public static boolean matchesMediaType(jakarta.ws.rs.core.MediaType mediaType, jakarta.ws.rs.core.MediaType mediaTypeToMatch) {
+        checkJakartaMediaType(mediaType);
+        checkJakartaMediaType(mediaTypeToMatch, "mediaTypeToMatch");
+        return matchesMediaType(mediaType.toString(), mediaTypeToMatch.toString());
+    }
+
+    /**
+     * Checks if the given media type has a type and subtype that matches the given {@code type/subtype} media type.
+     * Ignores parameters in {@code mediaType} such as "version" and "charset" in
+     * {@code text/plain; version=0.0.4; charset=utf-8}.
      *
      * @param mediaType the media type to check
      * @param mediaTypeToMatch the media type to match (must be in exact format {@code type/subtype})
@@ -250,6 +269,7 @@ public class KiwiMediaTypes {
      */
     public static boolean matchesMediaType(String mediaType, String mediaTypeToMatch) {
         checkMediaTypeNotBlank(mediaType);
+        checkMediaTypeNotBlank(mediaTypeToMatch, "mediaTypeToMatch");
 
         var slashIndex = indexOf(mediaTypeToMatch, '/');
         checkArgument(slashIndex > -1 && !contains(mediaTypeToMatch, ';'),
@@ -315,8 +335,12 @@ public class KiwiMediaTypes {
     }
 
     private static void checkJakartaMediaType(jakarta.ws.rs.core.MediaType mediaType) {
-        checkArgumentNotNull(mediaType, "mediaType must not be null");
+        checkJakartaMediaType(mediaType, "mediaType");
     }
+
+     private static void checkJakartaMediaType(jakarta.ws.rs.core.MediaType mediaType, String argumentName) {
+        checkArgumentNotNull(mediaType, "%s must not be null", argumentName);
+     }
 
     /**
      * Checks if the given media type has a type and subtype that matches the given values.
@@ -345,6 +369,10 @@ public class KiwiMediaTypes {
     }
 
     private static void checkMediaTypeNotBlank(String mediaType) {
-        checkArgumentNotBlank(mediaType, "mediaType must not be blank");
+        checkMediaTypeNotBlank(mediaType, "mediaType");
+    }
+
+     private static void checkMediaTypeNotBlank(String mediaType, String argumentName) {
+        checkArgumentNotBlank(mediaType, "%s must not be blank", argumentName);
     }
 }
