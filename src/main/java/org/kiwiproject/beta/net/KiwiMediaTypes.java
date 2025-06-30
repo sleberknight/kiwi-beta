@@ -45,6 +45,7 @@ public class KiwiMediaTypes {
     private static final String JSON_SUBTYPE = "json";
     private static final String PLAIN_SUBTYPE = "plain";
     private static final String XML_SUBTYPE = "xml";
+    private static final String HTML_SUBTYPE = "html";
 
     /**
      * Checks if the Jakarta Rest media type is "application/xml" or "text/xml", ignoring parameters such that
@@ -71,6 +72,33 @@ public class KiwiMediaTypes {
      */
     public static boolean isXml(String mediaType) {
         return matchesTypeAndSubtype(mediaType, XML_TYPES, XML_SUBTYPE);
+    }
+
+    /**
+     * Checks if the Jakarta Rest media type is "text/html", ignoring parameters such that
+     * "text/html; charset=utf-8" is considered HTML.
+     * <p>
+     * To use this method,
+     * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
+     * dependency must be present.
+     *
+     * @param mediaType the Jakarta Rest media type to check
+     * @return true if the media type is HTML ignoring any parameters, otherwise false
+     */
+    public static boolean isHtml(jakarta.ws.rs.core.MediaType mediaType) {
+        checkJakartaMediaType(mediaType);
+        return isHtml(mediaType.toString());
+    }
+
+    /**
+     * Checks if the media type is "text/html", ignoring parameters such that
+     * "text/html; charset=utf-8" is considered HTML.
+     *
+     * @param mediaType the media type to check
+     * @return true if the media type is HTML ignoring any parameters, otherwise false
+     */
+    public static boolean isHtml(String mediaType) {
+        return matchesTypeAndSubtype(mediaType, TEXT_TYPE, HTML_SUBTYPE);
     }
 
     /**

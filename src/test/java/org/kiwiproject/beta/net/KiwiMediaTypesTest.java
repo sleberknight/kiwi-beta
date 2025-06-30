@@ -88,6 +88,68 @@ class KiwiMediaTypesTest {
             assertThat(KiwiMediaTypes.isXml(MediaType.valueOf(mediaType))).isFalse();
         }
     }
+    @Nested
+    class IsHtml {
+
+        @ParameterizedTest
+        @AsciiOnlyBlankStringSource
+        void shouldNotAllowBlankMediaType(String value) {
+            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isHtml(value));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+            "text/html",
+            "text/html; charset=utf-8",
+            "text/html; charset=ISO-8859-1",
+        })
+        void shouldBeTrue_WhenGivenAnAcceptableHtmlType(String mediaType) {
+            assertThat(KiwiMediaTypes.isHtml(mediaType)).isTrue();
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+            "application/xml",
+            "text/css",
+            "application/json; charset=utf-8",
+            "text/xml; charset=ISO-8859-1",
+            "image/jpeg"
+        })
+        void shouldBeFalse_WhenNotHtmlType(String mediaType) {
+            assertThat(KiwiMediaTypes.isHtml(mediaType)).isFalse();
+        }
+    }
+
+    @Nested
+    class IsHtmlWithJakartaMediaType {
+
+        @Test
+        void shouldNotAllowNullMediaType() {
+            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isHtml((MediaType) null));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+            "text/html",
+            "text/html; charset=utf-8",
+            "text/html; charset=ISO-8859-1",
+        })
+        void shouldBeTrue_WhenGivenAnAcceptableHtmlType(String mediaType) {
+            assertThat(KiwiMediaTypes.isHtml(MediaType.valueOf(mediaType))).isTrue();
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+            "application/xml",
+            "text/css",
+            "application/json; charset=utf-8",
+            "text/xml; charset=ISO-8859-1",
+            "image/jpeg"
+        })
+        void shouldBeFalse_WhenNotHtmlType(String mediaType) {
+            assertThat(KiwiMediaTypes.isHtml(MediaType.valueOf(mediaType))).isFalse();
+        }
+    }
 
     @Nested
     class IsJson {
