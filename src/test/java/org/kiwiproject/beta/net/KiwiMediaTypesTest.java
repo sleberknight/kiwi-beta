@@ -26,7 +26,9 @@ class KiwiMediaTypesTest {
         @ParameterizedTest
         @AsciiOnlyBlankStringSource
         void shouldNotAllowBlankMediaType(String value) {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isXml(value));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.isXml(value))
+                    .withMessage("mediaType must not be blank");
         }
 
         @ParameterizedTest
@@ -60,7 +62,9 @@ class KiwiMediaTypesTest {
 
         @Test
         void shouldNotAllowNullMediaType() {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isXml((MediaType) null));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.isXml((MediaType) null))
+                    .withMessage("mediaType must not be null");
         }
 
         @ParameterizedTest
@@ -94,7 +98,9 @@ class KiwiMediaTypesTest {
         @ParameterizedTest
         @AsciiOnlyBlankStringSource
         void shouldNotAllowBlankMediaType(String value) {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isHtml(value));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.isHtml(value))
+                    .withMessage("mediaType must not be blank");
         }
 
         @ParameterizedTest
@@ -125,7 +131,9 @@ class KiwiMediaTypesTest {
 
         @Test
         void shouldNotAllowNullMediaType() {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isHtml((MediaType) null));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.isHtml((MediaType) null))
+                    .withMessage("mediaType must not be null");
         }
 
         @ParameterizedTest
@@ -157,7 +165,9 @@ class KiwiMediaTypesTest {
         @ParameterizedTest
         @AsciiOnlyBlankStringSource
         void shouldNotAllowBlankMediaType(String value) {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isJson(value));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.isJson(value))
+                    .withMessage("mediaType must not be blank");
         }
 
         @ParameterizedTest
@@ -188,7 +198,9 @@ class KiwiMediaTypesTest {
 
         @Test
         void shouldNotAllowNullMediaType() {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isJson((MediaType) null));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.isJson((MediaType) null))
+                    .withMessage("mediaType must not be null");
         }
 
         @ParameterizedTest
@@ -220,7 +232,9 @@ class KiwiMediaTypesTest {
         @ParameterizedTest
         @AsciiOnlyBlankStringSource
         void shouldNotAllowBlankMediaType(String value) {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isPlainText(value));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.isPlainText(value))
+                    .withMessage("mediaType must not be blank");
         }
 
         @ParameterizedTest
@@ -252,7 +266,9 @@ class KiwiMediaTypesTest {
 
         @Test
         void shouldNotAllowNullMediaType() {
-            assertThatIllegalArgumentException().isThrownBy(() -> KiwiMediaTypes.isPlainText((MediaType) null));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.isPlainText((MediaType) null))
+                    .withMessage("mediaType must not be null");
         }
 
         @ParameterizedTest
@@ -284,8 +300,9 @@ class KiwiMediaTypesTest {
 
         @Test
         void shouldNowAllowNullArgument() {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.toStringWithoutParameters(null));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.toStringWithoutParameters(null))
+                    .withMessage("mediaType must not be null");
         }
 
         @ParameterizedTest
@@ -314,8 +331,9 @@ class KiwiMediaTypesTest {
         @ParameterizedTest
         @MinimalBlankStringSource
         void shouldNotAllowBlankArguments(String value) {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.withoutParameters(value));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.withoutParameters(value))
+                    .withMessage("mediaType must not be blank");
         }
 
         @ParameterizedTest
@@ -342,8 +360,9 @@ class KiwiMediaTypesTest {
         @ParameterizedTest
         @AsciiOnlyBlankStringSource
         void shouldNotAllowBlankMediaType(String value) {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesType(value, "text"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesType(value, "text"))
+                    .withMessage("mediaType must not be blank");
         }
 
         @ParameterizedTest
@@ -375,8 +394,17 @@ class KiwiMediaTypesTest {
         @ParameterizedTest
         @AsciiOnlyBlankStringSource
         void shouldNotAllowBlankMediaType(String value) {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesSubtype(value, "xml"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesSubtype(value, "xml"))
+                    .withMessage("mediaType must not be blank");
+        }
+
+        @ParameterizedTest
+        @AsciiOnlyBlankStringSource
+        void shouldNotAllowBlankSubtypeTypeToMatch(String value) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesSubtype("application/json", value))
+                    .withMessage("subtypeToMatch must not be blank");
         }
 
         @ParameterizedTest
@@ -401,21 +429,22 @@ class KiwiMediaTypesTest {
     }
 
     @Nested
-    class MatchesMediaType {
+    class MatchesMediaTypeWithStrings {
 
         @ParameterizedTest
         @CsvSource(textBlock = """
-            null, null,
-            '', ''
-            null, text/plain
-            '', text/plain
-            text/plain, null
-            text/plain, ''
+            null, null, mediaType must not be blank 
+            '', '', mediaType must not be blank
+            null, text/plain, mediaType must not be blank
+            '', text/plain, mediaType must not be blank
+            text/plain, null, mediaTypeToMatch must not be blank
+            text/plain, '', mediaTypeToMatch must not be blank
             """,
             nullValues = "null")
-        void shouldNotAllowBlankArguments(String mediaType, String mediaTypeToMatch) {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesMediaType(mediaType, mediaTypeToMatch));
+        void shouldNotAllowBlankArguments(String mediaType, String mediaTypeToMatch, String expectedMessage) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesMediaType(mediaType, mediaTypeToMatch))
+                    .withMessage(expectedMessage);
         }
 
         @ParameterizedTest
@@ -436,16 +465,24 @@ class KiwiMediaTypesTest {
     }
 
     @Nested
-    class MatchesMediaTypeWithJakartaMediaType {
+    class MatchesMediaTypeWithJakartaMediaTypeAndString {
 
         @Test
         void shouldNotAllowNullJakartaMediaType() {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesMediaType((MediaType) null, "application/json"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesMediaType((MediaType) null, "application/json"))
+                    .withMessage("mediaType must not be null");
         }
 
         @ParameterizedTest
         @NullAndEmptySource
+        void shouldNotAllowBlankMediaTypeToMatch(String mediaTypeToMatch) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesMediaType(MediaType.APPLICATION_JSON_TYPE, mediaTypeToMatch))
+                    .withMessage("mediaTypeToMatch must not be blank");
+        }
+
+        @ParameterizedTest
         @ValueSource(strings = {
             "application",
             "json",
@@ -454,9 +491,10 @@ class KiwiMediaTypesTest {
             "application/json; charset=utf-8",
             "text/plain; version=0.0.4; charset=utf-8"
         })
-        void shouldNotAllowBlankOrMalformedMediaTypeToMatch(String mediaTypeToMatch) {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesMediaType(MediaType.APPLICATION_JSON_TYPE, mediaTypeToMatch));
+        void shouldNotAllowMalformedMediaTypeToMatch(String mediaTypeToMatch) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesMediaType(MediaType.APPLICATION_JSON_TYPE, mediaTypeToMatch))
+                    .withMessage("mediaTypeToMatch must not be blank and be in the format type/subtype");
         }
 
         @ParameterizedTest
@@ -479,22 +517,59 @@ class KiwiMediaTypesTest {
     }
 
     @Nested
+    class MatchesMediaTypeWithJakartaMediaTypes {
+
+        @Test
+        void shouldNotAllowNullJakartaMediaType() {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesMediaType((MediaType) null, MediaType.valueOf("application/json")))
+                    .withMessage("mediaType must not be null");
+        }
+
+        @Test
+        void shouldNotAllowNullJakartaMediaTypeToMatch() {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesMediaType(MediaType.valueOf("application/json"), (MediaType) null))
+                    .withMessage("mediaTypeToMatch must not be null");
+        }
+
+        @ParameterizedTest
+        @CsvSource(textBlock = """
+            application/json, application/json, true
+            application/json;charset=UTF-8, application/json, true
+            text/xml, text/xml, true
+            text/html;charset=ISO-8859-1, text/html, true
+            text/plain, text/plain, true
+
+            text/xml, application/xml, false
+            application/json, application/xml, false
+            text/plain, application/json, false
+            """,
+            nullValues = "null")
+        void shouldBeTrue_WhenTypeAndSubtypeMatch(String mediaType, String mediaTypeToMatch, boolean expectMatch) {
+            assertThat(KiwiMediaTypes.matchesMediaType(MediaType.valueOf(mediaType),  MediaType.valueOf(mediaTypeToMatch)))
+                    .isEqualTo(expectMatch);
+        }
+    }
+
+    @Nested
     class MatchesTypeAndSubtype {
 
         @ParameterizedTest
         @CsvSource(textBlock = """
-            null, null, null
-            null, text, xml
-            '', text, xml
-            text/plain, null, plain
-            text/plain, '', plain
-            application/json, application, null
-            application/json, application, ''
+            null, null, null, typeToMatch must not be blank
+            null, text, xml, mediaType must not be blank
+            '', text, xml, mediaType must not be blank
+            text/plain, null, plain, typeToMatch must not be blank
+            text/plain, '', plain, typeToMatch must not be blank
+            application/json, application, null, subtypeToMatch must not be blank
+            application/json, application, '', subtypeToMatch must not be blank
             """,
             nullValues = "null")
-        void shouldNotAllowBlankArguments(String mediaType, String typeToMatch, String subtypeToMatch) {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype(mediaType, typeToMatch, subtypeToMatch));
+        void shouldNotAllowBlankArguments(String mediaType, String typeToMatch, String subtypeToMatch, String expectedMessage) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype(mediaType, typeToMatch, subtypeToMatch))
+                    .withMessage(expectedMessage);
         }
 
         @ParameterizedTest
@@ -519,22 +594,24 @@ class KiwiMediaTypesTest {
 
         @Test
         void shouldNotAllowNullJakartaMediaType() {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype((MediaType) null, "application", "json"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype((MediaType) null, "application", "json"))
+                    .withMessage("mediaType must not be null");
         }
 
         @ParameterizedTest
         @CsvSource(textBlock = """
-            null, null
-            null, plain
-            '', plain
-            application, null
-            application, ''
+            null, null, typeToMatch must not be blank
+            null, plain, typeToMatch must not be blank
+            '', plain, typeToMatch must not be blank
+            application, null, subtypeToMatch must not be blank
+            application, '', subtypeToMatch must not be blank
             """,
             nullValues = "null")
-        void shouldNotAllowBlankArguments(String typeToMatch, String subtypeToMatch) {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype(MediaType.APPLICATION_JSON_TYPE, typeToMatch, subtypeToMatch));
+        void shouldNotAllowBlankArguments(String typeToMatch, String subtypeToMatch, String expectedMessage) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype(MediaType.APPLICATION_JSON_TYPE, typeToMatch, subtypeToMatch))
+                    .withMessage(expectedMessage);
         }
 
         @ParameterizedTest
@@ -560,32 +637,35 @@ class KiwiMediaTypesTest {
 
         @ParameterizedTest
         @CsvSource(textBlock = """
-            null, null
-            '', ''
-            null, xml
-            '', xml
-            text/plain, null
-            text/plain, ''
+            null, null, mediaType must not be blank
+            '', '', mediaType must not be blank
+            null, xml, mediaType must not be blank
+            '', xml, mediaType must not be blank
+            text/plain, null, subtypeToMatch must not be blank
+            text/plain, '', subtypeToMatch must not be blank
             """,
             nullValues = "null")
-        void shouldNotAllowBlankArguments(String mediaType, String subtypeToMatch) {
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype(mediaType, Set.of("text"), subtypeToMatch));
+        void shouldNotAllowBlankArguments(String mediaType, String subtypeToMatch, String expectedMessage) {
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype(mediaType, Set.of("text"), subtypeToMatch))
+                    .withMessage(expectedMessage);
         }
 
         @Test
         void shouldNotAllowEmptyTypesToMatch() {
             Set<String> typesToMatch = Set.of();
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype("text/xml", typesToMatch, "xml"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype("text/xml", typesToMatch, "xml"))
+                    .withMessage("typesToMatch must not be empty");
         }
 
         @ParameterizedTest
         @MinimalBlankStringSource
         void shouldNotAllowBlankElementsInTypesToMatch(String value) {
             var typesToMatch = Sets.newHashSet("text", value);  // use Guava's Sets b/c Set#of rejects null
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype("text/xml", typesToMatch, "xml"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype("text/xml", typesToMatch, "xml"))
+                    .withMessage("typesToMatch must not contain blank elements");
         }
 
         @ParameterizedTest
@@ -612,31 +692,35 @@ class KiwiMediaTypesTest {
         @Test
         void shouldNotAllowNullJakartaMediaType() {
             var typesToMatch = Set.of("application");
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype((MediaType) null, typesToMatch, "json"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype((MediaType) null, typesToMatch, "json"))
+                    .withMessage("mediaType must not be null");
         }
 
         @Test
         void shouldNotAllowEmptyTypesToMatch() {
             Set<String> typesToMatch = Set.of();
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype(MediaType.TEXT_XML_TYPE, typesToMatch, "xml"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype(MediaType.TEXT_XML_TYPE, typesToMatch, "xml"))
+                    .withMessage("typesToMatch must not be empty");
         }
 
         @ParameterizedTest
         @MinimalBlankStringSource
         void shouldNotAllowBlankElementsInTypesToMatch(String value) {
             var typesToMatch = Sets.newHashSet("text", value);  // use Guava's Sets b/c Set#of rejects null
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype(MediaType.TEXT_XML_TYPE, typesToMatch, "xml"));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype(MediaType.TEXT_XML_TYPE, typesToMatch, "xml"))
+                    .withMessage("typesToMatch must not contain blank elements");
         }
 
         @ParameterizedTest
         @MinimalBlankStringSource
         void shouldNotAllowBlankSubtypeToMatch(String value) {
             var typesToMatch = Set.of("application");
-            assertThatIllegalArgumentException().isThrownBy(() ->
-                    KiwiMediaTypes.matchesTypeAndSubtype(MediaType.APPLICATION_JSON_TYPE, typesToMatch, value));
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiMediaTypes.matchesTypeAndSubtype(MediaType.APPLICATION_JSON_TYPE, typesToMatch, value))
+                    .withMessage("subtypeToMatch must not be blank");
         }
 
         @ParameterizedTest
