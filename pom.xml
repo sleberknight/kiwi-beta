@@ -45,6 +45,8 @@
         <!-- Versions for test dependencies -->
         <kiwi-test.version>3.11.0</kiwi-test.version>
         <mockito-kotlin.version>5.4.0</mockito-kotlin.version>
+        <!-- TODO: Remove this property once update to kiwi-bom 2.0.27 (see https://github.com/kiwiproject/kiwi-bom/issues/1313) -->
+        <okhttp3.mockwebserver.version>4.12.0</okhttp3.mockwebserver.version>
 
         <!--  Sonar properties -->
         <sonar.projectKey>sleberknight_kiwi-beta</sonar.projectKey>
@@ -272,6 +274,12 @@
 
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
             <artifactId>jersey-common</artifactId>
             <scope>test</scope>
         </dependency>
@@ -299,6 +307,14 @@
                     <artifactId>mockito-core</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <!-- TODO: Remove version once update to kiwi-bom 2.0.27 (see https://github.com/kiwiproject/kiwi-bom/issues/1313) -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <version>${okhttp3.mockwebserver.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
