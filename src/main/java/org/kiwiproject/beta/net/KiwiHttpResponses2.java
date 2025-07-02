@@ -3,6 +3,7 @@ package org.kiwiproject.beta.net;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
+import com.google.common.annotations.Beta;
 import com.google.common.html.HtmlEscapers;
 import lombok.experimental.UtilityClass;
 
@@ -13,6 +14,7 @@ import lombok.experimental.UtilityClass;
  * in <a href="https://github.com/kiwiproject/kiwi">kiwi</a>. 
  */
 @UtilityClass
+@Beta
 public class KiwiHttpResponses2 {
 
     /**

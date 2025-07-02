@@ -3,6 +3,7 @@ package org.kiwiproject.beta.jakarta.rest;
 import static java.util.Objects.nonNull;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
+import com.google.common.annotations.Beta;
 import jakarta.ws.rs.core.Response;
 import lombok.experimental.UtilityClass;
 import org.kiwiproject.beta.net.KiwiHttpResponses2;
@@ -14,6 +15,7 @@ import org.kiwiproject.beta.net.KiwiHttpResponses2;
  * in <a href="https://github.com/kiwiproject/kiwi">kiwi</a>.
  */
 @UtilityClass
+@Beta
 public class KiwiResponses2 {
 
     /**
