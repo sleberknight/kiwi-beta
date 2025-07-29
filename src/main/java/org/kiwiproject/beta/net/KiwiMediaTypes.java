@@ -192,7 +192,12 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has a type that matches the given value.
+     * Checks if {@code mediaType} has a type that matches {@code typeToMatch}.
+     * <p>
+     * For example, if you want to check that the {@code type} part of the media type
+     * of an HTTP response is {@code "text"}, you would write:
+     * <p>
+     * {@code matchesType(response.mediaTypeAsString(), "text")}.
      *
      * @param mediaType the media type to check
      * @param typeToMatch the type to match
@@ -207,7 +212,12 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has a type that matches the given value.
+     * Checks if {@code mediaType} has a subtype that matches {@code subtypeToMatch}.
+     * <p>
+     * For example, if you want to check that a media type has the subtype {@code "xml"},
+     * you would write:
+     * <p>
+     * {@code matchesSubtype(response.mediaTypeAsString(), "xml")}
      *
      * @param mediaType the media type to check
      * @param subtypeToMatch the subtype to match
@@ -222,9 +232,14 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has a type and subtype that matches the given {@code type/subtype} media type.
-     * Ignores parameters in {@code mediaType} such as "version" and "charset" in
-     * {@code text/plain; version=0.0.4; charset=utf-8}.
+     * Checks if {@code mediaType} has a type and subtype that matches {@code mediaTypeToMatch}, which
+     * must be in the format {@code type/subtype}. Ignores parameters in {@code mediaType}
+     * such as "version" and "charset" in {@code text/plain; version=0.0.4; charset=utf-8}.
+     * <p>
+     * For example, if you want to check that the media type of an HTTP response is HTML ({@code text/html}),
+     * you would write:
+     * <p>
+     * {@code matchesMediaType(response.mediaType(), "text/html")}.
      * <p>
      * To use this method,
      * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
@@ -240,9 +255,14 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has a type and subtype that matches the given {@code type/subtype} media type.
-     * Ignores parameters in {@code mediaType} such as "version" and "charset" in
-     * {@code text/plain; version=0.0.4; charset=utf-8}.
+     * Checks if {@code mediaType} has a type and subtype that matches {@code mediaTypeToMatch}, which
+     * must only contain a type and subtype. Ignores parameters in {@code mediaType}
+     * such as "version" and "charset" in {@code text/plain; version=0.0.4; charset=utf-8}.
+     * <p>
+     * For example, if you want to check that the media type of an HTTP response is HTML ({@code text/html}),
+     * you would write:
+     * <p>
+     * {@code matchesMediaType(response.mediaType(), MediaType.TEXT_HTML)}.
      * <p>
      * To use this method,
      * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
@@ -259,9 +279,14 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has a type and subtype that matches the given {@code type/subtype} media type.
-     * Ignores parameters in {@code mediaType} such as "version" and "charset" in
-     * {@code text/plain; version=0.0.4; charset=utf-8}.
+     * Checks if {@code mediaType} has a type and subtype that matches {@code mediaTypeToMatch}, which
+     * must be in the format {@code type/subtype}. Ignores parameters in {@code mediaType}
+     * such as "version" and "charset" in {@code text/plain; version=0.0.4; charset=utf-8}.
+     * <p>
+     * For example, if you want to check that the media type of an HTTP response is HTML ({@code text/html}),
+     * you would write:
+     * <p>
+     * {@code matchesMediaType(response.mediaTypeAsString(), "text/html")}.
      *
      * @param mediaType the media type to check
      * @param mediaTypeToMatch the media type to match (must be in exact format {@code type/subtype})
@@ -281,7 +306,13 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has a type and subtype that matches the given values.
+     * Checks if {@code mediaType} has a type and subtype that matches
+     * {@code typeToMatch} and {@code subtypeToMatch}.
+     * <p>
+     * For example, if you want to check that the media type of an HTTP response
+     * is HTML ({@code text/html}), you would write:
+     * <p>
+     * {@code matchesTypeAndSubtype(response.mediaType(), "text", "html")}.
      * <p>
      * To use this method,
      * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
@@ -300,7 +331,14 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has a type and subtype that matches the given values.
+     * Checks if {@code mediaType} has a type and subtype that matches
+     * {@code typeToMatch} and {@code subtypeToMatch}.
+     * <p>
+     * For example, if you want to check that the media type of an HTTP response is HTML ({@code text/html}),
+     * you would write:
+     * <p>
+     * {@code matchesTypeAndSubtype(response.mediaTypeAsString(), "text", "html")}.
+     * <p>
      *
      * @param mediaType the media type to check
      * @param typeToMatch the type to match
@@ -313,10 +351,17 @@ public class KiwiMediaTypes {
     }
 
     /**
-     * Checks if the given media type has a type and subtype that matches the given values.
+     * Checks if{@code mediaType} has a type in {@code typesToMatch} and a subtype
+     * that matches {@code subtypeToMatch}.
      * <p>
      * This method lets you test for subtypes which can have more than one type.
      * For example, "application/xml" and "text/xml" are both considered valid XML types.
+     * <p>
+     * For example, if you want to check that the media type of an HTTP response is XML
+     * ({@code text/xml} or {@code application/xml})
+     * you would write:
+     * <p>
+     * {@code matchesTypeAndSubtype(response.mediaType(), Set.of("text", "application"), "xml")}.
      * <p>
      * To use this method,
      * the <a href="https://mvnrepository.com/artifact/jakarta.ws.rs/jakarta.ws.rs-api">jakarta.ws.rs:jakarta.ws.rs-api</a>
@@ -343,10 +388,16 @@ public class KiwiMediaTypes {
      }
 
     /**
-     * Checks if the given media type has a type and subtype that matches the given values.
+     * Checks if{@code mediaType} has a type in {@code typesToMatch} and a subtype
+     * that matches {@code subtypeToMatch}.
      * <p>
      * This method lets you test for subtypes which can have more than one type.
      * For example, "application/xml" and "text/xml" are both considered valid XML types.
+     * For example, if you want to check that the media type of an HTTP response is XML
+     * ({@code text/xml} or {@code application/xml})
+     * you would write:
+     * <p>
+     * {@code matchesTypeAndSubtype(response.mediaTypeAsString(), Set.of("text", "application"), "xml")}.
      *
      * @param mediaType the media type to check
      * @param typesToMatch the types to match (any one of them is considered a match)
