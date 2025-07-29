@@ -19,6 +19,15 @@ public class KiwiEnums2 {
 
     /**
      * Return the constants in the given enum class as a list.
+     * <p>
+     * Kiwi version <a href="https://github.com/kiwiproject/kiwi/releases/tag/v4.12.0">4.12.0</a> adds
+     * methods <a href="https://javadoc.io/static/org.kiwiproject/kiwi/4.12.0/org/kiwiproject/base/KiwiEnums.html#listOf(java.lang.Class)">listOf</a>
+     * and <a href="https://javadoc.io/static/org.kiwiproject/kiwi/4.12.0/org/kiwiproject/base/KiwiEnums.html#streamOf(java.lang.Class)">streamOf</a>.
+     * <p>
+     * <strong>Either of these methods should be preferred to this method, though {@code listOf}
+     * is a direct replacement.</strong>
+     * <p>
+     * <em>This method may be deprecated in a future release (but probably not).</em>
      *
      * @param enumClass the enum class
      * @param <E>       the type in the enum
