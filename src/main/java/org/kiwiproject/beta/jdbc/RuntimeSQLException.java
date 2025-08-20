@@ -8,10 +8,17 @@ import java.sql.SQLException;
 /**
  * Unchecked exception that wraps a {@link SQLException}.
  * <p>
- * Note: This was copied from kiwi-test. I am not sure why we
- * put this in kiwi-test instead of kiwi. It should probably
- * be moved to kiwi, then maybe deprecated and removed from
- * kiwi-test, though it would not hurt anything to leave it.
+ * <em>You should prefer kiwi's
+ * {@link org.kiwiproject.jdbc.UncheckedSQLException UncheckedSQLException}
+ * over this exception class for the reasons described below.</em>
+ * <p>
+ * This exception class was copied from kiwi-test. Later, kiwi version 4.2.0
+ * added {@code UncheckedSQLException}. The {@code RuntimeSQLException}
+ * in kiwi-test was then deprecated, scheduled for removal in version 5.0.0.
+ * <p>
+ * There are no current plans to deprecate or remove this class, but that
+ * may change in a future release. So, we suggest changing any code using
+ * this exception class to use kiwi's {@code UncheckedSQLException} instead.
  */
 @Beta
 public class RuntimeSQLException extends RuntimeException {
