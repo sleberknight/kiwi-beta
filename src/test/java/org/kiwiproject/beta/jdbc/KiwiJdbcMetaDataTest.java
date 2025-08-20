@@ -15,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kiwiproject.jdbc.UncheckedSQLException;
 import org.kiwiproject.test.h2.H2FileBasedDatabase;
 import org.kiwiproject.test.junit.jupiter.H2Database;
 import org.kiwiproject.test.junit.jupiter.H2FileBasedDatabaseExtension;
@@ -97,7 +98,7 @@ class KiwiJdbcMetaDataTest {
             when(rs.getMetaData()).thenThrow(new SQLException(reason));
 
             assertThatThrownBy(() -> resultSetContainsColumnLabel(rs, "created_at"))
-                    .isExactlyInstanceOf(RuntimeSQLException.class)
+                    .isExactlyInstanceOf(UncheckedSQLException.class)
                     .hasCauseInstanceOf(SQLException.class)
                     .hasMessageContaining(reason);
         }
@@ -114,7 +115,7 @@ class KiwiJdbcMetaDataTest {
             when(rs.getMetaData()).thenReturn(metaData);
 
             assertThatThrownBy(() -> resultSetContainsColumnLabel(rs, "created_at"))
-                    .isExactlyInstanceOf(RuntimeSQLException.class)
+                    .isExactlyInstanceOf(UncheckedSQLException.class)
                     .hasCauseInstanceOf(SQLException.class)
                     .hasMessageContaining(reason);
         }
@@ -128,7 +129,7 @@ class KiwiJdbcMetaDataTest {
         try (var conn = dataSource.getConnection()) {
             connectionConsumer.accept(conn);
         } catch (SQLException e) {
-            throw new RuntimeSQLException(e);
+            throw new UncheckedSQLException(e);
         }
     }
 }

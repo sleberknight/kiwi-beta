@@ -2,6 +2,7 @@ package org.kiwiproject.beta.jdbc;
 
 import com.google.common.annotations.Beta;
 import lombok.experimental.UtilityClass;
+import org.kiwiproject.jdbc.UncheckedSQLException;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -22,7 +23,7 @@ public class KiwiJdbcMetaData {
      * @param rs          the ResultSet to check
      * @param columnLabel the column label to look for
      * @return true if the ResultSet contains the given column label
-     * @throws RuntimeSQLException if there was any error getting column metadata
+     * @throws UncheckedSQLException if there was any error getting column metadata
      */
     public static boolean resultSetContainsColumnLabel(ResultSet rs, String columnLabel) {
         // NOTE: column numbers in JDBC result sets are 1-based, i.e., 1, 2, ..., N
@@ -35,7 +36,7 @@ public class KiwiJdbcMetaData {
                     .orElse(0);
             return foundColNum > 0;
         } catch (SQLException e) {
-            throw new RuntimeSQLException(e);
+            throw new UncheckedSQLException(e);
         }
     }
 
@@ -43,7 +44,7 @@ public class KiwiJdbcMetaData {
         try {
             return metaData.getColumnLabel(colNum).equalsIgnoreCase(columnLabel);
         } catch (SQLException e) {
-            throw new RuntimeSQLException(e);  // this really should never happen, so wrap in a runtime exception
+            throw new UncheckedSQLException(e);  // this really should never happen, so wrap in a runtime exception
         }
     }
 
