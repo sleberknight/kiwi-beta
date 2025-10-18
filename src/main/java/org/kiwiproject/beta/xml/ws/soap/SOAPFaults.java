@@ -21,6 +21,7 @@ import javax.xml.namespace.QName;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Utilities related to {@link SOAPFault} and {@link SOAPFaultException}.
@@ -156,6 +157,7 @@ public class SOAPFaults {
     static List<String> getFaultSubcodes(SOAPFault fault) {
         try {
             return Streams.stream(fault.getFaultSubcodes())
+                    .filter(Objects::nonNull)
                     .map(QName::toString)
                     .toList();
         } catch (UnsupportedOperationException unsupportedEx) {
@@ -176,6 +178,7 @@ public class SOAPFaults {
             Iterator<DetailEntry> detailEntries = detail.getDetailEntries();
 
             return Streams.stream(detailEntries)
+                    .filter(Objects::nonNull)
                     .map(detailEntry -> {
                         var nodeName = detailEntry.getNodeName();
                         var nodeValue = detailEntry.getNodeValue();
