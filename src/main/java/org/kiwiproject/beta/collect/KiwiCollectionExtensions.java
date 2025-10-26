@@ -36,4 +36,22 @@ public class KiwiCollectionExtensions {
     public static <T> boolean addIf(Collection<T> objects, @Nullable T value, Predicate<? super T> condition) {
         return KiwiCollections2.addIf(objects, value, condition);
     }
+
+    /**
+     * Adds the given value to the provided collection only if the value is non-null.
+     * <p>
+     * This is an extension-friendly wrapper around {@link KiwiCollections2#addIfNonNull(Collection, Object)}
+     * allowing calls like {@code collection.addIfNonNull(value)} when using Lombok's
+     * {@code @ExtensionMethod(KiwiCollectionExtensions.class)}.
+     *
+     * @param <T>     the element type of the collection
+     * @param objects the collection to which the value may be added
+     * @param value   the value to potentially add; if {@code null}, it will not be added
+     * @return {@code true} if the value was non-null and was added to the collection; {@code false} otherwise
+     * @see KiwiCollections2#addIfNonNull(Collection, Object)
+     */
+    @CanIgnoreReturnValue
+    public static <T> boolean addIfNonNull(Collection<T> objects, @Nullable T value) {
+        return KiwiCollections2.addIfNonNull(objects, value);
+    }
 }

@@ -47,6 +47,25 @@ public class KiwiCollections2 {
     }
 
     /**
+     * Adds the given value to the provided collection only if the value is non-null.
+     * <p>
+     * If {@code value} is {@code null}, this method does nothing and returns {@code false}.
+     * <p>
+     * This method throws the same exceptions as {@link java.util.Collection#add(Object)} when the
+     * value is non-null and the underlying collection rejects the addition (e.g., is unmodifiable).
+     *
+     * @param <T>     the element type of the collection
+     * @param objects the collection to which the value may be added
+     * @param value   the value to potentially add; if {@code null}, it will not be added
+     * @return {@code true} if the value was non-null and was added to the collection; {@code false} otherwise
+     * @throws IllegalArgumentException if {@code objects} is {@code null}
+     * @see #addIf(Collection, Object, Predicate)
+     */
+    public static <T> boolean addIfNonNull(Collection<T> objects, @Nullable T value) {
+        return addIf(objects, value, Objects::nonNull);
+    }
+
+    /**
      * Adds the given value to the provided collection only if the condition evaluates to true.
      * <p>
      * This method throws the same exceptions as {@link java.util.Collection#add(Object)}.
