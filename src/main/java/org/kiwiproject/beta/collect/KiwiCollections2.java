@@ -3,11 +3,14 @@ package org.kiwiproject.beta.collect;
 import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotNull;
 
 import com.google.common.annotations.Beta;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import lombok.experimental.UtilityClass;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Utilities related to Collections.
@@ -41,5 +44,24 @@ public class KiwiCollections2 {
             .filter(theType::isInstance)
             .map(theType::cast)
             .findFirst();
+    }
+
+    /**
+     * Adds the given value to the provided collection only if the condition evaluates to true.
+     * <p>
+     * This method throws the same exceptions as {@link java.util.Collection#add(Object)}.
+     *
+     * @param <T>       the element type of the collection
+     * @param objects   the collection to which the value may be added
+     * @param value     the value to potentially add
+     * @param condition the predicate that must be satisfied by {@code value} in order for it to be added
+     * @return {@code true} if the value satisfied the condition and was added to the collection; {@code false} otherwise
+     */
+    @CanIgnoreReturnValue
+    public static <T> boolean addIf(Collection<T> objects, @Nullable T value, Predicate<? super T> condition) {
+        checkArgumentNotNull(objects, "collection must not be null");
+        checkArgumentNotNull(condition, "condition must not be null");
+
+        return condition.test(value) && objects.add(value);
     }
 }

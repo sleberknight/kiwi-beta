@@ -2,16 +2,26 @@ package org.kiwiproject.beta.collect;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.google.common.collect.Lists;
+import lombok.experimental.ExtensionMethod;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.util.StringUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @DisplayName("KiwiCollections2")
 class KiwiCollections2Test {
@@ -173,4 +183,99 @@ class KiwiCollections2Test {
     static final class JsonMessage extends AbstractMessage {}
     static final class MapMessage extends AbstractMessage {}
     static final class TextMessage extends AbstractMessage {}
+
+    @Nested
+    class AddIf {
+
+        @Test
+        void shouldNotAddValue_AndReturnFalse_WhenConditionNotSatisfied() {
+            var numbers = new ArrayList<Integer>();
+            var added = KiwiCollections2.addIf(numbers, null, Objects::nonNull);
+
+            assertAll(
+                    () -> assertThat(added).isFalse(),
+                    () -> assertThat(numbers).isEmpty()
+            );
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"Red", "Green", "Blue"})
+        void shouldNotAddValue_AndReturnFalse_WhenConditionIsSatisfied_ButCollectionAddIsFalse(String newColor) {
+            var colors = new HashSet<String>();
+            colors.add("Red");
+            colors.add("Green");
+            colors.add("Blue");
+
+            var added = KiwiCollections2.addIf(colors, newColor, StringUtils::isNotBlank);
+
+            assertAll(
+                    () -> assertThat(added).isFalse(),
+                    () -> assertThat(colors).isEqualTo(Set.of("Red", "Green", "Blue"))
+            );
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {42, 84, 126})
+        void shouldAddValue_AndReturnTrue_WhenConditionIsSatisfied(int number) {
+            var numbers = new ArrayList<Integer>();
+            var added = KiwiCollections2.addIf(numbers, number, Objects::nonNull);
+
+            assertAll(
+                    () -> assertThat(added).isTrue(),
+                    () -> assertThat(numbers).isEqualTo(List.of(number))
+            );
+        }
+
+        @Test
+        void shouldThrowIllegalArgument_WhenObjectsIsNull() {
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> KiwiCollections2.addIf(null, 1, Objects::nonNull)
+            ).withMessage("collection must not be null");
+        }
+
+        @Test
+        void shouldThrowIllegalArgument_WhenConditionIsNull() {
+            var list = new ArrayList<Integer>();
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> KiwiCollections2.addIf(list, 1, null)
+            ).withMessage("condition must not be null");
+        }
+
+        @Test
+        void shouldAllowAddingNull_WhenPredicateAcceptsNull() {
+            var list = new ArrayList<Integer>();
+            var added = KiwiCollections2.addIf(list, null, Objects::isNull);
+            assertAll(
+                    () -> assertThat(added).isTrue(),
+                    () -> assertThat(list).containsExactly((Integer) null)
+            );
+        }
+
+        @Test
+        void shouldPropagateExceptionFromCollectionAdd() {
+            var unmodifiable = List.of(1);
+            assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(
+                    () -> KiwiCollections2.addIf(unmodifiable, 2, value -> true)
+            );
+        }
+    }
+
+    @ExtensionMethod(KiwiCollectionExtensions.class)
+    @Nested
+    class AddIfAsExtensionMethod {
+
+        @Test
+        void shouldAddValue() {
+            var names = new ArrayList<String>();
+            Predicate<String> startsWithA = name -> name.startsWith("A");
+            var aliceAdded = names.addIf("Alice", startsWithA);
+            var bobAdded = names.addIf("Bob", startsWithA);
+
+            assertAll(
+                    () -> assertThat(aliceAdded).isTrue(),
+                    () -> assertThat(bobAdded).isFalse(),
+                    () -> assertThat(names).containsExactly("Alice")
+            );
+        }
+    }
 }
