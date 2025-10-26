@@ -27,18 +27,18 @@ public class KiwiCollections2 {
      * @param <T> the type to find
      * @param <U> the type of objects in the collection
      * @param theType the type to find
-     * @param objects the collection to search
+     * @param objects the collection to search; elements may be any subtype of U
      * @return the first object in the collection of U objects having type T
      */
     public static <T extends U, U> Optional<T> findFirstOfType(Class<T> theType,
-                                                               Collection<U> objects) {
+                                                               Collection<? extends U> objects) {
 
         checkArgumentNotNull(theType, "type to find must not be null");
         checkArgumentNotNull(objects, "collection must not be null");
 
         return objects.stream()
             .filter(Objects::nonNull)
-            .filter(o -> theType.isAssignableFrom(o.getClass()))
+            .filter(theType::isInstance)
             .map(theType::cast)
             .findFirst();
     }
