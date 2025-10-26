@@ -522,7 +522,7 @@ class KiwiMediaTypesTest {
         @Test
         void shouldNotAllowNullJakartaMediaType() {
             assertThatIllegalArgumentException()
-                    .isThrownBy(() -> KiwiMediaTypes.matchesMediaType((MediaType) null, MediaType.valueOf("application/json")))
+                    .isThrownBy(() -> KiwiMediaTypes.matchesMediaType(null, MediaType.valueOf("application/json")))
                     .withMessage("mediaType must not be null");
         }
 
