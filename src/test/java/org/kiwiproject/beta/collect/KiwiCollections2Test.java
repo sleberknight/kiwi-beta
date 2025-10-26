@@ -38,8 +38,9 @@ class KiwiCollections2Test {
 
         @Test
         void shouldNotAllowNullCollection() {
+            Collection<TextMessage> nullCollection = null;
             assertThatIllegalArgumentException()
-                    .isThrownBy(() -> KiwiCollections2.findFirstOfType(TextMessage.class, null));
+                    .isThrownBy(() -> KiwiCollections2.findFirstOfType(TextMessage.class, nullCollection));
         }
 
         @Test
@@ -173,6 +174,84 @@ class KiwiCollections2Test {
             var result = KiwiCollections2.<Integer, Number>findFirstOfType(Integer.class, ints);
 
             assertThat(result).contains(10);
+        }
+    }
+
+    @Nested
+    class FindFirstOfTypeFromIterable {
+
+        @Test
+        void shouldNotAllowNullType() {
+            Iterable<AbstractMessage> messages = List.of(new JsonMessage(), new TextMessage());
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiCollections2.findFirstOfType(null, messages));
+        }
+
+        @Test
+        void shouldNotAllowNullIterable() {
+            Iterable<AbstractMessage> nullIterable = null;
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiCollections2.findFirstOfType(TextMessage.class, nullIterable));
+        }
+
+        @Test
+        void shouldReturnEmptyOptionalWhenIterableIsEmpty() {
+            Iterable<AbstractMessage> empty = List.of();
+            assertThat(KiwiCollections2.findFirstOfType(JsonMessage.class, empty)).isEmpty();
+        }
+
+        @Test
+        void shouldFindFirstMatchingElement_IgnoringNulls() {
+            var message = new MapMessage();
+            Iterable<AbstractMessage> messages = Lists.newArrayList(
+                    null,
+                    new TextMessage(),
+                    new JsonMessage(),
+                    null,
+                    message,
+                    null,
+                    new JsonMessage()
+            );
+
+            assertThat(KiwiCollections2.findFirstOfType(MapMessage.class, messages)).contains(message);
+        }
+    }
+
+    @Nested
+    class FindFirstOfTypeFromStream {
+
+        @Test
+        void shouldNotAllowNullType() {
+            var stream = java.util.stream.Stream.of(new JsonMessage(), new TextMessage());
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiCollections2.findFirstOfType(null, stream));
+        }
+
+        @Test
+        void shouldNotAllowNullStream() {
+            java.util.stream.Stream<AbstractMessage> nullStream = null;
+            assertThatIllegalArgumentException()
+                    .isThrownBy(() -> KiwiCollections2.findFirstOfType(TextMessage.class, nullStream));
+        }
+
+        @Test
+        void shouldReturnEmptyOptionalWhenStreamIsEmpty() {
+            var empty = java.util.stream.Stream.<AbstractMessage>empty();
+            assertThat(KiwiCollections2.findFirstOfType(JsonMessage.class, empty)).isEmpty();
+        }
+
+        @Test
+        void shouldFindFirstMatchingElement() {
+            var message = new BytesMessage();
+            var stream = java.util.stream.Stream.of(
+                    new JsonMessage(),
+                    new TextMessage(),
+                    message,
+                    new TextMessage(),
+                    new JsonMessage()
+            );
+
+            assertThat(KiwiCollections2.findFirstOfType(BytesMessage.class, stream)).contains(message);
         }
     }
 

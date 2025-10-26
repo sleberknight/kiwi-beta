@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Utilities related to Collections.
@@ -36,14 +38,53 @@ public class KiwiCollections2 {
     public static <T extends U, U> Optional<T> findFirstOfType(Class<T> theType,
                                                                Collection<? extends U> objects) {
 
-        checkArgumentNotNull(theType, "type to find must not be null");
-        checkArgumentNotNull(objects, "collection must not be null");
+        checkTypeAndObjects(theType, objects);
 
-        return objects.stream()
+        return findFirstOfType(theType, (Iterable<? extends U>) objects);
+    }
+
+    /**
+     * Finds the first object having type {@code T} in an {@link Iterable} of objects of base type {@code U}.
+     *
+     * @param <T> the type to find
+     * @param <U> the base type of the objects
+     * @param theType the type to find
+     * @param objects the iterable to search; elements may be any subtype of U
+     * @return the first object in the iterable of U objects having type T
+     */
+    public static <T extends U, U> Optional<T> findFirstOfType(Class<T> theType,
+                                                               Iterable<? extends U> objects) {
+        checkTypeAndObjects(theType, objects);
+
+        return findFirstOfType(theType, StreamSupport.stream(objects.spliterator(), false));
+    }
+
+    /**
+     * Finds the first object having type {@code T} in a {@link Stream} of objects of base type {@code U}.
+     *
+     * <p>Note: This method will consume the provided stream.</p>
+     *
+     * @param <T> the type to find
+     * @param <U> the base type of the objects
+     * @param theType the type to find
+     * @param objects the stream to search; elements may be any subtype of U
+     * @return the first object in the stream of U objects having type T
+     */
+    public static <T extends U, U> Optional<T> findFirstOfType(Class<T> theType,
+                                                               Stream<? extends U> objects) {
+
+        checkTypeAndObjects(theType, objects);
+
+        return objects
             .filter(Objects::nonNull)
             .filter(theType::isInstance)
             .map(theType::cast)
             .findFirst();
+    }
+
+    private static <T extends U, U> void checkTypeAndObjects(Class<T> theType, Object objects) {
+        checkArgumentNotNull(theType, "type to find must not be null");
+        checkArgumentNotNull(objects, "objects to find must not be null");
     }
 
     /**
