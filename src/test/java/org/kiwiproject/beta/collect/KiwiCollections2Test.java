@@ -278,4 +278,98 @@ class KiwiCollections2Test {
             );
         }
     }
+
+    @Nested
+    class AddIfNonNull {
+
+        @Test
+        void shouldAddValue_WhenNonNull() {
+            var numbers = new ArrayList<Integer>();
+            var added = KiwiCollections2.addIfNonNull(numbers, 42);
+
+            assertAll(
+                    () -> assertThat(added).isTrue(),
+                    () -> assertThat(numbers).containsExactly(42)
+            );
+        }
+
+        @Test
+        void shouldNotAddValue_WhenNull() {
+            var numbers = new ArrayList<Integer>();
+            var added = KiwiCollections2.addIfNonNull(numbers, null);
+
+            assertAll(
+                    () -> assertThat(added).isFalse(),
+                    () -> assertThat(numbers).isEmpty()
+            );
+        }
+
+        @Test
+        void shouldReturnFalse_WhenCollectionAddReturnsFalse() {
+            var set = new HashSet<Integer>();
+            set.add(5);
+
+            var added = KiwiCollections2.addIfNonNull(set, 5);
+
+            assertAll(
+                    () -> assertThat(added).isFalse(),
+                    () -> assertThat(set).containsExactlyInAnyOrder(5)
+            );
+        }
+
+        @Test
+        void shouldThrowIllegalArgument_WhenObjectsIsNull() {
+            assertThatIllegalArgumentException().isThrownBy(
+                    () -> KiwiCollections2.addIfNonNull(null, 1)
+            ).withMessage("collection must not be null");
+        }
+
+        @Test
+        void shouldPropagateExceptionFromCollectionAdd() {
+            var unmodifiable = List.of(1);
+            assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(
+                    () -> KiwiCollections2.addIfNonNull(unmodifiable, 2)
+            );
+        }
+    }
+
+    @ExtensionMethod(KiwiCollectionExtensions.class)
+    @Nested
+    class AddIfNonNullAsExtensionMethod {
+
+        @Test
+        void shouldAddValue_WhenNonNull() {
+            var names = new ArrayList<String>();
+            var added = names.addIfNonNull("Alice");
+
+            assertAll(
+                    () -> assertThat(added).isTrue(),
+                    () -> assertThat(names).containsExactly("Alice")
+            );
+        }
+
+        @Test
+        void shouldNotAddValue_WhenNull() {
+            var names = new ArrayList<String>();
+            var added = names.addIfNonNull(null);
+
+            assertAll(
+                    () -> assertThat(added).isFalse(),
+                    () -> assertThat(names).isEmpty()
+            );
+        }
+
+        @Test
+        void shouldReturnFalse_WhenCollectionAddReturnsFalse() {
+            var set = new HashSet<Integer>();
+            set.add(5);
+
+            var added = set.addIfNonNull(5);
+
+            assertAll(
+                    () -> assertThat(added).isFalse(),
+                    () -> assertThat(set).containsExactlyInAnyOrder(5)
+            );
+        }
+    }
 }
