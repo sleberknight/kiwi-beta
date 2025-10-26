@@ -143,7 +143,7 @@ class KiwiCollections2Test {
         }
 
         @Test
-        void shouldAcceptCollectionOfExtendsTypeParameter_U_1() {
+        void shouldAcceptCollectionOfExtendsTypeParameter_U_Where_U_IsNumber() {
             // Note: declare as Collection<? extends Number>
             Collection<? extends Number> nums = List.of(1, 2, 3);
 
@@ -155,11 +155,11 @@ class KiwiCollections2Test {
         }
 
         @Test
-        void shouldAcceptCollectionOfExtendsTypeParameterU_2() {
-            // Note: declare as Collection<? extends Message>
+        void shouldAcceptCollectionOfExtendsTypeParameterU_Where_U_IsCustomTypeAbstractMessages() {
+            // Note: declare as Collection<? extends AbstractMessage>
             Collection<? extends AbstractMessage> messages = List.of(new TextMessage(), new JsonMessage());
 
-            // T = TextMessage, U = Message
+            // T = TextMessage, U = AbstractMessage
             var result = KiwiCollections2.findFirstOfType(TextMessage.class, messages);
 
             assertThat(result).containsInstanceOf(TextMessage.class);
