@@ -433,7 +433,7 @@ class KiwiMediaTypesTest {
 
         @ParameterizedTest
         @CsvSource(textBlock = """
-            null, null, mediaType must not be blank 
+            null, null, mediaType must not be blank
             '', '', mediaType must not be blank
             null, text/plain, mediaType must not be blank
             '', text/plain, mediaType must not be blank
