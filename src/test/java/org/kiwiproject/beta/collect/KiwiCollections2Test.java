@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 
 @DisplayName("KiwiCollections2")
@@ -129,6 +130,39 @@ class KiwiCollections2Test {
 
             assertThat(KiwiCollections2.findFirstOfType(MapMessage.class, messages))
                     .contains(message);
+        }
+
+        @Test
+        void shouldAcceptCollectionOfExtendsTypeParameter_U_1() {
+            // Note: declare as Collection<? extends Number>
+            Collection<? extends Number> nums = List.of(1, 2, 3);
+
+            // T = Integer, U = Number
+            // This requires the wildcard in the method signature
+            var result = KiwiCollections2.findFirstOfType(Integer.class, nums);
+
+            assertThat(result).contains(1);
+        }
+
+        @Test
+        void shouldAcceptCollectionOfExtendsTypeParameterU_2() {
+            // Note: declare as Collection<? extends Message>
+            Collection<? extends AbstractMessage> messages = List.of(new TextMessage(), new JsonMessage());
+
+            // T = TextMessage, U = Message
+            var result = KiwiCollections2.findFirstOfType(TextMessage.class, messages);
+
+            assertThat(result).containsInstanceOf(TextMessage.class);
+        }
+
+        @Test
+        void shouldWorkWhenTypeParameter_U_IsPinnedToSupertypeAndCollectionIsSubtype() {
+            List<Integer> ints = List.of(10, 20);
+
+            // Force inference: T = Integer, U = Number while passing List<Integer>
+            var result = KiwiCollections2.<Integer, Number>findFirstOfType(Integer.class, ints);
+
+            assertThat(result).contains(10);
         }
     }
 
