@@ -88,20 +88,6 @@
                 <artifactId>kiwi-test</artifactId>
                 <version>${kiwi-test.version}</version>
             </dependency>
-
-            <!--
-                Force activation version to resolve conflict between logback-classic and spring-data-commons.
-                logback-classic has an optional dependency on com.sun.mail:javax.mail:jar:1.6.2 which depends
-                on javax.activation:activation:1.1. But spring-data-commons 2.x has a dependency on
-                javax.activation:activation:1.1.1 via its parent POM and a profile that activates on JDK 11+.
-                This has been removed in the main branch for spring-data-commons 3.x. The exact commit where
-                it was removed is: https://github.com/spring-projects/spring-data-build/commit/ced9f751e63bd18ad31fe05cbfdfcfc5b295189a
-            -->
-            <dependency>
-                <groupId>javax.activation</groupId>
-                <artifactId>activation</artifactId>
-                <version>1.1.1</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
