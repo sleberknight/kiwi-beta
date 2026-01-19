@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.kiwiproject</groupId>
         <artifactId>kiwi-parent</artifactId>
-        <version>3.0.35</version>
+        <version>3.0.36</version>
     </parent>
 
     <artifactId>kiwi-beta</artifactId>
@@ -34,7 +34,7 @@
 
         <!-- Versions for required/provided dependencies -->
 
-        <camel.version>4.16.0</camel.version>
+        <camel.version>4.17.0</camel.version>
         <jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>4.0.2</jakarta.xml.ws-api.version>
         <kiwi.version>4.15.0</kiwi.version>
