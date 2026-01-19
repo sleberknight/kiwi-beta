@@ -67,8 +67,8 @@ public class Timing {
         private final R result;
 
         /**
-         * @implNote Technically, this won't be removed but will become private.
          * @deprecated since 3.0.0, for removal at 4.0.0, replaced by {@link #ofElapsedNanos(long, Object)}
+         * @implNote Technically, this won't be removed but will become private.
          */
         @KiwiDeprecated(
                 removeAt = "4.0.0",
