@@ -15,6 +15,7 @@ import lombok.Value;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
+import org.kiwiproject.base.KiwiDeprecated;
 
 import java.beans.ConstructorProperties;
 import java.util.Optional;
@@ -65,6 +66,16 @@ public class Timing {
         private final long elapsedNanos;
         private final R result;
 
+        /**
+         * @implNote Technically, this won't be removed but will become private.
+         * @deprecated since 3.0.0, for removal at 4.0.0, replaced by {@link #ofElapsedNanos(long, Object)}
+         */
+        @KiwiDeprecated(
+                removeAt = "4.0.0",
+                replacedBy = "TimedNotResult#ofElapsedMillis"
+        )
+        @Deprecated(since = "3.0.0", forRemoval = true)
+        @SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed"})
         @ConstructorProperties({"elapsedMillis", "result"})
         public TimedWithResult(long elapsedMillis, R result) {
             logElapsedMillisChangeToNanosWarning(TimedWithResult.class, LOG_COUNT);
@@ -81,6 +92,7 @@ public class Timing {
          * @param <R>           the type of result returned by the operation
          * @return a new instance
          */
+        @SuppressWarnings("java:S5738")
         public static <R> TimedWithResult<R> ofElapsedMillis(long elapsedMillis, R result) {
             return new TimedWithResult<>(elapsedMillis, result);
         }
@@ -93,6 +105,7 @@ public class Timing {
          * @param <R>          the type of result returned by the operation
          * @return a new instance
          */
+        @SuppressWarnings("java:S5738")
         public static <R> TimedWithResult<R> ofElapsedNanos(long elapsedNanos, R result) {
             return new TimedWithResult<>(TimeUnit.NANOSECONDS.toMillis(elapsedNanos), result);
         }
@@ -116,6 +129,16 @@ public class Timing {
         private final long elapsedMillis;
         private final long elapsedNanos;
 
+        /**
+         * @deprecated since 3.0.0, for removal at 4.0.0, replaced by {@link #ofElapsedMillis(long)}
+         * @implNote Technically, this won't be removed but will become private.
+         */
+        @KiwiDeprecated(
+                removeAt = "4.0.0",
+                replacedBy = "TimedNotResult#ofElapsedMillis"
+        )
+        @Deprecated(since = "3.0.0", forRemoval = true)
+        @SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed"})
         @ConstructorProperties({"elapsedMillis"})
         public TimedNoResult(long elapsedMillis) {
             logElapsedMillisChangeToNanosWarning(TimedNoResult.class, LOG_COUNT);
@@ -129,6 +152,7 @@ public class Timing {
          * @param elapsedMillis the elapsed milliseconds
          * @return a new instance
          */
+        @SuppressWarnings({"java:S5738"})
         public static TimedNoResult ofElapsedMillis(long elapsedMillis) {
             return new TimedNoResult(elapsedMillis);
         }
@@ -139,6 +163,7 @@ public class Timing {
          * @param elapsedNanos the elapsed nanoseconds
          * @return a new instance
          */
+        @SuppressWarnings({"java:S5738"})
         public static TimedNoResult ofElapsedNanos(long elapsedNanos) {
             return new TimedNoResult(TimeUnit.NANOSECONDS.toMillis(elapsedNanos));
         }
