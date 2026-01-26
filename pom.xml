@@ -44,7 +44,7 @@
 
         <!-- Versions for test dependencies -->
         <kiwi-test.version>4.0.0</kiwi-test.version>
-        <mockito-kotlin.version>6.2.1</mockito-kotlin.version>
+        <mockito-kotlin.version>6.2.2</mockito-kotlin.version>
 
         <!--  Sonar properties -->
         <sonar.projectKey>sleberknight_kiwi-beta</sonar.projectKey>
