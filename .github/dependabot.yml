@@ -17,6 +17,8 @@ updates:
           - "patch"
     assignees:
       - "sleberknight"
+    commit-message:
+      prefix: "chore(deps)"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -27,4 +29,5 @@ updates:
           - "*"
     assignees:
       - "sleberknight"
-
+    commit-message:
+      prefix: "chore(deps)"
