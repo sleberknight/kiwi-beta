@@ -5,6 +5,7 @@ import static org.kiwiproject.base.KiwiPreconditions.checkArgumentNotBlank;
 import static org.kiwiproject.beta.base.KiwiStrings2.randomCaseVariants;
 import static org.kiwiproject.beta.base.KiwiStrings2.standardCaseVariants;
 
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
@@ -30,8 +31,8 @@ public class RandomCapitalizationArgumentsProvider
     }
 
     @Override
-    public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
-                                                        ExtensionContext context) {
+    public @NonNull Stream<? extends Arguments> provideArguments(@NonNull ParameterDeclarations parameters,
+                                                                 @NonNull ExtensionContext context) {
         var value = randomCapitalizationSource.value();
         var count = randomCapitalizationSource.count();
 
