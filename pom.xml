@@ -29,7 +29,7 @@
         <kiwi-bom.version>3.0.3</kiwi-bom.version>
 
         <!-- Kotlin properties -->
-        <kotlin.version>2.3.10</kotlin.version>
+        <kotlin.version>2.3.20</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
         <!-- Versions for required/provided dependencies -->
@@ -44,7 +44,7 @@
 
         <!-- Versions for test dependencies -->
         <kiwi-test.version>4.0.1</kiwi-test.version>
-        <mockito-kotlin.version>6.2.3</mockito-kotlin.version>
+        <mockito-kotlin.version>6.3.0</mockito-kotlin.version>
 
         <!--  Sonar properties -->
         <sonar.projectKey>sleberknight_kiwi-beta</sonar.projectKey>
