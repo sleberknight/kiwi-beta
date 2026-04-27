@@ -29,12 +29,12 @@
         <kiwi-bom.version>3.1.0</kiwi-bom.version>
 
         <!-- Kotlin properties -->
-        <kotlin.version>2.3.20</kotlin.version>
+        <kotlin.version>2.3.21</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 
         <!-- Versions for required/provided dependencies -->
 
-        <camel.version>4.19.0</camel.version>
+        <camel.version>4.20.0</camel.version>
         <jakarta.xml.soap-api.version>3.0.2</jakarta.xml.soap-api.version>
         <jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>
         <kiwi.version>5.3.1</kiwi.version>
