@@ -23,6 +23,7 @@ import java.util.Locale;
  */
 @UtilityClass
 @Beta
+@SuppressWarnings("java:S1133")
 public class KiwiSlf4j {
 
     /**
