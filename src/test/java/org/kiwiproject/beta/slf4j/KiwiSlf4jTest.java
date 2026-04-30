@@ -28,7 +28,7 @@ import java.util.Locale;
  * @implNote See the loggers defined for this test in {@code src/test/resources/logback-test.xml}.
  */
 @DisplayName("KiwiSlf4j")
-@SuppressWarnings("java:S1133")
+@SuppressWarnings({"java:S1133", "removal"})
 class KiwiSlf4jTest {
 
     private static final String TEST_CLASS_NAME = KiwiSlf4jTest.class.getName();
