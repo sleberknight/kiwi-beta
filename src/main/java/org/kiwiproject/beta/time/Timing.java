@@ -15,9 +15,11 @@ import lombok.Value;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
+import org.jspecify.annotations.Nullable;
 import org.kiwiproject.base.KiwiDeprecated;
 
 import java.beans.ConstructorProperties;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,6 +50,15 @@ public class Timing {
          * @return the number of nanoseconds that elapsed during the operation
          */
         long getElapsedNanos();
+
+        /**
+         * Returns the elapsed time of the operation as a {@link java.time.Duration}.
+         *
+         * @return a Duration representing the elapsed time of the operation
+         */
+        default Duration getElapsedDuration() {
+            return Duration.ofNanos(getElapsedNanos());
+        }
     }
 
     /**
@@ -72,7 +83,7 @@ public class Timing {
          */
         @KiwiDeprecated(
                 removeAt = "4.0.0",
-                replacedBy = "TimedNotResult#ofElapsedMillis"
+                replacedBy = "TimedNoResult#ofElapsedMillis"
         )
         @Deprecated(since = "3.0.0", forRemoval = true)
         @SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed"})
@@ -135,7 +146,7 @@ public class Timing {
          */
         @KiwiDeprecated(
                 removeAt = "4.0.0",
-                replacedBy = "TimedNotResult#ofElapsedMillis"
+                replacedBy = "TimedNoResult#ofElapsedMillis"
         )
         @Deprecated(since = "3.0.0", forRemoval = true)
         @SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed"})
@@ -274,6 +285,15 @@ public class Timing {
         }
 
         /**
+         * Returns the elapsed time of the operation as a {@link java.time.Duration}.
+         *
+         * @return a Duration representing the elapsed time of the operation
+         */
+        default Duration getElapsedDuration() {
+            return Duration.ofNanos(getElapsedNanos());
+        }
+
+        /**
          * @return true if the operation completed without exception, otherwise false
          */
         default boolean operationSucceeded() {
@@ -288,8 +308,43 @@ public class Timing {
         }
 
         /**
-         * @return an Optional that will contain a RuntimeException if the operation failed.
-         * If called when the operation succeeded, an empty Optional is always returned.
+         * Returns the exception if the operation failed, or null if it succeeded.
+         * <p>
+         * Note: a null return value does not distinguish between "the operation
+         * succeeded" and "no exception was thrown" — use {@link #hasException()}
+         * or {@link #operationSucceeded()} for explicit checks.
+         *
+         * @return the exception thrown by the operation, or null if the operation succeeded
+         */
+        @Nullable
+        default RuntimeException getExceptionOrNull() {
+            return getException().orElse(null);
+        }
+
+        /**
+         * Returns the exception, assuming the operation failed.
+         * <p>
+         * This is intended for use after an explicit check, for example:
+         * <pre>{@code
+         * if (timed.hasException()) {
+         *     throw timed.getRequiredException();
+         * }
+         * }</pre>
+         *
+         * @return the exception thrown by the operation
+         * @throws IllegalStateException if the operation succeeded and no exception is present
+         */
+        default RuntimeException getRequiredException() {
+            return getException().orElseThrow(() ->
+                    new IllegalStateException("Operation succeeded; no exception is present"));
+        }
+
+        /**
+         * Returns an Optional containing the exception if the operation failed.
+         * If the operation succeeds, an empty Optional is always returned.
+         *
+         * @return an Optional containing the RuntimeException if the operation failed,
+         * otherwise an empty Optional
          */
         Optional<RuntimeException> getException();
     }
@@ -350,6 +405,8 @@ public class Timing {
         }
 
         /**
+         * Returns true if the operation succeeded, regardless of whether the result is null.
+         *
          * @return true if the operation succeeded and contains a (possibly null) result
          */
         public boolean hasResult() {
@@ -357,8 +414,83 @@ public class Timing {
         }
 
         /**
-         * @return an Optional that will contain a (possibly null) result when the operation succeeds.
-         * If called when the operation failed, an empty Optional is always returned.
+         * Returns the result if the operation succeeded, or null if it failed.
+         * <p>
+         * A null return value is ambiguous: it may mean the operation failed,
+         * or it may mean the operation succeeded with a null result. Use
+         * {@link #hasResult()} or {@link #isNullResult()} to distinguish these cases
+         * when the difference matters.
+         *
+         * @return the result of the operation, or null if the operation failed
+         */
+        @Nullable
+        public R getResultOrNull() {
+            return hasResult() ? result : null;
+        }
+
+        /**
+         * Returns the result, assuming the operation succeeded.
+         * <p>
+         * This is intended for use after an explicit check, for example:
+         * <pre>{@code
+         * if (timed.hasResult()) {
+         *     process(timed.getRequiredResult());
+         * }
+         * }</pre>
+         * Note: a null return value is valid when the operation succeeded with a
+         * null result. Use {@link #isNullResult()} if you need to distinguish a
+         * null result from a failed operation.
+         *
+         * @return the result of the operation, which may be null if the operation
+         * succeeded with a null result
+         * @throws IllegalStateException if the operation failed (i.e., threw an exception)
+         */
+        public R getRequiredResult() {
+            if (hasResult()) {
+                return result;
+            }
+
+            throw new IllegalStateException("Operation failed; no result is present");
+        }
+
+        /**
+         * Returns the result if the operation succeeded, otherwise re-throws the
+         * exception that the operation threw.
+         * <p>
+         * This provides a convenient one-liner for callers that want to propagate
+         * the original failure without an explicit check:
+         * <pre>{@code
+         * var value = timed.getResultOrThrow();
+         * }</pre>
+         * Unlike {@link #getRequiredResult()}, this does not throw an
+         * {@link IllegalStateException} — it propagates the original
+         * {@link RuntimeException} as-is.
+         * <p>
+         * Note: a null return value is valid when the operation succeeded with a
+         * null result. Use {@link #isNullResult()} if you need to distinguish a
+         * null result from a failed operation.
+         *
+         * @return the result of the operation, which may be null if the operation
+         * succeeded with a null result
+         * @throws RuntimeException the original exception thrown by the operation,
+         *                          if the operation failed
+         */
+        @Nullable
+        public R getResultOrThrow() {
+            if (hasResult()) {
+                return result;
+            }
+
+            throw exception;
+        }
+
+        /**
+         * Returns an Optional containing the result if the operation succeeded.
+         * If the operation succeeds with a null result, an empty Optional is returned.
+         * If the operation failed, an empty Optional is always returned.
+         *
+         * @return an Optional containing the result if the operation succeeded,
+         * otherwise an empty Optional
          */
         public Optional<R> getResult() {
             return Optional.ofNullable(result);
