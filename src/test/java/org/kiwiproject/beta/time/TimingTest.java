@@ -2,6 +2,7 @@ package org.kiwiproject.beta.time;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -20,6 +21,7 @@ import org.kiwiproject.beta.time.Timing.TimedWithResult;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -111,7 +113,8 @@ class TimingTest {
             assertAll(
                     () -> assertThat(result.getResult()).isEqualTo("the result"),
                     () -> assertThat(result.getElapsedMillis()).isEqualTo(millis),
-                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis))
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis)),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos()))
             );
         }
 
@@ -124,7 +127,8 @@ class TimingTest {
             assertAll(
                     () -> assertThat(result.getResult()).isEqualTo("the result"),
                     () -> assertThat(result.getElapsedMillis()).isEqualTo(millis),
-                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis))
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis)),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos()))
             );
         }
 
@@ -146,7 +150,8 @@ class TimingTest {
 
             assertAll(
                     () -> assertThat(result.getElapsedMillis()).isEqualTo(millis),
-                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis))
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis)),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos()))
             );
         }
 
@@ -158,7 +163,8 @@ class TimingTest {
 
             assertAll(
                     () -> assertThat(result.getElapsedMillis()).isEqualTo(millis),
-                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis))
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(TimeUnit.MILLISECONDS.toNanos(millis)),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos()))
             );
         }
 
@@ -192,14 +198,22 @@ class TimingTest {
             var result = new TimedWithErrorOrResult<>(42_000_000L, "the result", null);
 
             assertAll(
-                () -> assertThat(result.getElapsedNanos()).isEqualTo(42_000_000L),
-                () -> assertThat(result.getElapsedMillis()).isEqualTo(42L),
-                () -> assertThat(result.operationSucceeded()).isTrue(),
-                () -> assertThat(result.hasResult()).isTrue(),
-                () -> assertThat(result.isNullResult()).isFalse(),
-                () -> assertThat(result.getResult()).contains("the result"),
-                () -> assertThat(result.hasException()).isFalse(),
-                () -> assertThat(result.getException()).isEmpty()
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(42_000_000L),
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(42L),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos())),
+                    () -> assertThat(result.operationSucceeded()).isTrue(),
+                    () -> assertThat(result.hasResult()).isTrue(),
+                    () -> assertThat(result.isNullResult()).isFalse(),
+                    () -> assertThat(result.getResult()).contains("the result"),
+                    () -> assertThat(result.hasException()).isFalse(),
+                    () -> assertThat(result.getException()).isEmpty(),
+                    () -> assertThat(result.getResultOrNull()).isEqualTo("the result"),
+                    () -> assertThat(result.getRequiredResult()).isEqualTo("the result"),
+                    () -> assertThat(result.getResultOrThrow()).isEqualTo("the result"),
+                    () -> assertThat(result.getExceptionOrNull()).isNull(),
+                    () -> assertThatIllegalStateException()
+                            .isThrownBy(result::getRequiredException)
+                            .withMessage("Operation succeeded; no exception is present")
             );
         }
 
@@ -208,14 +222,22 @@ class TimingTest {
             var result = new TimedWithErrorOrResult<>(420_000_000L, null, null);
 
             assertAll(
-                () -> assertThat(result.getElapsedNanos()).isEqualTo(420_000_000L),
-                () -> assertThat(result.getElapsedMillis()).isEqualTo(420L),
-                () -> assertThat(result.operationSucceeded()).isTrue(),
-                () -> assertThat(result.hasResult()).isTrue(),
-                () -> assertThat(result.isNullResult()).isTrue(),
-                () -> assertThat(result.getResult()).isEmpty(),
-                () -> assertThat(result.hasException()).isFalse(),
-                () -> assertThat(result.getException()).isEmpty()
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(420_000_000L),
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(420L),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos())),
+                    () -> assertThat(result.operationSucceeded()).isTrue(),
+                    () -> assertThat(result.hasResult()).isTrue(),
+                    () -> assertThat(result.isNullResult()).isTrue(),
+                    () -> assertThat(result.getResult()).isEmpty(),
+                    () -> assertThat(result.hasException()).isFalse(),
+                    () -> assertThat(result.getException()).isEmpty(),
+                    () -> assertThat(result.getResultOrNull()).isNull(),
+                    () -> assertThat(result.getRequiredResult()).isNull(),
+                    () -> assertThat(result.getResultOrThrow()).isNull(),
+                    () -> assertThat(result.getExceptionOrNull()).isNull(),
+                    () -> assertThatIllegalStateException()
+                            .isThrownBy(result::getRequiredException)
+                            .withMessage("Operation succeeded; no exception is present")
             );
         }
 
@@ -225,13 +247,21 @@ class TimingTest {
             var result = new TimedWithErrorOrResult<>(126_000_000L, null, error);
 
             assertAll(
-                () -> assertThat(result.getElapsedMillis()).isEqualTo(126L),
-                () -> assertThat(result.operationSucceeded()).isFalse(),
-                () -> assertThat(result.hasResult()).isFalse(),
-                () -> assertThat(result.isNullResult()).isFalse(),
-                () -> assertThat(result.getResult()).isEmpty(),
-                () -> assertThat(result.hasException()).isTrue(),
-                () -> assertThat(result.getException()).contains(error)
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(126L),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos())),
+                    () -> assertThat(result.operationSucceeded()).isFalse(),
+                    () -> assertThat(result.hasResult()).isFalse(),
+                    () -> assertThat(result.isNullResult()).isFalse(),
+                    () -> assertThat(result.getResult()).isEmpty(),
+                    () -> assertThat(result.hasException()).isTrue(),
+                    () -> assertThat(result.getException()).contains(error),
+                    () -> assertThat(result.getResultOrNull()).isNull(),
+                    () -> assertThatIllegalStateException()
+                            .isThrownBy(result::getRequiredResult)
+                            .withMessage("Operation failed; no result is present"),
+                    () -> assertThatThrownBy(result::getResultOrThrow).isSameAs(error),
+                    () -> assertThat(result.getExceptionOrNull()).isSameAs(error),
+                    () -> assertThat(result.getRequiredException()).isSameAs(error)
             );
         }
     }
@@ -244,11 +274,16 @@ class TimingTest {
             var result = TimedWithErrorNoResult.ofSuccess(42_000_000L);
 
             assertAll(
-                () -> assertThat(result.getElapsedNanos()).isEqualTo(42_000_000L),
-                () -> assertThat(result.getElapsedMillis()).isEqualTo(42L),
-                () -> assertThat(result.operationSucceeded()).isTrue(),
-                () -> assertThat(result.hasException()).isFalse(),
-                () -> assertThat(result.getException()).isEmpty()
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(42_000_000L),
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(42L),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos())),
+                    () -> assertThat(result.operationSucceeded()).isTrue(),
+                    () -> assertThat(result.hasException()).isFalse(),
+                    () -> assertThat(result.getException()).isEmpty(),
+                    () -> assertThat(result.getExceptionOrNull()).isNull(),
+                    () -> assertThatIllegalStateException()
+                            .isThrownBy(result::getRequiredException)
+                            .withMessage("Operation succeeded; no exception is present")
             );
         }
 
@@ -258,11 +293,14 @@ class TimingTest {
             var result = TimedWithErrorNoResult.ofException(420_000_000L, error);
 
             assertAll(
-                () -> assertThat(result.getElapsedNanos()).isEqualTo(420_000_000L),
-                () -> assertThat(result.getElapsedMillis()).isEqualTo(420L),
-                () -> assertThat(result.operationSucceeded()).isFalse(),
-                () -> assertThat(result.hasException()).isTrue(),
-                () -> assertThat(result.getException()).contains(error)
+                    () -> assertThat(result.getElapsedNanos()).isEqualTo(420_000_000L),
+                    () -> assertThat(result.getElapsedMillis()).isEqualTo(420L),
+                    () -> assertThat(result.getElapsedDuration()).isEqualTo(Duration.ofNanos(result.getElapsedNanos())),
+                    () -> assertThat(result.operationSucceeded()).isFalse(),
+                    () -> assertThat(result.hasException()).isTrue(),
+                    () -> assertThat(result.getException()).contains(error),
+                    () -> assertThat(result.getExceptionOrNull()).isSameAs(error),
+                    () -> assertThat(result.getRequiredException()).isSameAs(error)
             );
         }
 
