@@ -16,7 +16,6 @@ import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
-import org.kiwiproject.beta.slf4j.KiwiSlf4j;
 import org.slf4j.event.Level;
 
 import java.io.Closeable;
@@ -303,7 +302,7 @@ public class KiwiCloseables {
     }
 
     private static void logExceptionClosingObject(Level level, Object object, String methodName, Exception exception) {
-        KiwiSlf4j.log(LOG, level, "Suppressed exception thrown while closing {} from method {}",
+        LOG.atLevel(level).log("Suppressed exception thrown while closing {} from method {}",
                 object.getClass().getName(), methodName, exception);
     }
 
@@ -328,7 +327,7 @@ public class KiwiCloseables {
     }
 
     private static void logExceptionClosingClosable(Level level, Closeable closeable, Exception exception) {
-        KiwiSlf4j.log(LOG, level, "Suppressed exception thrown while closing Closeable ({})",
+        LOG.atLevel(level).log("Suppressed exception thrown while closing Closeable ({})",
                 closeable.getClass().getName(), exception);
     }
 

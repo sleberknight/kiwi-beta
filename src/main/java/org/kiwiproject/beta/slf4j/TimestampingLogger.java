@@ -187,7 +187,7 @@ public class TimestampingLogger {
     public void logElapsed(Level level, String message, Object... args) {
         if (KiwiSlf4j.isEnabled(logger, level)) {
             var now = System.nanoTime();
-            KiwiSlf4j.log(logger, level, message, args);
+            logger.atLevel(level).log(message, args);
             logElapsedSincePreviousTimestamp(level, now);
             previousTimestamp = now;
             ++logCount;
@@ -198,9 +198,9 @@ public class TimestampingLogger {
         if (previousTimestamp > 0) {
             var diffInNanos = now - previousTimestamp;
             var args = argumentTransformer.apply(diffInNanos, logCount);
-            KiwiSlf4j.log(logger, level, elapsedTimeTemplate, args);
+            logger.atLevel(level).log(elapsedTimeTemplate, args);
         } else if (isNotBlank(initialMessage)) {
-            KiwiSlf4j.log(logger, level, initialMessage);
+            logger.atLevel(level).log(initialMessage);
         }
     }
 
@@ -249,11 +249,11 @@ public class TimestampingLogger {
             var diffInNanos = now - previousTimestamp;
             var args = argumentTransformer.apply(diffInNanos, logCount);
             var elapsedTimeMessage = KiwiStrings.f(elapsedTimeTemplate, args);
-            KiwiSlf4j.log(logger, level, formattedMessage + " " + elapsedTimeMessage);
+            logger.atLevel(level).log(formattedMessage + " " + elapsedTimeMessage);
         } else if (isBlank(initialMessage)) {
-            KiwiSlf4j.log(logger, level, formattedMessage);
+            logger.atLevel(level).log(formattedMessage);
         } else {
-            KiwiSlf4j.log(logger, level, formattedMessage + " " + initialMessage);
+            logger.atLevel(level).log(formattedMessage + " " + initialMessage);
         }
     }
 }
