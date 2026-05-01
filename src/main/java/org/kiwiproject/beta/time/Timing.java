@@ -64,7 +64,7 @@ public class Timing {
     /**
      * Represents an operation that is timed and returns a result.
      *
-     * @param <R> the result type
+     * @param <R> the result type; the result may be null
      */
     @Getter
     @ToString
@@ -75,20 +75,22 @@ public class Timing {
 
         private final long elapsedMillis;
         private final long elapsedNanos;
+
+        @Nullable
         private final R result;
 
         /**
-         * @deprecated since 3.0.0, for removal at 4.0.0, replaced by {@link #ofElapsedNanos(long, Object)}
+         * @deprecated since 3.0.0, for removal at 4.0.0, replaced by {@link #ofElapsedMillis(long, Object)}
          * @implNote Technically, this won't be removed but will become private.
          */
         @KiwiDeprecated(
                 removeAt = "4.0.0",
-                replacedBy = "TimedNoResult#ofElapsedMillis"
+                replacedBy = "TimedWithResult#ofElapsedMillis"
         )
         @Deprecated(since = "3.0.0", forRemoval = true)
         @SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed"})
         @ConstructorProperties({"elapsedMillis", "result"})
-        public TimedWithResult(long elapsedMillis, R result) {
+        public TimedWithResult(long elapsedMillis, @Nullable R result) {
             logElapsedMillisChangeToNanosWarning(TimedWithResult.class, LOG_COUNT);
             this.elapsedMillis = elapsedMillis;
             this.elapsedNanos = TimeUnit.MILLISECONDS.toNanos(elapsedMillis);
@@ -104,7 +106,7 @@ public class Timing {
          * @return a new instance
          */
         @SuppressWarnings("java:S5738")
-        public static <R> TimedWithResult<R> ofElapsedMillis(long elapsedMillis, R result) {
+        public static <R> TimedWithResult<R> ofElapsedMillis(long elapsedMillis, @Nullable R result) {
             return new TimedWithResult<>(elapsedMillis, result);
         }
 
@@ -117,7 +119,7 @@ public class Timing {
          * @return a new instance
          */
         @SuppressWarnings("java:S5738")
-        public static <R> TimedWithResult<R> ofElapsedNanos(long elapsedNanos, R result) {
+        public static <R> TimedWithResult<R> ofElapsedNanos(long elapsedNanos, @Nullable R result) {
             return new TimedWithResult<>(TimeUnit.NANOSECONDS.toMillis(elapsedNanos), result);
         }
 
@@ -310,8 +312,7 @@ public class Timing {
         /**
          * Returns the exception if the operation failed, or null if it succeeded.
          * <p>
-         * Note: a null return value does not distinguish between "the operation
-         * succeeded" and "no exception was thrown" — use {@link #hasException()}
+         * A null return value means the operation succeeded. Use {@link #hasException()}
          * or {@link #operationSucceeded()} for explicit checks.
          *
          * @return the exception thrown by the operation, or null if the operation succeeded
@@ -369,7 +370,7 @@ public class Timing {
          * @throws IllegalArgumentException if both result and exception are non-null
          */
         @VisibleForTesting
-        TimedWithErrorOrResult(long elapsedNanos, R result, RuntimeException exception) {
+        TimedWithErrorOrResult(long elapsedNanos, @Nullable R result, RuntimeException exception) {
             if (nonNull(result) && nonNull(exception)) {
                 throw new IllegalArgumentException("Cannot contain a result and an exception");
             }
@@ -387,7 +388,7 @@ public class Timing {
          * @param result the result of the operation; may be null
          * @return a new instance representing a successful operation
          */
-        public static <R> TimedWithErrorOrResult<R> ofResult(long elapsedNanos, R result) {
+        public static <R> TimedWithErrorOrResult<R> ofResult(long elapsedNanos, @Nullable R result) {
             return new TimedWithErrorOrResult<>(elapsedNanos, result, null);
         }
 
@@ -445,6 +446,7 @@ public class Timing {
          * succeeded with a null result
          * @throws IllegalStateException if the operation failed (i.e., threw an exception)
          */
+        @Nullable
         public R getRequiredResult() {
             if (hasResult()) {
                 return result;
