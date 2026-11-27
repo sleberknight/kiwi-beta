@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 
 @DisplayName("JerseyTestHelpers")
+@SuppressWarnings("removal")  // tests a deprecated method
 class JakartaRestTestHelpersTest {
 
     record Order(String id, String customerId) {

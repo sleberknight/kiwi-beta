@@ -38,7 +38,12 @@ public class JakartaRestTestHelpers {
      * @return a simulated inbound response
      * @implNote The implementation uses Mockito to spy the outbound response, essentially intercepting calls to
      * readEntity and returning the value returned by {@link Response#getEntity()} instead.
+     * @deprecated since 3.2.0, for removal. Use {@code org.kiwiproject.test.jaxrs.JakartaRestTestHelpers#toInboundResponse}
+     * in kiwi-test 4.4.0 or later instead. It does not use Mockito, so it can be safely called inline when
+     * stubbing, e.g., {@code when(...).thenReturn(toInboundResponse(...))}, without causing Mockito's
+     * {@code UnfinishedStubbingException} from nested stubbing.
      */
+    @Deprecated(since = "3.2.0", forRemoval = true)
     public static Response toInboundResponse(Response outboundResponse) {
         var inboundResponse = spy(outboundResponse);
 
